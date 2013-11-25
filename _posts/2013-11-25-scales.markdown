@@ -1,0 +1,10 @@
+---
+layout: post
+title:  "Discovering Scales"
+date:   2013-11-25 23:25:05
+category: music
+---
+<h2>The Title</h2>
+<p>
+The article.
+</p>

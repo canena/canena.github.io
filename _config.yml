@@ -1,6 +1,6 @@
 exclude: ['build', 'watch']
 markdown: redcarpet
-name: Your New Jekyll Site
+name: CANENA
 paginate: 5
 paginate_path: "posts/:num"
 permalink: pretty
