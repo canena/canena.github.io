@@ -169,7 +169,7 @@ ul.tags {
 .tags li {
     display: inline-block;
     font-size: 13px;
-    padding: 0 2px;
+    padding: 0 1px;
 }
 .tag {
     background-color: #def;
