@@ -7,7 +7,8 @@
 <div class="meta">
     <ul class="tags">
         <li><span>{{ entity.date | date_to_string }}</span></li>
-        <li>in <a class="category" href="/{{ entity.category }}">{{ entity.category }}</a></li>
+        <li>in</li>
+        <li><a class="category" href="/{{ entity.category }}">{{ entity.category }}</a></li>
     {% if entity.tags.first %}
     &raquo;
     {% for tag in entity.tags %}
