@@ -16,28 +16,27 @@
     <body>
 
         <div class="site">
-          <div class="header">
-            <h1 class="title"><a href="/">{{ site.name }}</a></h1>
-            <a class="extra" href="/music">music</a>
-          </div>
-
-          {{ content }}
-
-          <div class="footer">
-            <div class="contact">
-              <p>
-                CANENA<br />
-                Music, Graphics, Programming and more<br />
-                canena@ymail.com
-              </p>
+            <div class="header">
+                <h1 class="title"><a href="/">{{ site.name }}</a></h1>
+                <a class="extra" href="/music">music</a>
+                <a class="extra" href="/programming">programming</a>
+                <a class="extra" href="/graphics">graphics</a>
             </div>
-            <div class="contact">
-              <p>
-                <a href="https://github.com/yourusername">github.com/yourusername</a><br />
-                <!--<a href="https://twitter.com/yourusername">twitter.com/yourusername</a><br />-->
-              </p>
+
+{{ content }}
+
+            <div class="footer">
+                <div class="contact">
+                    <p>
+                    <a title="CANENA on github.com" href="https://github.com/canena">CANENA</a>
+                    Music, Programming, Graphics and more
+                    </p>
+                </div>
+                <div class="contact">
+                    <p>
+                    </p>
+                </div>
             </div>
-          </div>
         </div>
 
         <script src="js/main.js"></script>

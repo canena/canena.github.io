@@ -2,8 +2,35 @@
 layout: default
 ---
 <h2>{{ page.title }}</h2>
-<p class="meta">{{ page.date | date_to_string }}</p>
+{% include meta.html %}
 
 <div class="post">
 {{ content }}
 </div>
+
+{% if site.related_posts.first %}
+{% assign isFirst = true %}
+    <ul class="related-posts">
+    {% for post in site.related_posts limit:5 %}
+        {% if page.categories contains post.category %}
+            {% if isFirst %}
+                {% assign isFirst = false %}
+                <li>Related:</li>
+            {% endif %}
+            <li><a href="{{ post.url }}">{{ post.title }}</a></li>
+        {% endif %}
+    {% endfor %}
+    </ul>
+{% endif %}
+
+<div id="disqus_thread"></div>
+<script>
+var disqus_shortname = 'canenade',
+    disqus_identifier = '{{ page.url }}';
+(function (doc) {
+var dsq = doc.createElement('script');
+dsq.async = true;
+dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+doc.getElementsByTagName('head')[0].appendChild(dsq);
+}(document));
+</script>

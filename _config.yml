@@ -1,4 +1,5 @@
 exclude: ['build', 'watch']
+lsi: true
 markdown: redcarpet
 name: CANENA
 paginate: 5
