@@ -1,0 +1,22 @@
+<h1>Categories</h1>
+{% for post in site.posts %}
+    {% assign category = post.category %}
+    {% if category %}
+        <a id="{{ category }}" href="/{{ category }}" class="category">{{ category }}</a>
+        <ul class="posts">
+        {% for p in site.posts %}
+        {% if p.category == category %}
+            <li>
+                <span>{{ p.date | date_to_string }}</span> &raquo; <a href="{{ p.url }}">{{ p.title }}</a>
+                {% if p.tags.first %}
+                &raquo;
+                {% for tag in p.tags %}
+                    <a class="tag" href="/tags#{{ tag }}">{{ tag }}</a>
+                {% endfor %}
+                {% endif %}
+            </li>
+        {% endif %}
+        {% endfor %}
+        </ul>
+    {% endif %}
+{% endfor %}

@@ -1,0 +1,25 @@
+---
+layout: default
+---
+<h1>Tags</h1>
+{% for post in site.posts %}
+    {% assign tags = post.tags %}
+    {% if tags.first %}
+        {% for tag in tags %}
+            <a id="{{ tag }}" href="/tags/#{{ tag }}" class="tag {{ tag }}">{{ tag }}</a>
+            <ul class="posts">
+            {% for p in site.posts %}
+            {% if p.tags.first %}
+                <li>
+                    <span>{{ p.date | date_to_string }}</span> &raquo; <a href="{{ p.url }}">{{ p.title }}</a>
+                    {% if p.category %}
+                    in <a class="category" href="/{{ p.category }}">{{ p.category }}</a>
+                    {% endif %}
+                </li>
+            {% endif %}
+            {% endfor %}
+            </ul>
+        {% endfor %}
+    {% endif %}
+{% endfor %}
+

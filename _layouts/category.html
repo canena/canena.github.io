@@ -1,19 +1,30 @@
 ---
 layout: default
 ---
-{% assign posts = site.categories[page.category] %}
+            {% assign posts = site.categories[page.category] %}
 
-<div id="home">
-    <h1>Recent</h1>
-    <div class="posts">
-      {% assign post = posts.first %}
-        <div>{{ post.excerpt }}<a href="{{ post.url }}">Read More ...</a></div>
-    </div>
+            <div id="home">
+                {% assign post = posts.first %}
+                <h2><a href="{{ post.url }}">{{ post.title }}</a></h2>
+                {% include meta.html entity=post %}
 
-    <h1>All articles in {{ page.category }}</h1>
-    <ul class="posts">
-      {% for post in posts %}
-        <li><span>{{ post.date | date_to_string }}</span> &raquo; <a href="{{ post.url }}">{{ post.title }}</a></li>
-      {% endfor %}
-    </ul>
-</div>
+                <div class="post">
+                    {{ post.excerpt }}
+                    <a href="{{ post.url }}">More ...</a>
+                </div>
+
+                <h2>All articles in <a href="/{{ page.category }}" class="category">{{ page.category }}</a></h2>
+                <ul class="posts">
+                {% for post in posts %}
+                    <li>
+                        <span>{{ post.date | date_to_string }}</span> &raquo; <a href="{{ post.url }}">{{ post.title }}</a>
+                        {% if post.tags.first %} 
+                            &raquo;
+                            {% for tag in post.tags %}
+                                <a class="tag {{ tag }}" href="{{ root_url }}/tags#{{ tag }}">{{ tag }}</a>
+                            {% endfor %}
+                        {% endif %}
+                    </li>
+                {% endfor %}
+                </ul>
+            </div>
