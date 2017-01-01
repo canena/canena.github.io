@@ -1,0 +1,47 @@
+
+body.ui-theme {
+    margin: 0;
+    padding: 0;
+}
+
+.ui-theme {
+    color: #333;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 14px;
+}
+
+.ui-theme *, 
+.ui-theme *:after, 
+.ui-theme *:before {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+.ui-theme h1 {
+    margin: 0;
+}
+
+.ui-theme h2 {
+    margin: 0;
+}
+
+.ui-theme h3 {
+    margin: 0;
+}
+
+.ui-theme h4 {
+    margin: 0;
+}
+
+.ui-theme h5 {
+    margin: 0;
+}
+
+.ui-theme h6 {
+    margin: 0;
+}
+
+.ui-theme p {
+    margin: 0;
+}

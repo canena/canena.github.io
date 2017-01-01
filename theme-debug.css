@@ -1,0 +1,36 @@
+
+.ui-theme--debug .ui-button {
+    background: #bbb;
+    line-height: 30px;
+    padding: 2px 12px 2px 12px;
+}
+
+.ui-theme--debug .ui-button--primary {
+    background: #f00;
+}
+
+.ui-theme--debug .ui-button--secondary {
+    background: #0f0;
+}
+
+.ui-theme--debug .ui-layout__content {
+    background: #eee;
+}
+
+.ui-theme--debug .ui-form__group {
+    margin-bottom: 4px;
+}
+
+.ui-theme--debug .ui-form__text,
+.ui-theme--debug .ui-form__textarea {
+    padding: 8px;
+}
+
+.ui-theme--debug p {
+    margin: 0 0 10px 0;
+}
+
+.ui-theme--debug .ui-grid__row > div {
+    background: #ccc;
+    border: #f0f 1px solid;
+}
