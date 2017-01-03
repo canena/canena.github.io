@@ -2,17 +2,20 @@
 .ui-intro {
     min-height: 100%;
     margin-top: -50px;
-    padding-bottom: 250px;
-    padding-top: 300px;
+    /*padding-bottom: 250px;*/
+    /*padding-top: 300px;*/
+    position: relative;
 }
 
 .ui-intro__label {
+    padding-top: 300px;
     text-align: center;
 }
 
 .ui-intro__sub-label {
     font-style: italic;
     font-weight: normal;
+    padding-bottom: 250px;
     text-align: center;
 }
 .ui-intro__sub-label:before {

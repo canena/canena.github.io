@@ -37,8 +37,14 @@
 }
 
 .ui-theme--orange .ui-intro {
-    background: url('./img/intro2.jpg') bottom right;
+    background: url('./img/intro3.jpg') bottom right;
     border-bottom: #f60 4px solid;
+}
+
+.ui-theme--orange .ui-intro .ui-user {
+    bottom: -200px;
+    position: absolute;
+    right: -95px;
 }
 
 .ui-theme--orange .ui-intro__label {
@@ -75,9 +81,21 @@
     color: #f80;
 }
 
+.ui-theme--orange .ui-layout__main {
+    padding-bottom: 0;
+}
+
 .ui-theme--orange .ui-layout__main .ui-grid__row {
     margin-bottom: 20px;
     margin-top: 20px;
+}
+
+.ui-theme--orange .ui-outro {
+    background: linear-gradient(#444, #555 15px, #888);
+    border-top: #888 2px solid;
+    color: #fff;
+    padding-bottom: 1px;
+    text-shadow: #333 0 0 3px;
 }
 
 .ui-theme--orange .ui-button {

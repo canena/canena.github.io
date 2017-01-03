@@ -1,0 +1,8 @@
+
+.ui-user {
+
+}
+
+.ui-user__avatar {
+    clip-path: circle(60px at center);
+}
