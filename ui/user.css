@@ -4,5 +4,5 @@
 }
 
 .ui-user__avatar {
-    clip-path: circle(60px at center);
+    border-radius: 60px;
 }

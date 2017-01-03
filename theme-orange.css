@@ -25,7 +25,7 @@
 }
 .ui-theme--orange .ui-layout__header .ui-layout__content {
     /*line-height: 46px;*/
-    line-height: 46px;
+    /*line-height: 20px;*/
 }
 
 .ui-theme--orange .ui-layout__content {
@@ -42,9 +42,9 @@
 }
 
 .ui-theme--orange .ui-intro .ui-user {
-    bottom: -200px;
+    bottom: -60px;
     position: absolute;
-    right: -95px;
+    right: 16px;
 }
 
 .ui-theme--orange .ui-intro__label {
@@ -56,11 +56,15 @@
     color: #fff;
 }
 
+.ui-theme--orange .ui-header__logo {
+    padding-top: 20px;    
+}
 .ui-theme--orange .ui-header a {
     border-top: transparent 4px solid;
     color: #f60;
     display: block;
-    margin-top: -4px;
+    margin-top: -24px;
+    padding-top: 20px;    
     padding-left: 16px;
     padding-right: 16px;
     text-decoration: none;
@@ -74,6 +78,11 @@
 }
 .ui-theme--orange .ui-header a:visited:hover {
 
+}
+
+.ui-theme--orange .ui-header__menu-item {
+    padding-bottom: 6px;
+    padding-top: 20px;
 }
 
 .ui-theme--orange .ui-header__menu-item--active a {

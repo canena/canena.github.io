@@ -28,6 +28,7 @@
     left: 16px;
     line-height: 15px;
     position: absolute;
-    top: 0;
+    top: 8px;
     white-space: nowrap;
+    z-index: -1;
 }
