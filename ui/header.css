@@ -9,15 +9,24 @@
 
 .ui-header__logo {
     display: inline-block;
-    font-size: 18px;
-    margin-right: 10px;
+    font-size: 20px;
+    position: relative;
+    vertical-align: top;
 }
 
 .ui-header__menu-item {
     display: inline-block;
-    font-size: 18px;
+    font-size: 20px;
+    position: relative;
+    vertical-align: top;
 }
 
-.ui-header__menu-item a {
-    text-decoration: none;
+.ui-header__menu-category {
+    color: #ddd;
+    display: block;
+    font-size: 10px;
+    left: 16px;
+    line-height: 15px;
+    position: absolute;
+    top: 0;
 }

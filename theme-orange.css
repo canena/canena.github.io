@@ -1,18 +1,57 @@
 
+.ui-theme--orange {
+    font-family: 'Roboto Condensed',Verdana,Geneva,Tahoma,sans-serif;
+}
+
 .ui-theme--orange .ui-layout__header {
     border-top: #f60 4px solid;
 }
 .ui-theme--orange .ui-layout__header .ui-layout__content {
-    background: linear-gradient(rgba(255, 255, 255, 1.0),rgba(255, 255, 255, 1.0), rgba(255, 255, 255, 0));
+    background: linear-gradient(rgba(255, 255, 255, 1.0),rgba(255, 255, 255, 1.0) 66%, rgba(255, 255, 255, 0));
     line-height: 46px;
 }
 
+.ui-theme--orange .ui-layout__content {
+    padding-left: 20px;
+    padding-right: 20px;
+}
+.ui-theme--orange .ui-header__logo {
+    margin-left: -16px;
+}
+
+.ui-theme--orange .ui-header a {
+    border-top: transparent 4px solid;
+    color: #f60;
+    display: block;
+    margin-top: -4px;
+    padding-left: 16px;
+    padding-right: 16px;
+    text-decoration: none;
+}
+.ui-theme--orange .ui-header a:hover {
+    border-color: #f90;
+    color: #f90;
+}
+.ui-theme--orange .ui-header a:visited {
+
+}
+.ui-theme--orange .ui-header a:visited:hover {
+
+}
+
+.ui-theme--orange .ui-header__menu-item--active a {
+    border-color: #f80;
+    color: #f80;
+}
+
 .ui-theme--orange .ui-button {
-    background: linear-gradient(#f60, #f50); /* #f60;*/
+    background: linear-gradient(142deg, #f60, #f40); /* #f60;*/
     border-bottom: #f30 4px solid;
     /*border-bottom-right-radius: 4px;*/
+    font-family: 'Roboto Condensed',Verdana,Geneva,Tahoma,sans-serif;
+    font-size: 16px;
     line-height: 30px;
-    padding: 3px 14px 2px 14px;
+    padding: 3px 14px 0 14px;
 }
 
 .ui-theme--orange .ui-button:not(.ui-button--disabled):hover {
@@ -22,7 +61,7 @@
 
 .ui-theme--orange .ui-button__label {
     color: #fff;
-    letter-spacing: -1px;
+    /*letter-spacing: -1px;*/
     text-transform: uppercase;
 }
 
