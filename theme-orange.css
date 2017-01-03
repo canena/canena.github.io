@@ -1,9 +1,18 @@
 
+.ui-theme--orange .ui-layout__header {
+    border-top: #f60 4px solid;
+}
+.ui-theme--orange .ui-layout__header .ui-layout__content {
+    background: linear-gradient(rgba(255, 255, 255, 1.0),rgba(255, 255, 255, 1.0), rgba(255, 255, 255, 0));
+    line-height: 46px;
+}
+
 .ui-theme--orange .ui-button {
-    background: #f60;
+    background: linear-gradient(#f60, #f50); /* #f60;*/
     border-bottom: #f30 4px solid;
     /*border-bottom-right-radius: 4px;*/
-    padding: 2px 12px 0 12px;
+    line-height: 30px;
+    padding: 3px 14px 2px 14px;
 }
 
 .ui-theme--orange .ui-button:not(.ui-button--disabled):hover {
@@ -22,8 +31,7 @@
     box-shadow: #888 0 0 3px;
 }
 
-.ui-theme--orange .ui-region-main {
-    background: #eee;
-    padding-bottom: 30px;
-    padding-top: 30px;
+.ui-theme--orange .ui-form__text,
+.ui-theme--orange .ui-form__textarea {
+    padding: 10px;
 }

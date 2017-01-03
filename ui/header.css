@@ -1,0 +1,23 @@
+
+.ui-header {
+    font-size: 0;
+    font-weight: bold;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.ui-header__logo {
+    display: inline-block;
+    font-size: 18px;
+    margin-right: 10px;
+}
+
+.ui-header__menu-item {
+    display: inline-block;
+    font-size: 18px;
+}
+
+.ui-header__menu-item a {
+    text-decoration: none;
+}

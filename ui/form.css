@@ -8,6 +8,10 @@
     position: relative;
 }
 
+.ui-form__group .ui-button {
+    vertical-align: top;
+}
+
 .ui-form__group-label {
     display: block;
     font-size: 14px;
