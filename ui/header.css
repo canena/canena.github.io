@@ -29,4 +29,5 @@
     line-height: 15px;
     position: absolute;
     top: 0;
+    white-space: nowrap;
 }
