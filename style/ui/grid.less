@@ -13,6 +13,8 @@
 
     &__col-@{order} {
         font-size: @font-size;
+        padding-left: @grid-spacing;
+        padding-right: @grid-spacing;
     }
 
     .ui-grid-mixin(@size, (@order + 1));
@@ -26,16 +28,13 @@
         font-size: 0;
         justify-content: space-between;
         position: relative;
+        margin-left: -@grid-spacing;
+        margin-right: -@grid-spacing;
         /*margin: 5px;*/
 
         &--static {
             display: flex;
         }
-    }
-
-    &__col {
-        flex:1;
-        font-size: @font-size;
     }
 
 }

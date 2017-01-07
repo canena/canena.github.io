@@ -7,6 +7,7 @@ body.ui-theme {
 
 .headings-mixin(@amount, @order: 1) when (@order =< @amount) {
     h@{order} {
+        font-size: 2*@font-size - ((@order - 1) * 4px);
         margin: 0;
     }
 
