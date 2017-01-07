@@ -1,0 +1,47 @@
+@import 'vars.less';
+
+html.ui-layout {
+    height: 100%;
+
+    & > body {
+        height: 100%;
+        margin: 0;
+        min-height: 100%;
+        overflow-y: scroll;
+        padding: 0;
+        position: relative;
+    }
+
+}
+
+.ui-layout {
+
+    &__content {
+        margin: 0 auto;
+        max-width: @content-max-width;
+        position: relative;
+    }
+
+    &__header {
+        position: fixed;
+        width: 100%;
+        z-index: 100;
+    }
+
+    &__main {
+        min-height: 100%;
+        overflow: auto;
+        padding-bottom: @footer-size;
+        padding-top: @header-size;
+        position: relative;
+        z-index: 50;
+    }
+
+    &__footer {
+        bottom: 0;
+        position: fixed;
+        width: 100%;
+        z-index: 90;
+    }
+
+}

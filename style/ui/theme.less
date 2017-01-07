@@ -1,0 +1,28 @@
+@import 'vars.less';
+
+body.ui-theme {
+    margin: 0;
+    padding: 0;
+}
+
+.headings-mixin(@amount, @order: 1) when (@order =< @amount) {
+    h@{order} {
+        margin: 0;
+    }
+
+    .headings-mixin(@amount, (@order + 1));
+}
+
+.ui-theme {
+    .headings-mixin(6);
+
+    color: @text-color;
+    font-size: @font-size;
+
+    *, *:after, *:before {
+        -webkit-box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        box-sizing: border-box;
+    }
+
+}

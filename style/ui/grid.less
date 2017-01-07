@@ -1,0 +1,41 @@
+@import 'vars.less';
+
+.ui-grid-mixin(@size, @order: 1) when (@order =< @size) {
+
+    &__col-@{order} {
+        font-size: @font-size;
+        width: (@order / @size) * 100%;
+    }
+
+    .ui-grid-mixin(@size, (@order + 1));
+}
+
+.ui-grid {
+    .ui-grid-mixin(@grid-size);
+
+    &__row {
+        display: block;
+        font-size: 0;
+        justify-content: space-between;
+        position: relative;
+        /*margin: 5px;*/
+
+        &--static {
+            display: flex;
+        }
+    }
+
+    &__col {
+        flex:1;
+        font-size: @font-size;
+    }
+
+}
+
+@media (min-width: @breakpoint-sm) {
+
+    .ui-grid__row {
+        display: flex;
+    }
+
+}
