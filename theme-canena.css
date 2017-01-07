@@ -4,71 +4,78 @@
 #4b8dd8
 #9ad84b
 #d8734b
+
+Alizarine Crimson: #e32636
+Dunkler: #94131e
 */
 
-.ui-theme--orange {
+.ui-theme--canena {
     font-family: 'Roboto Condensed',Verdana,Geneva,Tahoma,sans-serif;
 }
 
-.ui-theme--orange h1 {
+.ui-theme--canena h1 {
     margin-bottom: 10px;
 }
-.ui-theme--orange h2 {
+.ui-theme--canena h2 {
     margin-bottom: 8px;
 }
-.ui-theme--orange h3 {
+.ui-theme--canena h3 {
     margin-bottom: 6px;
 }
-.ui-theme--orange h4 {
+.ui-theme--canena h4 {
     margin-bottom: 4px;
 }
 
-.ui-theme--orange .ui-layout__header {
+.ui-theme--canena .ui-layout__header {
     background: linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.4));
     /*background: linear-gradient(rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.4));*/
     /*background: linear-gradient(rgba(255, 255, 255, 1.0), rgba(255, 255, 255, 0));*/
     /*background: linear-gradient(rgba(255, 255, 255, 1.0),rgba(255, 255, 255, 1.0) 66%, rgba(255, 255, 255, 0));*/
-    border-top: #f60 4px solid;
+    border-top: #94131e 4px solid;
 }
-.ui-theme--orange .ui-layout__header .ui-layout__content {
+.ui-theme--canena .ui-layout__header .ui-layout__content {
     /*line-height: 46px;*/
     /*line-height: 20px;*/
 }
 
-.ui-theme--orange .ui-layout__content {
+.ui-theme--canena .ui-layout__content {
     padding-left: 16px;
     padding-right: 16px;
 }
-.ui-theme--orange .ui-header__logo {
+.ui-theme--canena .ui-header__logo {
     margin-left: -16px;
 }
 
-.ui-theme--orange .ui-intro {
+.ui-theme--canena .ui-intro {
     background: url('./img/intro3.jpg') bottom right;
-    border-bottom: #f60 4px solid;
+    border-bottom: #94131e 4px solid;
 }
 
-.ui-theme--orange .ui-intro .ui-user {
+.ui-theme--canena .ui-intro .ui-user {
     bottom: -60px;
     position: absolute;
     right: 16px;
 }
 
-.ui-theme--orange .ui-intro__label {
+.ui-theme--canena .ui-user__avatar {
+    /*border: #94131e 4px solid;*/
+}
+
+.ui-theme--canena .ui-intro__label {
     color: #fff;
     text-shadow: #333 0 0 3px;
 }
 
-.ui-theme--orange .ui-intro__sub-label {
+.ui-theme--canena .ui-intro__sub-label {
     color: #fff;
 }
 
-.ui-theme--orange .ui-header__logo {
+.ui-theme--canena .ui-header__logo {
     padding-top: 20px;    
 }
-.ui-theme--orange .ui-header a {
+.ui-theme--canena .ui-header a {
     border-top: transparent 4px solid;
-    color: #f60;
+    color: #94131e;
     display: block;
     margin-top: -24px;
     padding-top: 20px;    
@@ -76,37 +83,37 @@
     padding-right: 16px;
     text-decoration: none;
 }
-.ui-theme--orange .ui-header a:hover {
+.ui-theme--canena .ui-header a:hover {
     border-color: #f90;
     color: #f90;
 }
-.ui-theme--orange .ui-header a:visited {
+.ui-theme--canena .ui-header a:visited {
 
 }
-.ui-theme--orange .ui-header a:visited:hover {
+.ui-theme--canena .ui-header a:visited:hover {
 
 }
 
-.ui-theme--orange .ui-header__menu-item {
+.ui-theme--canena .ui-header__menu-item {
     padding-bottom: 6px;
     padding-top: 20px;
 }
 
-.ui-theme--orange .ui-header__menu-item--active a {
+.ui-theme--canena .ui-header__menu-item--active a {
     border-color: #f80;
     color: #f80;
 }
 
-.ui-theme--orange .ui-layout__main {
+.ui-theme--canena .ui-layout__main {
     padding-bottom: 0;
 }
 
-.ui-theme--orange .ui-layout__main .ui-grid__row {
+.ui-theme--canena .ui-layout__main .ui-grid__row {
     margin-bottom: 20px;
     margin-top: 20px;
 }
 
-.ui-theme--orange .ui-outro {
+.ui-theme--canena .ui-outro {
     background: linear-gradient(#444, #555 15px, #888);
     border-top: #888 2px solid;
     color: #fff;
@@ -114,8 +121,8 @@
     text-shadow: #333 0 0 3px;
 }
 
-.ui-theme--orange .ui-button {
-    background: linear-gradient(142deg, #f60, #f40); /* #f60;*/
+.ui-theme--canena .ui-button {
+    background: linear-gradient(142deg, #94131e, #f40); /* #94131e;*/
     border-bottom: #f30 4px solid;
     /*border-bottom-right-radius: 4px;*/
     font-family: 'Roboto Condensed',Verdana,Geneva,Tahoma,sans-serif;
@@ -124,23 +131,23 @@
     padding: 3px 14px 0 14px;
 }
 
-.ui-theme--orange .ui-button:not(.ui-button--disabled):hover {
+.ui-theme--canena .ui-button:not(.ui-button--disabled):hover {
     background: #f90;
-    border-color: #f60;
+    border-color: #94131e;
 }
 
-.ui-theme--orange .ui-button__label {
+.ui-theme--canena .ui-button__label {
     color: #fff;
     /*letter-spacing: -1px;*/
     text-transform: uppercase;
 }
 
-.ui-theme--orange .ui-button:active,
-.ui-theme--orange .ui-button:focus {
+.ui-theme--canena .ui-button:active,
+.ui-theme--canena .ui-button:focus {
     box-shadow: #888 0 0 3px;
 }
 
-.ui-theme--orange .ui-form__text,
-.ui-theme--orange .ui-form__textarea {
+.ui-theme--canena .ui-form__text,
+.ui-theme--canena .ui-form__textarea {
     padding: 9px;
 }
