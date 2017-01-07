@@ -235,6 +235,13 @@ html.ui-layout > body {
   width: 100%;
   z-index: 90;
 }
+.ui-tag {
+  display: inline-block;
+}
+.ui-tag__label {
+  display: block;
+  font-size: 16px;
+}
 body.ui-theme {
   margin: 0;
   padding: 0;
@@ -268,6 +275,9 @@ body.ui-theme {
   -moz-box-sizing: border-box;
   box-sizing: border-box;
 }
+.ui-theme p {
+  margin: 16px 0;
+}
 .ui-user__avatar {
   border-radius: 60px;
 }
@@ -292,6 +302,54 @@ body.ui-theme {
 }
 .ui-theme--canena h4 {
   margin-bottom: 4px;
+}
+.ui-theme--canena .ui-frontmatter {
+  line-height: 44px;
+  margin-right: 100px;
+  margin-top: -48px;
+  padding-right: 30px;
+}
+.ui-theme--canena .ui-frontmatter__tags {
+  white-space: nowrap;
+}
+.ui-theme--canena .ui-frontmatter__properties {
+  color: #bfbfbf;
+  font-style: italic;
+  margin-top: 4px;
+}
+.ui-theme--canena .ui-frontmatter__properties em {
+  font-weight: bold;
+}
+.ui-theme--canena .ui-frontmatter .ui-tag {
+  margin-right: 6px;
+}
+.ui-theme--canena .ui-tag {
+  background: #d84b97;
+  border: none;
+  border-radius: 5px;
+  border-top-left-radius: 0;
+  cursor: pointer;
+  padding: 0;
+}
+.ui-theme--canena .ui-tag:not(.ui-tag--plain):hover {
+  background: #e175af;
+}
+.ui-theme--canena .ui-tag--plain {
+  cursor: default;
+  opacity: 0.8;
+}
+.ui-theme--canena .ui-tag__label {
+  color: #fff;
+  font-size: 16px;
+  line-height: 16px;
+  padding: 4px 8px;
+  text-decoration: none;
+}
+.ui-theme--canena .ui-tag__label:before {
+  content: "●";
+  display: inline-block;
+  margin-right: 5px;
+  margin-top: -1px;
 }
 .ui-theme--canena .ui-button {
   background: linear-gradient(142deg, #d84b97, #f40);
@@ -386,6 +444,33 @@ body.ui-theme {
   color: #fff;
   padding-bottom: 1px;
   text-shadow: #333 0 0 3px;
+}
+.ui-theme--canena .ui-outro ul {
+  list-style: none;
+  margin: 16px 0;
+  padding: 0;
+}
+.ui-theme--canena .ui-outro a {
+  color: #fff;
+  display: block;
+}
+.ui-theme--canena .ui-outro .ui-grid__row:last-of-type {
+  margin-bottom: 0;
+}
+.ui-theme--canena .ui-outro__section {
+  border-top: #888 1px solid;
+  position: relative;
+}
+.ui-theme--canena .ui-outro__section:before {
+  border-top: #777 1px solid;
+  content: " ";
+  display: block;
+  position: absolute;
+  top: 0;
+  width: 100%;
+}
+.ui-theme--canena .ui-outro__punchline {
+  text-align: right;
 }
 .ui-theme--canena .ui-form__text {
   border: #ccc 1px solid;
