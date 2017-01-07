@@ -84,51 +84,39 @@
 }
 .ui-grid__col-1 {
   font-size: 16px;
-  width: 8.33333333%;
 }
 .ui-grid__col-2 {
   font-size: 16px;
-  width: 16.66666667%;
 }
 .ui-grid__col-3 {
   font-size: 16px;
-  width: 25%;
 }
 .ui-grid__col-4 {
   font-size: 16px;
-  width: 33.33333333%;
 }
 .ui-grid__col-5 {
   font-size: 16px;
-  width: 41.66666667%;
 }
 .ui-grid__col-6 {
   font-size: 16px;
-  width: 50%;
 }
 .ui-grid__col-7 {
   font-size: 16px;
-  width: 58.33333333%;
 }
 .ui-grid__col-8 {
   font-size: 16px;
-  width: 66.66666667%;
 }
 .ui-grid__col-9 {
   font-size: 16px;
-  width: 75%;
 }
 .ui-grid__col-10 {
   font-size: 16px;
-  width: 83.33333333%;
 }
 .ui-grid__col-11 {
   font-size: 16px;
-  width: 91.66666667%;
 }
 .ui-grid__col-12 {
   font-size: 16px;
-  width: 100%;
 }
 .ui-grid__row {
   display: block;
@@ -145,6 +133,42 @@
   font-size: 16px;
 }
 @media (min-width: 768px) {
+  .ui-grid__col-1 {
+    width: 8.33333333%;
+  }
+  .ui-grid__col-2 {
+    width: 16.66666667%;
+  }
+  .ui-grid__col-3 {
+    width: 25%;
+  }
+  .ui-grid__col-4 {
+    width: 33.33333333%;
+  }
+  .ui-grid__col-5 {
+    width: 41.66666667%;
+  }
+  .ui-grid__col-6 {
+    width: 50%;
+  }
+  .ui-grid__col-7 {
+    width: 58.33333333%;
+  }
+  .ui-grid__col-8 {
+    width: 66.66666667%;
+  }
+  .ui-grid__col-9 {
+    width: 75%;
+  }
+  .ui-grid__col-10 {
+    width: 83.33333333%;
+  }
+  .ui-grid__col-11 {
+    width: 91.66666667%;
+  }
+  .ui-grid__col-12 {
+    width: 100%;
+  }
   .ui-grid__row {
     display: flex;
   }
@@ -316,6 +340,7 @@ body.ui-theme {
   color: #bfbfbf;
   font-style: italic;
   margin-top: 4px;
+  white-space: nowrap;
 }
 .ui-theme--canena .ui-frontmatter__properties em {
   font-weight: bold;
@@ -442,7 +467,9 @@ body.ui-theme {
   background: linear-gradient(#444, #555 15px, #888);
   border-top: #888 2px solid;
   color: #fff;
+  margin-top: 10px;
   padding-bottom: 1px;
+  padding-top: 20px;
   text-shadow: #333 0 0 3px;
 }
 .ui-theme--canena .ui-outro ul {
@@ -499,4 +526,9 @@ body.ui-theme {
   border-width: 1px;
   padding: 10px;
   margin-bottom: 10px;
+}
+@media (max-width: 768px) {
+  .ui-theme--canena .ui-outro__punchline {
+    text-align: left;
+  }
 }

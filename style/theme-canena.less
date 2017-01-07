@@ -78,6 +78,7 @@
             color: lighten(@text-color, 55%);
             font-style: italic;
             margin-top: @border-intro-width;
+            white-space: nowrap;
 
             em {
                 font-weight: bold;
@@ -250,7 +251,9 @@
         background: linear-gradient(#444, #555 15px, #888);
         border-top: #888 2px solid;
         color: #fff;
+        margin-top: @default-spacing;
         padding-bottom: 1px;
+        padding-top: 2*@default-spacing;
         text-shadow: @text-color 0 0 3px;
 
         ul {
@@ -322,6 +325,22 @@
             .border-mixin();
             padding: @pad;
             margin-bottom: @pad;
+        }
+
+    }
+
+}
+
+@media (max-width: @breakpoint-sm) {
+
+    .ui-theme--canena {
+
+        .ui-outro {
+
+            &__punchline {
+                text-align: left;
+            }
+
         }
 
     }

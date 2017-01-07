@@ -1,17 +1,25 @@
 @import 'vars.less';
 
-.ui-grid-mixin(@size, @order: 1) when (@order =< @size) {
+.ui-grid-responsive-mixin(@size: @grid-size, @order: 1) when (@order =< @size) {
+
+    &__col-@{order} {
+        width: (@order / @size) * 100%;
+    }
+
+    .ui-grid-responsive-mixin(@size, (@order + 1));
+}
+
+.ui-grid-mixin(@size: @grid-size, @order: 1) when (@order =< @size) {
 
     &__col-@{order} {
         font-size: @font-size;
-        width: (@order / @size) * 100%;
     }
 
     .ui-grid-mixin(@size, (@order + 1));
 }
 
 .ui-grid {
-    .ui-grid-mixin(@grid-size);
+    .ui-grid-mixin();
 
     &__row {
         display: block;
@@ -34,8 +42,13 @@
 
 @media (min-width: @breakpoint-sm) {
 
-    .ui-grid__row {
-        display: flex;
+    .ui-grid {
+        .ui-grid-responsive-mixin();
+
+        &__row {
+            display: flex;
+        }
+
     }
 
 }
