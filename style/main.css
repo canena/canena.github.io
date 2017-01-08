@@ -2,6 +2,9 @@
 .ui-abstract__title {
   font-size: 16px;
 }
+.ui-article-archive ul {
+  margin: 0 0 10px 0;
+}
 .ui-article-list ul {
   list-style: none;
   margin: 0;
@@ -323,6 +326,17 @@ html.ui-layout > body {
   display: block;
   font-size: 16px;
 }
+.ui-tag-cloud ul {
+  font-size: 0;
+  list-style: none;
+  margin: 0 0 20px 0;
+  padding: 0;
+}
+.ui-tag-cloud li {
+  display: inline-block;
+  font-size: 16px;
+  margin-right: 4px;
+}
 body.ui-theme {
   margin: 0;
   padding: 0;
@@ -554,6 +568,17 @@ body.ui-theme {
   font-size: 16px;
   font-weight: normal;
   margin-bottom: 10px;
+}
+.ui-theme--canena .ui-article-archive h3 {
+  margin-bottom: 10px;
+}
+.ui-theme--canena .ui-article-archive__post-title {
+  font-weight: bold;
+}
+.ui-theme--canena .ui-article-archive__post-date {
+  color: #b3b3b3;
+  display: block;
+  font-size: 16px;
 }
 .ui-theme--canena .ui-outro {
   background: linear-gradient(#444, #555 15px, #888);
