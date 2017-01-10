@@ -1,7 +1,6 @@
 @import url('https://fonts.googleapis.com/css?family=Roboto+Condensed');
 
 @import 'ui/abstract.less';
-@import 'ui/article-archive.less';
 @import 'ui/article-list.less';
 @import 'ui/article-preview.less';
 @import 'ui/button.less';
@@ -262,8 +261,8 @@
 
         &__item {
             border-bottom: @default-border;
-            padding-bottom: 2*@default-spacing;
-            padding-top: @default-spacing;
+            //padding-bottom: 2*@default-spacing;
+            //padding-top: @default-spacing;
 
             &:last-of-type {
                 border-bottom: none;
@@ -274,6 +273,9 @@
     }
 
     .ui-article-preview {
+        overflow: hidden;
+        padding-bottom: 2*@default-spacing;
+        padding-top: 2*@default-spacing;
         position: relative;
 
         &__title {
@@ -288,31 +290,71 @@
             }
         }
 
-        &__property {
+        &__date {
             color: lighten(@text-color, 50%);
             display: block;
-            //float: left;
+            float: left;
             font-size: @font-size;
             font-weight: normal;
-            margin-bottom: @default-spacing;
+            margin-top: 2*@default-spacing + 4px;
+            //margin-bottom: @default-spacing;
+            position: absolute;
         }
 
-    }
+        &--size-compact {
+            .ui-article-preview {
 
-    .ui-article-archive {
+                &__title {
+                    margin-right: 140px;
+                }
 
-        h3 {
-            margin-bottom: @default-spacing;
-        }
+                &__tags {
+                    margin-right: 140px;
+                    margin-top: @default-spacing;
+                }
 
-        &__post-title {
-            font-weight: bold;
-        }
+                &__abstract {
+                    //background: #fff;
+                    //border-bottom: #ccc 1px solid;
+                    display: none;
+                    //margin-right: 140px;
+                    //margin-top: -0.75*@default-spacing;
+                    //max-width: 70%;
+                    overflow: hidden;
+                    //position: absolute;
+                    text-overflow: ellipsis;
+                    white-space: nowrap;
+                    //z-index: 50;
+                }
 
-        &__post-date {
-            color: lighten(@text-color, 50%);
-            display: block;
-            font-size: @font-size;
+                &__date {
+                    display: none;
+                    float: none;
+                    margin-top: @default-spacing;
+                    position: relative;
+                }
+            }
+
+            &:hover {
+                .ui-article-preview {
+                    //&__tags {
+                    //    visibility: hidden;
+                    //}
+                    &__abstract {
+                        display: block;
+                    }
+                    &__date {
+                        display: block;
+                    }
+                }
+            }
+
+            .ui-button {
+                bottom: 2*@default-spacing;
+                position: absolute;
+                right: 0;
+                //top: 4px;
+            }
         }
 
     }
