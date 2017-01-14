@@ -487,8 +487,8 @@ body.ui-theme {
   padding: 10px;
 }
 .ui-theme--canena .ui-layout__content {
-  padding-left: 16px;
-  padding-right: 16px;
+  padding-left: 20px;
+  padding-right: 20px;
 }
 .ui-theme--canena .ui-header a {
   border-top: transparent 4px solid;

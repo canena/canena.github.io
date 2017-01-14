@@ -193,6 +193,7 @@
     }
 
     .ui-header {
+        @pad: 16px;
 
         a {
             border-top: transparent @border-top-width solid;
@@ -200,8 +201,8 @@
             display: block;
             margin-top: -24px;
             padding-top: 20px;    
-            padding-left: 16px;
-            padding-right: 16px;
+            padding-left: @pad;
+            padding-right: @pad;
             text-decoration: none;
 
             &:hover {
@@ -226,11 +227,11 @@
             }
 
             &:first-child {
-                margin-left: -@content-horizontal-padding;
+                margin-left: -@pad;
             }
 
             &:last-child {
-                margin-right: -@content-horizontal-padding;
+                margin-right: -@pad;
             }
 
         }
