@@ -47,6 +47,8 @@
     @border-top-width: 4px;
     @border-intro-width: 4px;
 
+    @color-gradient: linear-gradient(142deg, #d84b97, #f40);
+
     font-family: @font-family;
 
     h1 {
@@ -66,28 +68,35 @@
     }
 
     .ui-frontmatter {
-        //border-bottom: #ddd 1px solid;
+        //border-bottom: @default-border;
         //font-size: 0;
         //height: 45px;
-        line-height: 44px;
-        margin-right: 100px;
-        margin-top: -48px;
-        padding-right: 30px;
+        //line-height: 36px;
+        //margin-right: 100px;
+        margin-top: -34px - @border-intro-width;
+        min-height: 44px + @border-intro-width;
+        //padding-right: 30px;
         //padding-top: 4px;
 
-        &__tags {
-            white-space: nowrap;
-        }
-
         &__properties {
-            color: lighten(@text-color, 55%);
+            color: lighten(@text-color, 65%);
             font-style: italic;
-            margin-top: @border-intro-width;
+            line-height: 34px;
+            margin-right: 130px;
+            text-shadow: @text-color 0 0 3px;
             white-space: nowrap;
 
             em {
                 font-weight: bold;
             }
+        }
+
+        &__tags {
+            //background: linear-gradient(@default-border-color, rgba(255, 255, 255, 0));
+            line-height: 44px;
+            margin-right: 130px;
+            margin-top: @border-intro-width;
+            white-space: nowrap;
         }
 
         .ui-tag {
@@ -141,7 +150,7 @@
     }
 
     .ui-button {
-        background: linear-gradient(142deg, #d84b97, #f40); 
+        background: @color-gradient; 
         border-bottom: @alizarine-crimson 4px solid;
         font-family: @font-family;
         line-height: 30px;
@@ -175,7 +184,7 @@
         &__main {
             padding-bottom: 0;
 
-            .ui-grid__row {
+            .ui-layout__content > .ui-grid__row {
                 margin-bottom: @grid-row-vertical-spacing;
                 margin-top: @grid-row-vertical-spacing;
             }
@@ -245,6 +254,7 @@
     .ui-intro {
         background: url('../img/intro3.jpg') bottom right;
         border-bottom: @primary-color @border-intro-width solid;
+        //border-image: @color-gradient 1 100%;
 
         &__label {
             color: #fff;
@@ -392,6 +402,7 @@
 
         &__section {
             border-top: #888 1px solid;
+            margin-top: @default-spacing;
             position: relative;
 
             &:before {
