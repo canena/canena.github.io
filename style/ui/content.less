@@ -1,0 +1,14 @@
+@import 'vars.less';
+
+.ui-content {
+
+    a[href^="ftp://"]:after,
+    a[href^="ftps://"]:after,
+    a[href^="http://"]:after,
+    a[href^="https://"]:after {
+        content: " (⇑)";// " (‡)"; //⇑ ";
+        font-size: @font-size - 2px;
+        line-height: @font-size;
+    }
+
+}

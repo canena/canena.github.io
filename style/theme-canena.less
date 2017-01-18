@@ -4,6 +4,7 @@
 @import 'ui/article-list.less';
 @import 'ui/article-preview.less';
 @import 'ui/button.less';
+@import 'ui/content.less';
 @import 'ui/form.less';
 @import 'ui/frontmatter.less';
 @import 'ui/grid.less';
@@ -192,11 +193,36 @@
             .ui-grid__col {
                 padding: @default-spacing;
             }
+
         }
 
         &__content {
             padding-left: @content-horizontal-padding;
             padding-right: @content-horizontal-padding;
+        }
+
+    }
+
+    .ui-content {
+
+        a:link, a:visited {
+            color: @primary-color;
+            //display: inline-block;
+            //padding: 0.5*@default-spacing 0;
+            text-decoration: underline;
+        }
+
+        a:hover {
+            color: @secondary-color;
+            text-decoration: none;
+        }
+
+        ul {
+            padding-left: 30px;
+        }
+
+        li {
+            margin-bottom: 0.25*@default-spacing;
         }
 
     }
@@ -292,11 +318,11 @@
         &__title {
             a {
                 color: @primary-color;
-                text-decoration: none;
+                text-decoration: underline;
 
                 &:hover {
                     color: @secondary-color;
-                    text-decoration: underline;
+                    text-decoration: none;
                 }
             }
         }
@@ -391,9 +417,19 @@
             padding: 0;
         }
 
+        li {
+            margin-bottom: 0.5*@default-spacing;
+        }
+
         a {
             color: #fff;
-            display: block;
+            display: inline-block;
+            text-decoration: underline;
+        }
+
+        a:hover {
+            color: @primary-color;
+            text-decoration: none;
         }
 
         .ui-grid__row:last-of-type {

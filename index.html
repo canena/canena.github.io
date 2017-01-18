@@ -65,7 +65,7 @@
             </header>
 
             <div class="ui-layout__content">
-                <div class="ui-grid__row">
+                <div id="posts" class="ui-grid__row">
                     <section class="ui-grid__col-8 ui-article-list">
                         <h3>Blog Posts</h3>
                         <ul>
@@ -74,7 +74,7 @@
                                     <h4 class="ui-article-preview__title">
                                         <a href="blog/2017-01-19-the-blank-page-disease">The Blank Page Disease</a>
                                     </h4>
-                                    <p class="ui-article-preview__abstract">
+                                    <p class="ui-article-preview__abstract ui-content">
                                         The Blank Page Disease and it's <abbr title="User Experience">UX</abbr> implications.
                                     </p>
                                     <ul class="ui-article-preview__tags">
@@ -102,7 +102,7 @@
                                     <h4 class="ui-article-preview__title">
                                         <a href="blog/2017-01-18-hello-living-style-guide">Hello Living Style Guide</a>
                                         </h4>
-                                    <p class="ui-article-preview__abstract">
+                                    <p class="ui-article-preview__abstract ui-content">
                                         This is the living style guide for my own little collection of <abbr title="Block Element Modifier">BEM</abbr> Blocks that form the foundation for this blog - a different kind of Hello World.
                                     </p>
                                     <ul class="ui-article-preview__tags">
@@ -130,7 +130,7 @@
 
                     <section class="ui-grid__col-4">
                         <div class="ui-grid__row">
-                            <div class="ui-grid__col-12">
+                            <div class="ui-grid__col-12 ui-content">
                                 <h3>Hello there</h3>
                                 <div class="ui-abstract">
                                     <p class="ui-abstract__content">
@@ -147,8 +147,8 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="ui-grid__row">
-                            <div class="ui-grid__col-12">
+                        <div id="links" class="ui-grid__row">
+                            <div class="ui-grid__col-12 ui-content">
                                 <h3>External Links</h3>
 
                                 <h4>Useful Tools</h4>
@@ -161,8 +161,8 @@
                                 <ul>
                                     <li><a href="https://ayende.com" target="_blank">ayende.com</a></li>
                                     <li><a href="http://blog.ploeh.dk/" target="_blank">blog.ploeh.dk</a></li>
-                                    <li><a href="https://ericlippert.com/" target="_blank">ericlippert.com</a></li>
                                     <li><a href="https://cuttingedge.it/blogs/steven/">cuttingedge.it/blogs/steven</a></li>
+                                    <li><a href="https://ericlippert.com/" target="_blank">ericlippert.com</a></li>
                                 </ul>
 
                                 <h4>Daily Dose</h4>
@@ -188,7 +188,7 @@
         <div class="ui-layout__content">
 
             <section class="ui-grid__row">
-                <div class="ui-grid__col-6">
+                <div class="ui-grid__col-8">
                     <h4>About the author</h4>
                     <p>
                         I love listening to and making music myself, enjoy reading, get excited when watching a decent movie, flourish in creating artwork, marvel in coding and grocking other people's code and delight in learning anything new in general while living The Dream in the beautiful city of Leipzig, Germany. 
@@ -196,20 +196,27 @@
                         <a href="blog/about">Do you want to know more?</a>
                     </p>
                 </div>
-                <nav class="ui-grid__col-3">
-                    <h4>Miscellaneous</h4>
+                <nav class="ui-grid__col-4">
+                    <h4>Sitemap</h4>
                     <ul>
-                        <li><a href="blog/about">About</a></li>
-                        <li><a href="blog/about#contact">Contact me</a></li>
-                        <li><a href="blog/about#data-usage">Data Usage Disclosure</a></li>
-                        <li><a href="blog/imprint">Imprint</a></li>
-                    </ul>
-                </nav>
-                <nav class="ui-grid__col-3">
-                    <h4>Some more</h4>
-                    <ul>
-                        <li><a href="#">Contact Me</a></li>
-                        <li><a href="#">Imprint</a></li>
+                        <li>
+                            <a href="./">Home</a>
+                            &bull;
+                            <a href="./#posts">Posts</a>
+                            &bull;
+                            <a href="./#links">Links</a>
+                        </li>
+                        <li>
+                            <a href="blog/about">About</a>
+                            &bull;
+                            <a href="blog/about#contact">Contact me</a>
+                        </li>
+                        <li>
+                            <a href="blog/imprint">Imprint</a>
+                            &bull;
+                            <a href="blog/imprint#data-usage">Data Usage</a>
+                        </li>
+                        <li><a href="blog/tags">Tags</a></li>
                     </ul>
                 </nav>
             </section>

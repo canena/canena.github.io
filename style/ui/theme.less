@@ -29,4 +29,22 @@ body.ui-theme {
     p {
         margin: @font-size 0;
     }
+
+    abbr {
+        cursor: help;
+        position: relative;
+        text-decoration: none;
+
+        &:before {
+            border-bottom: @text-color 1px dotted;
+            bottom: 0;
+            content: " ";
+            display: block;
+            left: 0;
+            position: absolute;
+            right: 0;
+            width: 100%;
+        }
+    }
+
 }
