@@ -14,8 +14,12 @@
         <nav>
             <ul class="ui-layout__content ui-header">
                 <li class="ui-header__menu-item ui-header__menu-item--active">
+                    <div class="ui-header__menu-category">
+                        Music/Life
+                    </div>
                     <a class="ui-header__logo" href="./">CANENA</a>
                 </li>
+                <!--
                 <li class="ui-header__menu-item">
                     <div class="ui-header__menu-category">
                         Visual
@@ -28,6 +32,7 @@
                     </div>
                     <a href="blog/about">About</a>
                 </li>
+                -->
             </ul>
         </nav>
     </header>
@@ -39,9 +44,9 @@
                     <div class="ui-layout__content">
                         
                         <h1 class="ui-intro__label">
-                            Ein Bett ist ein Bett ist ein Bett
+                            Life/Music/Art/Code/Stuff
                             <span class="ui-intro__sub-label">
-                                Und da ist es ja auch ganz nett
+                                A blog about life
                             </span>
                         </h1>
 
@@ -56,7 +61,10 @@
                         </div>
 
                         <div class="ui-frontmatter__properties">
+                            <!--
                             Magic article counter only available with active JavaScript
+                            -->
+                            &nbsp;
                         </div>
 
                     </div>
@@ -67,36 +75,8 @@
             <div class="ui-layout__content">
                 <div id="posts" class="ui-grid__row">
                     <section class="ui-grid__col-8 ui-article-list">
-                        <h3>Blog Posts</h3>
+                        <h3>Recent Posts</h3>
                         <ul>
-                            <li class="ui-article-list__item">
-                                <article class="ui-article-preview">
-                                    <h4 class="ui-article-preview__title">
-                                        <a href="blog/2017-01-19-the-blank-page-disease">The Blank Page Disease</a>
-                                    </h4>
-                                    <p class="ui-article-preview__abstract ui-content">
-                                        The Blank Page Disease and it's <abbr title="User Experience">UX</abbr> implications.
-                                    </p>
-                                    <ul class="ui-article-preview__tags">
-                                        <li>
-                                            <div class="ui-tag">
-                                                <a href="#" class="ui-tag__label">Some tag</a>
-                                            </div>
-                                        </li>
-                                        <li>
-                                            <div class="ui-tag">
-                                                <a href="#" class="ui-tag__label">Another tag</a>
-                                            </div>
-                                        </li>
-                                    </ul>
-                                    <div class="ui-article-preview__date">Wednesday 2017-02-01</div>
-                                    <a href="blog/2017-01-19-the-blank-page-disease" class="ui-button">
-                                        <span class="ui-button__label">
-                                            Read More...
-                                        </span>
-                                    </a>
-                                </article>
-                            </li>
                             <li class="ui-article-list__item">
                                 <article class="ui-article-preview">
                                     <h4 class="ui-article-preview__title">
@@ -107,18 +87,56 @@
                                     </p>
                                     <ul class="ui-article-preview__tags">
                                         <li>
-                                            <div class="ui-tag">
-                                                <a href="#" class="ui-tag__label">Some tag</a>
+                                            <div class="ui-tag ui-tag--plain">
+                                                <span href="#" class="ui-tag__label">BEM</span>
                                             </div>
                                         </li>
                                         <li>
-                                            <div class="ui-tag">
-                                                <a href="#" class="ui-tag__label">Another tag</a>
+                                            <div class="ui-tag ui-tag--plain">
+                                                <span href="#" class="ui-tag__label">HTML</span>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <div class="ui-tag ui-tag--plain">
+                                                <span href="#" class="ui-tag__label">Design</span>
                                             </div>
                                         </li>
                                     </ul>
-                                    <div class="ui-article-preview__date">Wednesday 2017-02-01</div>
+                                    <div class="ui-article-preview__date">2017-01-18, Wednesday</div>
                                     <a href="blog/2017-01-18-hello-living-style-guide" class="ui-button">
+                                        <span class="ui-button__label">
+                                            Read More...
+                                        </span>
+                                    </a>
+                                </article>
+                            </li>
+                            <li class="ui-article-list__item">
+                                <article class="ui-article-preview">
+                                    <h4 class="ui-article-preview__title">
+                                        <a href="blog/2015-08-04-making-a-habit-of-making-a-habit">Making a habit of making a habit</a>
+                                        </h4>
+                                    <p class="ui-article-preview__abstract ui-content">
+                                        This post about my struggle of forming habbits. This is my very first blog post I'm republishing here on my blog.
+                                    </p>
+                                    <ul class="ui-article-preview__tags">
+                                        <li>
+                                            <div class="ui-tag ui-tag--plain">
+                                                <span href="#" class="ui-tag__label">Life</span>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <div class="ui-tag ui-tag--plain">
+                                                <span href="#" class="ui-tag__label">Writing</span>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <div class="ui-tag ui-tag--plain">
+                                                <span href="#" class="ui-tag__label">Self-Improvement</span>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                    <div class="ui-article-preview__date">2015-08-04, Tuesday</div>
+                                    <a href="blog/2015-08-04-making-a-habit-of-making-a-habit" class="ui-button">
                                         <span class="ui-button__label">
                                             Read More...
                                         </span>
@@ -140,7 +158,9 @@
                                             <em>Enabling JavaScript is not required but will enhance the site experience.</em>
                                         </noscript>
 
+                                        <!--
                                         If you're concerned about how this site uses your personal data - as you should - <a href="blog/about#data-usage">visit the data usage disclosure page</a>.
+                                        -->
 
                                         Shiny!
                                     </p>
@@ -150,6 +170,9 @@
                         <div id="links" class="ui-grid__row">
                             <div class="ui-grid__col-12 ui-content">
                                 <h3>External Links</h3>
+                                <p>
+                                    I'm not in any way affiliated with the following links, I just find them useful, delightful, funny...
+                                </p>
 
                                 <h4>Useful Tools</h4>
                                 <ul>
@@ -212,11 +235,8 @@
                             <a href="blog/about#contact">Contact me</a>
                         </li>
                         <li>
-                            <a href="blog/imprint">Imprint</a>
-                            &bull;
-                            <a href="blog/imprint#data-usage">Data Usage</a>
+                            <a href="../about#imprint">Imprint</a>
                         </li>
-                        <li><a href="blog/tags">Tags</a></li>
                     </ul>
                 </nav>
             </section>

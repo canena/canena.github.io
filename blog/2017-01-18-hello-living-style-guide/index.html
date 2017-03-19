@@ -13,49 +13,28 @@
         <nav>
             <ul class="ui-layout__content ui-header">
                 <li class="ui-header__menu-item">
-                    <a class="ui-header__logo" href="#home">CANENA</a>
+                    <div class="ui-header__menu-category">
+                        Music/Life
+                    </div>
+                    <a class="ui-header__logo" href="../../">CANENA</a>
                 </li>
                 <li class="ui-header__menu-item ui-header__menu-item--active">
                     <div class="ui-header__menu-category">
-                        Music
+                        Category
                     </div>
-                    <a href="#reviews">Reviews</a>
+                    <a href="../../">Title</a>
                 </li>
                 <li class="ui-header__menu-item">
-                    <a href="#guitar">Guitar</a>
+                    <a href="#guitar">Singleton</a>
                 </li>
                 <li class="ui-header__menu-item">
                     <div class="ui-header__menu-category">
-                        Tech
+                        Another
                     </div>
-                    <a href="#elm">Elm</a>
+                    <a href="../../">Title</a>
                 </li>
                 <li class="ui-header__menu-item">
-                    <div class="ui-header__menu-category">
-                        Graphics
-                    </div>
-                    <a href="#design">Design</a>
-                </li>
-                <li class="ui-header__menu-item">
-                    <a href="#artwork">Artwork</a>
-                </li>
-                <li class="ui-header__menu-item">
-                    <div class="ui-header__menu-category">
-                        Media
-                    </div>
-                    <a href="#reading">Reading</a>
-                </li>
-                <li class="ui-header__menu-item">
-                    <a href="#movies">Movies</a>
-                </li>
-                <li class="ui-header__menu-item">
-                    <div class="ui-header__menu-category">
-                        Misc
-                    </div>
-                    <a href="#languages">Language</a>
-                </li>
-                <li class="ui-header__menu-item">
-                    <a href="#life">Life</a>
+                    <a href="../../">Design</a>
                 </li>
             </ul>
         </nav>
@@ -84,20 +63,29 @@
                             <img class="ui-user__avatar" src="../../img/ich3.jpg" alt="Closeup image of the author">
                         </div>
 
+                        <div class="ui-frontmatter__properties">
+                            <!-- EN: 228+-30 -->
+                            Reading time is approximately <em>5 minutes</em>
+                        </div>
                         <div class="ui-frontmatter__tags">
-                            <div class="ui-tag">
-                                <a href="#" class="ui-tag__label">Some tag</a>
+                            <div class="ui-tag ui-tag--plain">
+                                <span href="#" class="ui-tag__label">BEM</span>
                             </div>
                             <div class="ui-tag ui-tag--plain">
-                                <div class="ui-tag__label">Another tag</div>
+                                <span href="#" class="ui-tag__label">HTML</span>
+                            </div>
+                            <div class="ui-tag ui-tag--plain">
+                                <span href="#" class="ui-tag__label">Design</span>
+                            </div>
+                            <div class="ui-tag">
+                                <a href="#" class="ui-tag__label">Div Tag</a>
+                            </div>
+                            <div class="ui-tag ui-tag--plain">
+                                <div class="ui-tag__label">Passive Tag</div>
                             </div>
                             <button class="ui-tag">
                                 <span class="ui-tag__label">Button tag</span>
                             </button>
-                        </div>
-                        <div class="ui-frontmatter__properties">
-                            <!-- EN: 228+-30 -->
-                            Reading time is approximately <em>5 minutes</em>
                         </div>
                         <div class="ui-frontmatter__abstract">
                             
@@ -109,7 +97,7 @@
                             <h2>A Living Style Guide</h2>
                             <div class="ui-abstract">
                                 <p class="ui-abstract__content">
-                                    This is the living documentation for my own little set of <abbr title="Block Element Modifier">BEM</abbr> based CSS layout blocks being used throughout my blog.
+                                    This is the living documentation for my own little set of responsive <abbr title="Block Element Modifier">BEM</abbr> based CSS layout blocks being used throughout my blog. Don't expect any content here :-).
                                 </p>
                             </div>
                         </div>
@@ -268,7 +256,10 @@
                     </section>
                     <div class="ui-grid__col-4">
                         <section class="ui-tag-cloud">
-                            <h3>Tags</h3>
+                            <h3>Sidebar with Tags</h3>
+                            <p>
+                                Some info.
+                            </p>
                             <ul>
                                 <li>
                                     <div class="ui-tag">
@@ -520,24 +511,32 @@
         <div class="ui-layout__content">
 
             <section class="ui-grid__row">
-                <div class="ui-grid__col-6">
+                <div class="ui-grid__col-8">
                     <h4>About the author</h4>
                     <p>
-                        Some simple content for the footer of the content.
+                        I love listening to and making music myself, enjoy reading, get excited when watching a decent movie, flourish in creating artwork, marvel in coding and grocking other people's code and delight in learning anything new in general while living The Dream in the beautiful city of Leipzig, Germany. 
+                        
+                        <a href="../about">Do you want to know more?</a>
                     </p>
                 </div>
-                <nav class="ui-grid__col-3">
-                    <h4>Miscellaneous</h4>
+                <nav class="ui-grid__col-4">
+                    <h4>Sitemap</h4>
                     <ul>
-                        <li><a href="#">Contact Me</a></li>
-                        <li><a href="#">Imprint</a></li>
-                    </ul>
-                </nav>
-                <nav class="ui-grid__col-3">
-                    <h4>Some more</h4>
-                    <ul>
-                        <li><a href="#">Contact Me</a></li>
-                        <li><a href="#">Imprint</a></li>
+                        <li>
+                            <a href="../../">Home</a>
+                            &bull;
+                            <a href="../../#posts">Posts</a>
+                            &bull;
+                            <a href="../../#links">Links</a>
+                        </li>
+                        <li>
+                            <a href="../about">About</a>
+                            &bull;
+                            <a href="../about#contact">Contact me</a>
+                        </li>
+                        <li>
+                            <a href="../about#imprint">Imprint</a>
+                        </li>
                     </ul>
                 </nav>
             </section>
