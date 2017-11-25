@@ -1,11 +1,13 @@
 module Styled
     exposing
-        ( articleListItem
+        ( articleHeader
+        , articleListItem
         , frontmatter
         , defaultIntro
         , intro
         , layout
         , layoutMain
+        , mainContent
         , mainHeader
         , outro
         , passiveTag
@@ -36,9 +38,10 @@ import Html.Styled as Html
         , text
         , ul
         )
-import Html.Styled.Attributes as Attr exposing (class, styled)
+import Html.Styled.Attributes as Attr exposing (class, classList, styled)
 import Route exposing (Route(..))
 import Tagging exposing (Tag)
+import Time.Date as Date exposing (Date, Weekday(..))
 
 
 type alias InteractiveSingleRootFragment msg =
@@ -58,8 +61,66 @@ type alias Fragment msg =
     List (Html.Attribute msg) -> List (Html msg) -> List (Html msg)
 
 
-articleListItem : String -> Route -> List (Html msg) -> String -> Html msg
-articleListItem label route tags description =
+-- Utilities
+
+formatDate : Date -> String
+formatDate date =
+    let
+        dayName =
+            case Date.weekday date of
+                Mon ->
+                    "Monday"
+
+                Tue ->
+                    "Tuesday"
+
+                Wed ->
+                    "Wednesday"
+
+                Thu ->
+                    "Thursday"
+
+                Fri ->
+                    "Friday"
+
+                Sat ->
+                    "Saturday"
+
+                Sun ->
+                    "Sunday"
+    in
+    List.foldr (::)
+        []
+        [ toString (Date.year date)
+        , "-"
+        , String.padLeft 2 '0' (toString (Date.month date))
+        , "-"
+        , String.padLeft 2 '0' (toString (Date.day date))
+        , ", "
+        , dayName
+        ]
+        |> String.join ""
+
+
+-- Building blocks
+
+
+articleHeader : String -> String -> Html msg
+articleHeader title abstract =
+    styled div []
+        [ class "ui-grid__row"
+        ]
+        [ div [ class "ui-abstract" ]
+            [ h2 [] [ text title ]
+            , div [ class "ui-abstract__content" ]
+                [ text abstract
+                ]
+            ]
+        ]
+
+
+articleListItem : String -> Route -> Date -> List (Html msg) -> String -> Html msg
+articleListItem label route date tags description =
     styled li
         []
         [ class "ui-article-list__item" ]
@@ -73,7 +134,7 @@ articleListItem label route tags description =
             , ul [ class "ui-article-preview__tags" ]
                 (List.map (\x -> li [] [ x ]) tags)
             , div [ class "ui-article-preview__date" ]
-                [ text "2017-03-20, Monday" ]
+                [ text (formatDate date) ]
             , buttonLink route "Read more..."
             ]
         ]
@@ -163,7 +224,7 @@ layoutHeader attrs children =
                         [ div [ class "ui-header__menu-category" ]
                             [ text "Music/Life"
                             ]
-                        , a [ class "ui-header__logo", Attr.href "./" ]
+                        , a [ class "ui-header__logo", Route.href Home ]
                             [ text "CANENA"
                             ]
                         ]
@@ -204,6 +265,22 @@ routeLink route label =
                 [ Route.href route ]
                 [ text label
                 ]
+
+
+mainContent : List (Html msg) -> Html msg
+mainContent children =
+    styled div []
+        [ class "ui-layout__content" ]
+        (List.map mainContentSection children)
+
+
+mainContentSection : Html msg -> Html msg
+mainContentSection children =
+    div [ class "ui-grid__row" ]
+        [ section [ class "ui-grid__col-12 ui-content" ]
+            [ children
+            ]
+        ]
 
 
 mainHeader : SingleRootFragment msg
