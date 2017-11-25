@@ -1,7 +1,9 @@
 module Index exposing (decodeModel, view)
 
-import Html exposing (Html)
+import Html
+import Html.Styled exposing (Html, text, toUnstyled)
 import Json.Decode as Decode exposing (Decoder, Value)
+import Styled
 
 
 decodeModel : Decoder Model
@@ -39,6 +41,9 @@ update msg model =
     ( model, Cmd.none )
 
 
-view : Model -> Html Msg
+view : Model -> Html.Html Msg
 view model =
-    Html.text ("Hello " ++ model.who ++ "!")
+    Styled.toplevelPageFrame []
+        [ text ("Hello " ++ model.who ++ "!")
+        ]
+        |> toUnstyled
