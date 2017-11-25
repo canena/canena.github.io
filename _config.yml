@@ -1,8 +1,0 @@
-exclude: ['build', 'watch']
-#lsi: true
-markdown: redcarpet
-name: CANENA
-paginate: 5
-paginate_path: "posts/:num"
-permalink: pretty
-pygments: true
