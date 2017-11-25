@@ -43,7 +43,28 @@ update msg model =
 
 view : Model -> Html.Html Msg
 view model =
-    Styled.toplevelPageFrame []
-        [ text ("Hello " ++ model.who ++ "!")
+    Styled.toplevelLayout []
+        [ Styled.layoutMain []
+            [ Styled.mainHeader []
+                [ Styled.intro
+                    "Life/Music/Art/Code/Stuff"
+                    "A blog about life"
+                , Styled.frontmatter
+                ]
+            , Styled.posts "Recent Posts"
+                [ Styled.articleListItem "Epic Links"
+                    "blog/2017-03-20-epic-links"
+                    [ Styled.tag "Learning"
+                    , Styled.tag "Music"
+                    , Styled.tag "Self-Improvement"
+                    , Styled.tag "Tech"
+                    ]
+                    """
+                    A collection of links that I found useful, inspired me and may
+                    bring you enjoyment and/or enlightenment as well.
+                    """
+                ]
+            , Styled.outro
+            ]
         ]
         |> toUnstyled

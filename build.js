@@ -13,6 +13,7 @@ const elmStaticHtml = require("elm-static-html-lib").default;
 const CWD = __dirname;
 const ELM_PACKAGE_PATH = `${CWD}/`;
 const OUTPUT_DIR = `${CWD}/private`;
+const PAGE_TITLE = `A blog about life`;
 
 // Invariants
 
@@ -53,6 +54,6 @@ elmStaticHtml(ELM_PACKAGE_PATH, "Index.view", options)
         fs.writeFile(`${OUTPUT_DIR}/index.html`, generatePage({
             body: generatedHtml,
             styleRootDir: `../`,
-            title: `A blog about life`,
+            title: PAGE_TITLE,
         }))
     ));
