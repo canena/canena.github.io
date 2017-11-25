@@ -1,13 +1,13 @@
 module Blog.About exposing (decodeModel, main, meta, view)
 
+import Data.Meta exposing (Meta)
 import Html
-import Html.Styled exposing (text, fromUnstyled, toUnstyled)
+import Html.Styled exposing (fromUnstyled, text, toUnstyled)
 import Json.Decode as Decode exposing (Decoder, Value)
 import Markdown
 import Route exposing (Route(..), Slug(..))
 import Styled
-import Tagging exposing (Tag(..))
-import Time.Date as Date exposing (Date, date)
+import Time.Date as Date exposing (Date)
 
 
 decodeModel : Decoder Model
@@ -16,9 +16,14 @@ decodeModel =
         (Decode.field "who" Decode.string)
 
 
+meta : Meta
 meta =
-    { abstract = Nothing
-    , date = date 2017 1 18
+    { abstract = Just
+        """
+        This is my personal blog.
+        """
+    , abstractTagline = Just "What is this?"
+    , date = Date.date 2017 1 18
     , route = About
     , tags = []
     , title = "About This Blog"
@@ -41,21 +46,9 @@ type alias Model =
     }
 
 
-view : Model -> Html.Html ()
-view model =
-    Styled.layout []
-        [ Styled.layoutMain []
-            [ Styled.mainHeader []
-                [ Styled.defaultIntro
-                , Styled.frontmatter
-                , Styled.articleHeader "What is this?"
-                    """
-                    This is my personal blog.
-                    """
-                ]
-            , Styled.mainContent
-                [ Markdown.toHtml []
-                    """
+sectionProfession : String
+sectionProfession =
+    """
 
 ### My professional self
 
@@ -69,26 +62,44 @@ Currently obsessed with...
 * the <abbr title="Block Element Modifier">BEM</abbr> methodology of writing <abbr title="Cascaded Style Sheets">CSS</abbr> with a little help of <a href="https://www.lesscss.org" target="_blank">LESS</a>.
 * using <a href="http://elm-lang.org" target="_blank">Elm</a> instead of JavaScript wherever it makes sense.
 
-                    """
-                    |> fromUnstyled
-                , Markdown.toHtml []
-                    """
+    """
+
+
+sectionContent : String
+sectionContent =
+    """
 
 ### Contact
 
-If you're human, you can surely make sense of the following gibberish where you need to reverse the letters of every word __anenac (ατ) liamy • moc__.
+If you're human, you can surely make sense of the following gibberish where you need to reverse the letters of every word *anenac (ατ) liamy • moc*.
 
-                    """
-                    |> fromUnstyled
-                , Markdown.toHtml []
-                    """
+    """
+
+
+sectionImpressum : String
+sectionImpressum =
+    """
 
 ### Impressum
 
 The views expressed in this blog are my own thoughts and don't necessarily match that of my professional acquaintances like my employer or co-workers, it is a fully private endeavor. I'm not responsible for linked content that lives outside of <em>canena.de</em> and it's subdomains, the respective owner's opinions are not my own and I distance myself from them and any affiliation that is not explicitly stated on my part.
 
-                    """
-                    |> fromUnstyled
+    """
+
+
+view : Model -> Html.Html ()
+view model =
+    Styled.layout []
+        [ Styled.layoutMain []
+            [ Styled.mainHeader []
+                [ Styled.defaultIntro
+                , Styled.frontmatter meta.tags
+                , Styled.articleHeader meta.abstractTagline meta.abstract
+                ]
+            , Styled.mainContent
+                [ Markdown.toHtml [] sectionProfession |> fromUnstyled
+                , Markdown.toHtml [] sectionContent |> fromUnstyled
+                , Markdown.toHtml [] sectionImpressum |> fromUnstyled
                 ]
             , Styled.outro
             ]

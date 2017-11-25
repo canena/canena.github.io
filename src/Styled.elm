@@ -1,9 +1,9 @@
 module Styled
     exposing
         ( articleHeader
-        , articleListItem
-        , frontmatter
+        , articleListItemFromMeta
         , defaultIntro
+        , frontmatter
         , intro
         , layout
         , layoutMain
@@ -15,6 +15,7 @@ module Styled
         )
 
 import Css exposing (..)
+import Data.Meta exposing (Meta)
 import Html.Styled as Html
     exposing
         ( Attribute
@@ -61,7 +62,9 @@ type alias Fragment msg =
     List (Html.Attribute msg) -> List (Html msg) -> List (Html msg)
 
 
+
 -- Utilities
+
 
 formatDate : Date -> String
 formatDate date =
@@ -102,24 +105,31 @@ formatDate date =
         |> String.join ""
 
 
+
 -- Building blocks
 
 
-articleHeader : String -> String -> Html msg
+articleHeader : Maybe String -> Maybe String -> Html msg
 articleHeader title abstract =
-    styled div []
-        [ class "ui-grid__row"
-        ]
-        [ div [ class "ui-abstract" ]
-            [ h2 [] [ text title ]
-            , div [ class "ui-abstract__content" ]
-                [ text abstract
+    case title of
+        Nothing ->
+            text ""
+
+        Just title ->
+            styled div
+                []
+                [ class "ui-grid__row"
                 ]
-            ]
-        ]
+                [ div [ class "ui-abstract" ]
+                    [ h2 [] [ text title ]
+                    , div [ class "ui-abstract__content" ]
+                        [ text (Maybe.withDefault "" abstract)
+                        ]
+                    ]
+                ]
 
 
-articleListItem : String -> Route -> Date -> List (Html msg) -> String -> Html msg
+articleListItem : String -> Route -> Date -> List Tag -> String -> Html msg
 articleListItem label route date tags description =
     styled li
         []
@@ -132,12 +142,22 @@ articleListItem label route date tags description =
                 [ text description
                 ]
             , ul [ class "ui-article-preview__tags" ]
-                (List.map (\x -> li [] [ x ]) tags)
+                (List.map (\tag -> li [] [ passiveTag tag ]) tags)
             , div [ class "ui-article-preview__date" ]
                 [ text (formatDate date) ]
             , buttonLink route "Read more..."
             ]
         ]
+
+
+articleListItemFromMeta : Meta -> Html msg
+articleListItemFromMeta meta =
+    articleListItem
+        meta.title
+        meta.route
+        meta.date
+        meta.tags
+        (Maybe.withDefault "" meta.abstract)
 
 
 bullet : Html msg
@@ -186,8 +206,8 @@ intro title subTitle =
         ]
 
 
-frontmatter : Html msg
-frontmatter =
+frontmatter : List Tag -> Html msg
+frontmatter tags =
     styled div
         []
         [ class "ui-layout__content" ]
@@ -200,7 +220,12 @@ frontmatter =
                     ]
                     []
                 ]
+            , div [ class "ui-frontmatter__tags" ]
+                (List.map passiveTag tags)
             , div [ class "ui-frontmatter__properties" ]
+                [ text " "
+                ]
+            , div [ class "ui-frontmatter__abstract" ]
                 [ text " "
                 ]
             ]
@@ -209,7 +234,8 @@ frontmatter =
 
 layout : SingleRootFragment msg
 layout attrs children =
-    styled div []
+    styled div
+        []
         attrs
         (layoutHeader [] [] :: children)
 
@@ -269,7 +295,8 @@ routeLink route label =
 
 mainContent : List (Html msg) -> Html msg
 mainContent children =
-    styled div []
+    styled div
+        []
         [ class "ui-layout__content" ]
         (List.map mainContentSection children)
 
