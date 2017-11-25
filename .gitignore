@@ -1,0 +1,14 @@
+# elm-package generated files
+elm-stuff
+# elm-repl generated files
+repl-temp-*
+
+# colocate data that shouldn't be handled by version control
+private/
+tmp/
+
+# elm-static-html-lib stuff
+.elm-static-html
+
+# node stuf
+node_modules/

@@ -17,3 +17,4 @@ Disallow: /
 User-agent: *
 Disallow: /dev/
 Disallow: /drafts/
+Disallow: /src/
