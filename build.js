@@ -30,7 +30,7 @@ const generatePage = ({ title, body, styleRootDir }) => joinCompact([
     `<html lang="en" class="ui-layout">`,
     `<head>`,
         `<meta charset="utf-8">`,
-        `<title>${title}</title>`,
+        `<title>${title} - CANENA Blog</title>`,
         `<meta http-equiv="X-UA-Compatible" content="IE=edge">`,
         //<link href="favicon.ico" rel="shortcut icon" type="image/x-icon" />-
         `<meta name="viewport" content="width=device-width, user-scalable=yes, initial-scale=1.0, minimum-scale=1.0"/>`,

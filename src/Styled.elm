@@ -7,8 +7,8 @@ module Styled
         , layoutMain
         , mainHeader
         , outro
+        , passiveTag
         , posts
-        , tag
         , toplevelLayout
         )
 
@@ -37,6 +37,7 @@ import Html.Styled as Html
         , ul
         )
 import Html.Styled.Attributes as Attrs exposing (class, styled)
+import Tagging exposing (Tag)
 
 
 type alias InteractiveSingleRootFragment msg =
@@ -251,6 +252,14 @@ outro =
         ]
 
 
+passiveTag : Tag -> Html msg
+passiveTag thisTag =
+    div [ class "ui-tag ui-tag--plain" ]
+        [ span [ class "ui-tag__label" ]
+            [ text (Tagging.makeReadable thisTag) ]
+        ]
+
+
 posts : String -> List (Html msg) -> Html msg
 posts title articleList =
     styled div
@@ -372,14 +381,6 @@ sidebar =
                     ]
                 ]
             ]
-        ]
-
-
-tag : String -> Html msg
-tag title =
-    div [ class "ui-tag ui-tag--plain" ]
-        [ span [ class "ui-tag__label" ]
-            [ text title ]
         ]
 
 

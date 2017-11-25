@@ -4,6 +4,7 @@ import Html
 import Html.Styled exposing (Html, text, toUnstyled)
 import Json.Decode as Decode exposing (Decoder, Value)
 import Styled
+import Tagging exposing (Tag(..), allTags)
 
 
 decodeModel : Decoder Model
@@ -54,10 +55,10 @@ view model =
             , Styled.posts "Recent Posts"
                 [ Styled.articleListItem "Epic Links"
                     "blog/2017-03-20-epic-links"
-                    [ Styled.tag "Learning"
-                    , Styled.tag "Music"
-                    , Styled.tag "Self-Improvement"
-                    , Styled.tag "Tech"
+                    [ Styled.passiveTag Learning
+                    , Styled.passiveTag Music
+                    , Styled.passiveTag SelfImprovement
+                    , Styled.passiveTag Tech
                     ]
                     """
                     A collection of links that I found useful, inspired me and may
