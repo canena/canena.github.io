@@ -2,6 +2,7 @@ module Styled
     exposing
         ( articleListItem
         , frontmatter
+        , defaultIntro
         , intro
         , layout
         , layoutMain
@@ -9,7 +10,6 @@ module Styled
         , outro
         , passiveTag
         , posts
-        , toplevelLayout
         )
 
 import Css exposing (..)
@@ -36,7 +36,8 @@ import Html.Styled as Html
         , text
         , ul
         )
-import Html.Styled.Attributes as Attrs exposing (class, styled)
+import Html.Styled.Attributes as Attr exposing (class, styled)
+import Route exposing (Route(..))
 import Tagging exposing (Tag)
 
 
@@ -57,14 +58,14 @@ type alias Fragment msg =
     List (Html.Attribute msg) -> List (Html msg) -> List (Html msg)
 
 
-articleListItem : String -> String -> List (Html msg) -> String -> Html msg
-articleListItem label href tags description =
+articleListItem : String -> Route -> List (Html msg) -> String -> Html msg
+articleListItem label route tags description =
     styled li
         []
         [ class "ui-article-list__item" ]
         [ article [ class "ui-article-preview" ]
             [ h4 [ class "ui-article-preview__title" ]
-                [ internalLink href label
+                [ routeLink route label
                 ]
             , p [ class "ui-article-preview__abstract ui-content" ]
                 [ text description
@@ -73,33 +74,39 @@ articleListItem label href tags description =
                 (List.map (\x -> li [] [ x ]) tags)
             , div [ class "ui-article-preview__date" ]
                 [ text "2017-03-20, Monday" ]
-            , buttonLink href "Read more..."
+            , buttonLink route "Read more..."
             ]
         ]
 
 
 bullet : Html msg
 bullet =
-    text "•"
+    text " • "
 
 
-buttonLink : String -> String -> Html msg
-buttonLink href label =
-    a [ Attrs.href href, class "ui-button" ]
-        [ span [ class "ui-button__label" ]
-            [ text label
-            ]
-        ]
+buttonLink : Route -> String -> Html msg
+buttonLink route label =
+    case route of
+        External _ ->
+            a [ Route.href route, class "ui-button", Attr.target "_blank" ]
+                [ span [ class "ui-button__label" ]
+                    [ text label
+                    ]
+                ]
+
+        _ ->
+            a [ Route.href route, class "ui-button" ]
+                [ span [ class "ui-button__label" ]
+                    [ text label
+                    ]
+                ]
 
 
-externalLink : String -> String -> Html msg
-externalLink href linkText =
-    a
-        [ Attrs.href href
-        , Attrs.target "_blank"
-        ]
-        [ text linkText
-        ]
+defaultIntro : Html msg
+defaultIntro =
+    intro
+        "Life/Music/Art/Code/Stuff"
+        "A blog about life"
 
 
 intro : String -> String -> Html msg
@@ -126,9 +133,9 @@ frontmatter =
         [ div [ class "ui-frontmatter" ]
             [ div [ class "ui-user" ]
                 [ img
-                    [ Attrs.alt "Closeup image of the author"
+                    [ Attr.alt "Closeup image of the author"
                     , class "ui-user__avatar"
-                    , Attrs.src "img/ich3.jpg"
+                    , Attr.src "img/ich3.jpg"
                     ]
                     []
                 ]
@@ -140,8 +147,10 @@ frontmatter =
 
 
 layout : SingleRootFragment msg
-layout =
+layout attrs children =
     styled div []
+        attrs
+        (layoutHeader [] [] :: children)
 
 
 layoutHeader : SingleRootFragment msg
@@ -154,7 +163,7 @@ layoutHeader attrs children =
                         [ div [ class "ui-header__menu-category" ]
                             [ text "Music/Life"
                             ]
-                        , a [ class "ui-header__logo", Attrs.href "./" ]
+                        , a [ class "ui-header__logo", Attr.href "./" ]
                             [ text "CANENA"
                             ]
                         ]
@@ -177,12 +186,24 @@ layoutMain attrs children =
         ]
 
 
-internalLink : String -> String -> Html msg
-internalLink href title =
-    styled a
-        []
-        [ Attrs.href href ]
-        [ text title ]
+routeLink : Route -> String -> Html msg
+routeLink route label =
+    case route of
+        External _ ->
+            styled a
+                []
+                [ Attr.target "_blank"
+                , Route.href route
+                ]
+                [ text label
+                ]
+
+        _ ->
+            styled a
+                []
+                [ Route.href route ]
+                [ text label
+                ]
 
 
 mainHeader : SingleRootFragment msg
@@ -208,26 +229,26 @@ outro =
                             delight in learning anything new in general while living
                             The Dream in the beautiful city of Leipzig, Germany.
                             """
-                        , internalLink "blog/about" "Do you want to know more?"
+                        , routeLink Route.About "Do you want to know more?"
                         ]
                     ]
                 , nav [ class "ui-grid__col-4" ]
                     [ h4 [] [ text "Sitemap" ]
                     , ul []
                         [ li []
-                            [ internalLink "./" "Home"
+                            [ routeLink Route.Home "Home"
                             , bullet
-                            , internalLink "./#posts" "Posts"
+                            , routeLink Route.Posts "Posts"
                             , bullet
-                            , internalLink "./#links" "Links"
+                            , routeLink Route.Links "Links"
                             ]
                         , li []
-                            [ internalLink "blog/about" "About"
+                            [ routeLink Route.About "About"
                             , bullet
-                            , internalLink "blog/about#contact" "Contact Me"
+                            , routeLink Route.Contact "Contact Me"
                             ]
                         , li []
-                            [ internalLink "blog/about#impressum" "Impressum"
+                            [ routeLink Route.Impressum "Impressum"
                             ]
                         ]
                     ]
@@ -265,7 +286,7 @@ posts title articleList =
     styled div
         []
         [ class "ui-layout__content" ]
-        [ div [ Attrs.id "posts", class "ui-grid__row" ]
+        [ div [ Attr.id "posts", class "ui-grid__row" ]
             [ section [ class "ui-grid__col-8 ui-article-list" ]
                 [ h3 [] [ text title ]
                 , ul [] articleList
@@ -295,7 +316,7 @@ sidebar =
                     ]
                 ]
             ]
-        , div [ Attrs.id "links", class "ui-grid__row" ]
+        , div [ Attr.id "links", class "ui-grid__row" ]
             [ div [ class "ui-grid__col-12 ui-content" ]
                 [ h3 [] [ text "External Links" ]
                 , p []
@@ -308,83 +329,77 @@ sidebar =
                 , h4 [] [ text "Useful Tools" ]
                 , ul []
                     [ li []
-                        [ externalLink
-                            "http://caniuse.com"
+                        [ routeLink
+                            (External "http://caniuse.com")
                             "caniuse.com"
                         ]
                     , li []
-                        [ externalLink
-                            "http://css-tricks.com"
+                        [ routeLink
+                            (External "http://css-tricks.com")
                             "css-tricks.com"
                         ]
                     ]
                 , h4 [] [ text "Favorite Developer Blogs" ]
                 , ul []
                     [ li []
-                        [ externalLink
-                            "https://ayende.com"
+                        [ routeLink
+                            (External "https://ayende.com")
                             "ayende.com"
                         ]
                     , li []
-                        [ externalLink
-                            "http://blog.ploeh.dk/"
+                        [ routeLink
+                            (External "http://blog.ploeh.dk/")
                             "blog.ploeh.dk"
                         ]
                     , li []
-                        [ externalLink
-                            "https://cuttingedge.it/blogs/steven/"
+                        [ routeLink
+                            (External "https://cuttingedge.it/blogs/steven/")
                             "cuttingedge.it/blogs/steven"
                         ]
                     , li []
-                        [ externalLink
-                            "https://ericlippert.com"
+                        [ routeLink
+                            (External "https://ericlippert.com")
                             "ericlippert.com"
                         ]
                     ]
                 , h4 [] [ text "Daily Dose" ]
                 , ul []
                     [ li []
-                        [ externalLink
-                            "https://aeon.co"
+                        [ routeLink
+                            (External "https://aeon.co")
                             "Aeon | ideas and culture"
                         ]
                     , li []
-                        [ externalLink
-                            "https://groups.google.com/forum/#!forum/elm-dev"
+                        [ routeLink
+                            (External "https://groups.google.com/forum/#!forum/elm-dev")
                             "elm-dev"
                         ]
                     , li []
-                        [ externalLink
-                            "https://groups.google.com/forum/#!forum/elm-discuss"
+                        [ routeLink
+                            (External "https://groups.google.com/forum/#!forum/elm-discuss")
                             "elm-discuss"
                         ]
                     , li []
-                        [ externalLink
-                            "https://news.ycombinator.com/newest"
+                        [ routeLink
+                            (External "https://news.ycombinator.com/newest")
                             "news.ycombinator.com/newest"
                         ]
                     , li []
-                        [ externalLink
-                            "https://www.reddit.com/r/elm/new"
+                        [ routeLink
+                            (External "https://www.reddit.com/r/elm/new")
                             "reddit.com/r/elm/new"
                         ]
                     , li []
-                        [ externalLink
-                            "https://www.reddit.com/r/java/new"
+                        [ routeLink
+                            (External "https://www.reddit.com/r/java/new")
                             "reddit.com/r/java/new"
                         ]
                     , li []
-                        [ externalLink
-                            "https://www.reddit.com/r/javascript/new"
+                        [ routeLink
+                            (External "https://www.reddit.com/r/javascript/new")
                             "reddit.com/r/javascript/new"
                         ]
                     ]
                 ]
             ]
         ]
-
-
-toplevelLayout : SingleRootFragment msg
-toplevelLayout attrs children =
-    layout attrs
-        (layoutHeader [] [] :: children)

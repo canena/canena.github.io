@@ -1,10 +1,11 @@
-module Index exposing (decodeModel, view)
+module Home exposing (decodeModel, main, view)
 
 import Html
 import Html.Styled exposing (Html, text, toUnstyled)
 import Json.Decode as Decode exposing (Decoder, Value)
+import Route exposing (Route(..), Slug(..))
 import Styled
-import Tagging exposing (Tag(..), allTags)
+import Tagging exposing (Tag(..))
 
 
 decodeModel : Decoder Model
@@ -18,43 +19,28 @@ type alias Model =
     }
 
 
-type Msg
-    = Bootstrap
-
-
-main : Program Never Model Msg
+main : Program Never Model ()
 main =
-    Html.program
-        { init = init
-        , subscriptions = \_ -> Sub.none
-        , update = update
+    Html.beginnerProgram
+        { model =
+            { who = "No-One"
+            }
+        , update = \_ model -> model
         , view = view
         }
 
 
-init : ( Model, Cmd Msg )
-init =
-    ( { who = "No-One" }, Cmd.none )
-
-
-update : Msg -> Model -> ( Model, Cmd Msg )
-update msg model =
-    ( model, Cmd.none )
-
-
-view : Model -> Html.Html Msg
+view : Model -> Html.Html ()
 view model =
-    Styled.toplevelLayout []
+    Styled.layout []
         [ Styled.layoutMain []
             [ Styled.mainHeader []
-                [ Styled.intro
-                    "Life/Music/Art/Code/Stuff"
-                    "A blog about life"
+                [ Styled.defaultIntro
                 , Styled.frontmatter
                 ]
             , Styled.posts "Recent Posts"
                 [ Styled.articleListItem "Epic Links"
-                    "blog/2017-03-20-epic-links"
+                      (Article Blog_2017_03_20_epic_links)
                     [ Styled.passiveTag Learning
                     , Styled.passiveTag Music
                     , Styled.passiveTag SelfImprovement

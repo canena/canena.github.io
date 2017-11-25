@@ -44,12 +44,12 @@ const generatePage = ({ title, body, styleRootDir }) => joinCompact([
 
 const model = { who: "World" };
 const options = {
-    decoder: "Index.decodeModel",
+    decoder: "Home.decodeModel",
     indent: 0,
     model : model,
 };
 
-elmStaticHtml(ELM_PACKAGE_PATH, "Index.view", options)
+elmStaticHtml(ELM_PACKAGE_PATH, "Home.view", options)
     .then(generatedHtml => (
         fs.writeFile(`${OUTPUT_DIR}/index.html`, generatePage({
             body: generatedHtml,
