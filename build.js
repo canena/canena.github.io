@@ -50,7 +50,7 @@ const generatePageMarkup = ({ title, body, styleRootDir }) => joinCompact([
     `</html>`,
 ]);
 
-const renderPage = ({ isToplevel, moduleName, model, styleRootDir, title }) => (
+const renderPage = ({ isToplevel, moduleName, model, title }) => (
     elmStaticHtml(ELM_PACKAGE_PATH, `${moduleName}.view`, {
         decoder: `${moduleName}.decodeModel`,
         indent: 0,
@@ -62,7 +62,7 @@ const renderPage = ({ isToplevel, moduleName, model, styleRootDir, title }) => (
                 : `${ARTICLE_DIR}/index.html`,
             generatePageMarkup({
                 body: generatedHtml,
-                styleRootDir,
+                styleRootDir: isToplevel ? `../` : `../../`,
                 title,
             }),
         "utf-8")
@@ -72,35 +72,30 @@ const renderPage = ({ isToplevel, moduleName, model, styleRootDir, title }) => (
 // Do it...
 
 Promise.all([
-    //renderPage({
-    //    isToplevel: true,
-    //    model: { who: "World" },
-    //    moduleName: "Home",
-    //    styleRootDir: `../`,
-    //    title: PAGE_TITLE,
-    //}),
+    renderPage({
+        isToplevel: true,
+        model: { who: "World" },
+        moduleName: "Home",
+        title: PAGE_TITLE,
+    }),
     //renderPage({
     //    model: { who: "World" },
     //    moduleName: "Blog.About",
-    //    styleRootDir: `../../`,
     //    title: PAGE_TITLE,
     //}),
     //renderPage({
     //    model: { who: "World" },
     //    moduleName: "Blog.EpicLinks",
-    //    styleRootDir: `../../`,
     //    title: PAGE_TITLE,
     //}),
     //renderPage({
     //    model: { who: "World" },
     //    moduleName: "Blog.HelloLivingStyleguide",
-    //    styleRootDir: `../../`,
     //    title: PAGE_TITLE,
     //}),
-    renderPage({
-        model: { who: "World" },
-        moduleName: "Blog.MakingAHabitOfMakingAHabit",
-        styleRootDir: `../../`,
-        title: PAGE_TITLE,
-    }),
+    //renderPage({
+    //    model: { who: "World" },
+    //    moduleName: "Blog.MakingAHabitOfMakingAHabit",
+    //    title: PAGE_TITLE,
+    //}),
 ]).catch(err => console.error(err));

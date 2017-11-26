@@ -11,12 +11,6 @@ import Tagging exposing (Tag(..))
 import Time.Date as Date exposing (Date)
 
 
-decodeModel : Decoder Model
-decodeModel =
-    Decode.map Model
-        (Decode.field "who" Decode.string)
-
-
 meta : Meta
 meta =
     { abstract = Just
@@ -33,6 +27,12 @@ meta =
         ]
     , title = "Making a habit of making a habit"
     }
+
+
+decodeModel : Decoder Model
+decodeModel =
+    Decode.map Model
+        (Decode.field "who" Decode.string)
 
 
 main : Program Never Model ()

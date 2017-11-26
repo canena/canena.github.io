@@ -227,7 +227,7 @@ frontmatter tags =
                     []
                 ]
             , div [ class "ui-frontmatter__properties" ]
-                [ text "Nothing here yet..."
+                [ text "This line is not that useful right now..."
                 ]
             , div [ class "ui-frontmatter__tags" ]
                 (List.map passiveTag tags)
