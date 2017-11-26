@@ -1,59 +1,62 @@
 {
-    "name": "canena.github.io",
-    "version": "0.1.0",
-    "description": "A blog about life",
-    "main": "build.js",
-    "scripts": {
-        "test": "echo \"Error: no test specified\" && exit 1"
+  "name": "canena.github.io",
+  "version": "0.3.0",
+  "description": "A blog about life",
+  "main": "build.js",
+  "scripts": {
+    "build": "NODE_ENV=production node build.js",
+    "debug": "NODE_ENV=debug node build.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/canena/canena.github.io.git"
+  },
+  "keywords": [
+    "blog",
+    "music",
+    "code",
+    "programming",
+    "elm"
+  ],
+  "author": "Martin Feineis",
+  "license": "BSD-3-Clause",
+  "bugs": {
+    "url": "https://github.com/canena/canena.github.io/issues"
+  },
+  "homepage": "https://github.com/canena/canena.github.io#readme",
+  "devDependencies": {},
+  "dependencies": {
+    "bluebird": "^3.5.1",
+    "elm-static-html-lib": "0.0.9-alpha.2",
+    "ramda": "^0.25.0"
+  },
+  "eslintConfig": {
+    "env": {
+      "es6": true
     },
-    "repository": {
-        "type": "git",
-        "url": "git+https://github.com/canena/canena.github.io.git"
-    },
-    "keywords": [
-        "blog",
-        "music",
-        "code",
-        "programming",
-        "elm"
+    "plugins": [
+      "fp"
     ],
-    "author": "Martin Feineis",
-    "license": "BSD-3-Clause",
-    "bugs": {
-        "url": "https://github.com/canena/canena.github.io/issues"
-    },
-    "homepage": "https://github.com/canena/canena.github.io#readme",
-    "devDependencies": {},
-    "dependencies": {
-        "elm-static-html-lib": "0.0.9-alpha.2",
-        "ramda": "^0.25.0"
-    },
-    "eslintConfig": {
-        "env": {
-            "es6": true
-        },
-        "plugins": [
-            "fp"
-        ],
-        "rules": {
-            "fp/no-arguments": "error",
-            "fp/no-class": "error",
-            "fp/no-delete": "error",
-            "fp/no-events": "error",
-            "fp/no-get-set": "error",
-            "fp/no-let": "error",
-            "fp/no-loops": "error",
-            "fp/no-mutating-assign": "error",
-            "fp/no-mutating-methods": "error",
-            "fp/no-mutation": "error",
-            "fp/no-nil": "error",
-            "fp/no-proxy": "error",
-            "fp/no-rest-parameters": "error",
-            "fp/no-this": "error",
-            "fp/no-throw": "error",
-            "fp/no-unused-expression": "error",
-            "fp/no-valueof-field": "error",
-            "no-var": "error"
-        }
+    "rules": {
+      "fp/no-arguments": "error",
+      "fp/no-class": "error",
+      "fp/no-delete": "error",
+      "fp/no-events": "error",
+      "fp/no-get-set": "error",
+      "fp/no-let": "error",
+      "fp/no-loops": "error",
+      "fp/no-mutating-assign": "error",
+      "fp/no-mutating-methods": "error",
+      "fp/no-mutation": "error",
+      "fp/no-nil": "error",
+      "fp/no-proxy": "error",
+      "fp/no-rest-parameters": "error",
+      "fp/no-this": "error",
+      "fp/no-throw": "error",
+      "fp/no-unused-expression": "error",
+      "fp/no-valueof-field": "error",
+      "no-var": "error"
     }
+  }
 }

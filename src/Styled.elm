@@ -252,7 +252,7 @@ layoutHeader attrs children =
         staticChildren =
             [ nav []
                 [ ul [ class "ui-layout__content ui-header" ]
-                    [ li [ class "ui-header__menu-item ui-header__menu-item--active" ]
+                    [ li [ class "ui-header__menu-item x-ui-header__menu-item--active" ]
                         [ div [ class "ui-header__menu-category" ]
                             [ text "Music/Life"
                             ]
@@ -344,7 +344,7 @@ outro =
                             delight in learning anything new in general while living
                             The Dream in the beautiful city of Leipzig, Germany.
                             """
-                        , routeLink (Route.Article About) "Do you want to know more?"
+                        , routeLink (Route.Article Blog_About) "Do you want to know more?"
                         ]
                     ]
                 , nav [ class "ui-grid__col-4" ]
@@ -358,7 +358,7 @@ outro =
                             , routeLink Route.Links "Links"
                             ]
                         , li []
-                            [ routeLink (Route.Article About) "About"
+                            [ routeLink (Route.Article Blog_About) "About"
                             , bullet
                             , routeLink Route.Contact "Contact Me"
                             ]

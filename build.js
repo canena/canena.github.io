@@ -5,17 +5,23 @@ const path = require("path");
 
 // External libraries
 
-const { contains, join, replace, toLower } = require("ramda");
+const { contains, join, map, pipe, replace, toLower } = require("ramda");
 const elmStaticHtml = require("elm-static-html-lib").default;
+const { promisify } = require("bluebird");
+
+const liftedReaddir = promisify(fs.readdir);
 
 // Constants
 
+console.log(`NODE_ENV: ${process.env.NODE_ENV}`);
+
 const CWD = __dirname;
-const DEBUG = true;
+const DEBUG = toLower(process.env.NODE_ENV) === 'debug';
 const ELM_PACKAGE_PATH = `${CWD}/`;
 const SRC_DIR = `${CWD}/src`;
 const OUTPUT_DIR = `${CWD}/private`;
-const ARTICLE_DIR = `${CWD}/private/blog`;
+const ARTICLE_SRC_DIR_NAME = `Blog`;
+const ARTICLE_SRC_DIR = `${SRC_DIR}/${ARTICLE_SRC_DIR_NAME}`;
 const PAGE_TITLE = `A blog about life`;
 const CODE_STYLE = `dracula`; // default, github, vs, vs2015
 
@@ -23,10 +29,6 @@ const CODE_STYLE = `dracula`; // default, github, vs, vs2015
 
 if (!fs.existsSync(OUTPUT_DIR)) {
     fs.mkdir(OUTPUT_DIR);
-}
-
-if (!fs.existsSync(ARTICLE_DIR)) {
-    fs.mkdir(ARTICLE_DIR);
 }
 
 // Utilities
@@ -64,7 +66,7 @@ const renderPage = ({ isToplevel, moduleName, modulePath, model, route, title })
     }).then(generatedHtml => {
         const filePathRaw = isToplevel
               ? `${OUTPUT_DIR}/index.html`
-              : `${ARTICLE_DIR}/${route}/index.html`;
+              : `${OUTPUT_DIR}${route}/index.html`;
 
         const filePath = toLower(filePathRaw);
         const fileDir = path.dirname(filePath);
@@ -88,7 +90,6 @@ const renderPage = ({ isToplevel, moduleName, modulePath, model, route, title })
                 }),
                 `utf-8`
             );
-            trace(`generated ${moduleName}.`);
         } catch (e) {
             fail(`Failed generating ${moduleName}.`);
             throw e;
@@ -168,36 +169,13 @@ const dispatch = (moduleName, title = null, route = null) => (
     })
 );
 
-// Do it...
+// First building the home page then the rest follows
+dispatch(`Home`, `Welcome to my blog`, `/`).then(() => (
+    liftedReaddir(ARTICLE_SRC_DIR).then(pipe(
+        map(replace(/\.elm$/i, ``)),
+        map(file => `${ARTICLE_SRC_DIR_NAME}.${file}`)
+    )).then(articles => (
+        Promise.all(map(dispatch, articles))
+    ))
+)).catch(err => fail(err.message));
 
-Promise.all([
-    dispatch(`Home`, `Welcome to my blog`, `/`),
-    dispatch(`Blog.About`),
-    //renderPage({
-    //    isToplevel: true,
-    //    model: { who: `World` },
-    //    moduleName: `Home`,
-    //    modulePath: getModulePath(`Home`),
-    //    title: PAGE_TITLE,
-    //}),
-    //renderPage({
-    //    model: { who: "World" },
-    //    moduleName: "Blog.About",
-    //    title: PAGE_TITLE,
-    //}),
-    //renderPage({
-    //    model: { who: "World" },
-    //    moduleName: "Blog.EpicLinks",
-    //    title: PAGE_TITLE,
-    //}),
-    //renderPage({
-    //    model: { who: "World" },
-    //    moduleName: "Blog.HelloLivingStyleguide",
-    //    title: PAGE_TITLE,
-    //}),
-    //renderPage({
-    //    model: { who: "World" },
-    //    moduleName: "Blog.MakingAHabitOfMakingAHabit",
-    //    title: PAGE_TITLE,
-    //}),
-]).catch(err => fail(err.message));

@@ -17,14 +17,14 @@ meta =
         """
         This is the living documentation for my own little set of responsive Block Element Modifier (BEM) based CSS layout blocks being used throughout my blog. Don't expect any content here :-).
         """
-    , abstractTagline = Just "A Living Styleguide"
+    , abstractTagline = Just "Hello Living Styleguide"
     , date = Date.date 2017 1 18
     , route = Article Blog_2017_01_18_hello_living_styleguide
     , tags =
         [ Misc "BEM"
         , Misc "HTML"
         ]
-    , title = "A Living Styleguide"
+    , title = "Hello Living Styleguide"
     }
 
 

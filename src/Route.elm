@@ -7,7 +7,7 @@ import Regex exposing (HowMany(..), Match, Regex)
 
 
 type Slug
-    = About
+    = Blog_About
     | Blog_2017_03_20_epic_links
     | Blog_2017_01_18_hello_living_styleguide
     | Blog_2015_08_04_making_a_habit_of_making_a_habit
@@ -31,7 +31,7 @@ href route =
 routeToString : Route -> String
 routeToString route =
     case route of
-        Article About ->
+        Article Blog_About ->
             "/blog/about"
 
         Article slug ->

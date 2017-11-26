@@ -18,7 +18,7 @@ meta =
         """
     , abstractTagline = Just "What is this?"
     , date = Date.date 2017 1 18
-    , route = Article About
+    , route = Article Blog_About
     , tags = []
     , title = "About This Blog"
     }

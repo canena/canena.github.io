@@ -4,6 +4,7 @@ import Blog.About
 import Blog.EpicLinks
 import Blog.HelloLivingStyleguide
 import Blog.MakingAHabitOfMakingAHabit
+import Data.Meta exposing (Meta)
 import Html
 import Html.Styled exposing (Html, text, toUnstyled)
 import Json.Decode as Decode exposing (Decoder, Value)
@@ -32,6 +33,31 @@ main =
         }
 
 
+
+-- Keeping these collections even for pages that aren't
+-- published for the compiler to cover all code changes
+-- when using `elm-reactor`
+
+
+drafts : List Meta
+drafts =
+    []
+
+
+staticPages : List Meta
+staticPages =
+    [ Blog.About.meta
+    ]
+
+
+published : List Meta
+published =
+    [ Blog.EpicLinks.meta
+    , Blog.HelloLivingStyleguide.meta
+    , Blog.MakingAHabitOfMakingAHabit.meta
+    ]
+
+
 view : Model -> Html.Html ()
 view model =
     Styled.layout []
@@ -41,12 +67,7 @@ view model =
                 , Styled.frontmatter (Just "../img/ich3.jpg") []
                 ]
             , Styled.posts "Recent Posts"
-                (List.map Styled.articleListItemFromMeta
-                    [ Blog.EpicLinks.meta
-                    , Blog.HelloLivingStyleguide.meta
-                    , Blog.MakingAHabitOfMakingAHabit.meta
-                    ]
-                )
+                (List.map Styled.articleListItemFromMeta published)
             ]
         , Styled.outro
         ]
