@@ -19,7 +19,7 @@ meta =
         """
     , abstractTagline = Just "Hello Living Styleguide"
     , date = Date.date 2017 1 18
-    , route = Article Blog_2017_01_18_hello_living_styleguide
+    , route = Article Blog_2017_01_18_hello_living_style_guide
     , tags =
         [ Misc "BEM"
         , Misc "HTML"

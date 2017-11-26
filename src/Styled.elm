@@ -229,7 +229,7 @@ frontmatter avatarHref tags =
                 [ img
                     [ Attr.alt "Closeup image of the author"
                     , class "ui-user__avatar"
-                    , Attr.src (Maybe.withDefault "../../../img/ich3.jpg" avatarHref)
+                    , Attr.src (Maybe.withDefault "../../img/ich3.jpg" avatarHref)
                     ]
                     []
                 ]
@@ -424,6 +424,31 @@ sidebar =
                             This is my personal blog covering various topics from music
                             to design, programming, life itself and more.
                             """
+                         , p []
+                            [ h4 [ Attr.id "data-usage" ] [ text "Data Usage Disclosure" ]
+                            , text
+                                """
+                                This is a static site, I don't collect any data myself
+                                although these pages are hosted somewhere and they might
+                                be keeping track of you.
+
+                                Enabling JavaScript is not required but might enhance the site experience by...
+                                """
+                            , ul []
+                                [ li []
+                                    [ text "providing code syntax highlighting powered by"
+                                    , routeLink (External "https://highlightjs.org/") "highlight.js"
+                                    ]
+                                , li [] [ text "nothing else as of now :-)" ]
+                                ]
+                            ]
+                         , Html.node "noscript" []
+                              [ p []
+                                  [ Html.em []
+                                      [ text "You seem to have disabled JavaScript."
+                                      ]
+                                  ]
+                              ]
                         , text "Shiny!"
                         ]
                     ]

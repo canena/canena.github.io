@@ -25,7 +25,9 @@
     "url": "https://github.com/canena/canena.github.io/issues"
   },
   "homepage": "https://github.com/canena/canena.github.io#readme",
-  "devDependencies": {},
+  "devDependencies": {
+    "html-minifier": "^3.5.7"
+  },
   "dependencies": {
     "bluebird": "^3.5.1",
     "elm-static-html-lib": "0.0.9-alpha.2",

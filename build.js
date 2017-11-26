@@ -5,6 +5,7 @@ const path = require("path");
 
 // External libraries
 
+const { minify } = require('html-minifier');
 const { contains, join, map, pipe, replace, toLower } = require("ramda");
 const elmStaticHtml = require("elm-static-html-lib").default;
 const { promisify } = require("bluebird");
@@ -19,11 +20,11 @@ const CWD = __dirname;
 const DEBUG = toLower(process.env.NODE_ENV) === 'debug';
 const ELM_PACKAGE_PATH = `${CWD}/`;
 const SRC_DIR = `${CWD}/src`;
-const OUTPUT_DIR = `${CWD}/private`;
+const OUTPUT_DIR = `${CWD}`;
 const ARTICLE_SRC_DIR_NAME = `Blog`;
 const ARTICLE_SRC_DIR = `${SRC_DIR}/${ARTICLE_SRC_DIR_NAME}`;
 const PAGE_TITLE = `A blog about life`;
-const CODE_STYLE = `dracula`; // default, github, vs, vs2015
+const CODE_STYLE = `vs2015`; // default, dracula, github, vs, vs2015
 
 // Invariants
 
@@ -38,6 +39,15 @@ const trace = (...rest) => console.log(`> `, ...rest);
 const fail = (...rest) => console.error(`> `, rest);
 
 const joinCompact = join(``);
+const minifyHTML = html => (
+    minify(html, {
+        collapseWhitespace: true,
+        minifyCSS: true,
+        minifyJS: true,
+        removeAttributeQuotes: true,
+        removeComments: true,
+    })
+);
 
 const generatePageMarkup = ({ title, body, styleRootDir }) => joinCompact([
     `<!DOCTYPE html>`,
@@ -84,8 +94,8 @@ const renderPage = ({ isToplevel, moduleName, modulePath, model, route, title })
             fs.writeFile(
                 filePath,
                 generatePageMarkup({
-                    body: prefix + generatedHtml,
-                    styleRootDir: isToplevel ? `../` : `../../../`,
+                    body: prefix + minifyHTML(generatedHtml),
+                    styleRootDir: isToplevel ? `./` : `../../`,
                     title,
                 }),
                 `utf-8`

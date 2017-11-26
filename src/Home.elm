@@ -64,7 +64,7 @@ view model =
         [ Styled.layoutMain []
             [ Styled.mainHeader []
                 [ Styled.defaultIntro
-                , Styled.frontmatter (Just "../img/ich3.jpg") []
+                , Styled.frontmatter (Just "./img/ich3.jpg") []
                 ]
             , Styled.posts "Recent Posts"
                 (List.map Styled.articleListItemFromMeta published)
