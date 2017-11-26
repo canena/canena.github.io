@@ -85,10 +85,22 @@ Promise.all([
     //    styleRootDir: `../../`,
     //    title: PAGE_TITLE,
     //}),
+    //renderPage({
+    //    model: { who: "World" },
+    //    moduleName: "Blog.EpicLinks",
+    //    styleRootDir: `../../`,
+    //    title: PAGE_TITLE,
+    //}),
+    //renderPage({
+    //    model: { who: "World" },
+    //    moduleName: "Blog.HelloLivingStyleguide",
+    //    styleRootDir: `../../`,
+    //    title: PAGE_TITLE,
+    //}),
     renderPage({
         model: { who: "World" },
-        moduleName: "Blog.EpicLinks",
+        moduleName: "Blog.MakingAHabitOfMakingAHabit",
         styleRootDir: `../../`,
         title: PAGE_TITLE,
     }),
-]);
+]).catch(err => console.error(err));

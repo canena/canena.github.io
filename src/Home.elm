@@ -1,7 +1,8 @@
 module Home exposing (decodeModel, main, view)
 
-import Blog.About
 import Blog.EpicLinks
+import Blog.HelloLivingStyleguide
+import Blog.MakingAHabitOfMakingAHabit
 import Html
 import Html.Styled exposing (Html, text, toUnstyled)
 import Json.Decode as Decode exposing (Decoder, Value)
@@ -41,10 +42,11 @@ view model =
             , Styled.posts "Recent Posts"
                 (List.map Styled.articleListItemFromMeta
                     [ Blog.EpicLinks.meta
-                    , Blog.About.meta
+                    , Blog.HelloLivingStyleguide.meta
+                    , Blog.MakingAHabitOfMakingAHabit.meta
                     ]
                 )
-            , Styled.outro
             ]
+        , Styled.outro
         ]
         |> toUnstyled

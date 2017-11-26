@@ -1,20 +1,34 @@
 module Tagging exposing (Tag(..), allTags, makeReadable)
 
 type Tag
-    = Learning
+    = Design
+    | Learning
+    | Life
+    | Misc String
     | Music
     | SelfImprovement
     | Tech
+    | Writing
 
 
+-- Misc intentionally omitted
 allTags : List Tag
 allTags =
-    [ Learning
+    [ Design
+    , Learning
+    , Life
     , Music
     , SelfImprovement
     , Tech
+    , Writing
     ]
+
 
 makeReadable : Tag -> String
 makeReadable tag =
-    toString tag
+    case tag of
+        Misc topic ->
+            topic
+
+        _ ->
+            toString tag

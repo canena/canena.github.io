@@ -8,6 +8,8 @@ import Regex exposing (HowMany(..), Match, Regex)
 
 type Slug
     = Blog_2017_03_20_epic_links
+    | Blog_2017_01_18_hello_living_styleguide
+    | Blog_2015_08_04_making_a_habit_of_making_a_habit
 
 
 type Route

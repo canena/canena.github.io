@@ -40,6 +40,7 @@ import Html.Styled as Html
         , ul
         )
 import Html.Styled.Attributes as Attr exposing (class, classList, styled)
+import Json.Encode as Encode
 import Route exposing (Route(..))
 import Tagging exposing (Tag)
 import Time.Date as Date exposing (Date, Weekday(..))
@@ -111,19 +112,24 @@ formatDate date =
 
 articleHeader : Maybe String -> Maybe String -> Html msg
 articleHeader title abstract =
-    case title of
+    case abstract of
         Nothing ->
             text ""
 
-        Just title ->
+        Just abstract ->
             styled div
                 []
-                [ class "ui-grid__row"
-                ]
-                [ div [ class "ui-abstract" ]
-                    [ h2 [] [ text title ]
-                    , div [ class "ui-abstract__content" ]
-                        [ text (Maybe.withDefault "" abstract)
+                [ class "ui-layout__content" ]
+                [ div
+                    [ class "ui-grid__row"
+                    ]
+                    [ div [ class "ui-grid__col-12" ]
+                        [ h2 [] [ text (Maybe.withDefault "" title) ]
+                        , div [ class "ui-abstract" ]
+                            [ div [ class "ui-abstract__content" ]
+                                [ text abstract
+                                ]
+                            ]
                         ]
                     ]
                 ]
@@ -216,15 +222,15 @@ frontmatter tags =
                 [ img
                     [ Attr.alt "Closeup image of the author"
                     , class "ui-user__avatar"
-                    , Attr.src "img/ich3.jpg"
+                    , Attr.src "../img/ich3.jpg"
                     ]
                     []
                 ]
+            , div [ class "ui-frontmatter__properties" ]
+                [ text "Nothing here yet..."
+                ]
             , div [ class "ui-frontmatter__tags" ]
                 (List.map passiveTag tags)
-            , div [ class "ui-frontmatter__properties" ]
-                [ text " "
-                ]
             , div [ class "ui-frontmatter__abstract" ]
                 [ text " "
                 ]
@@ -271,6 +277,11 @@ layoutMain attrs children =
         (class "ui-layout__main" :: attrs)
         [ article [] children
         ]
+
+
+nbsp : Html msg
+nbsp =
+    span [ Attr.property "innerHTML" (Encode.string "&nbsp;") ] []
 
 
 routeLink : Route -> String -> Html msg
@@ -487,6 +498,11 @@ sidebar =
                         [ routeLink
                             (External "https://news.ycombinator.com/newest")
                             "news.ycombinator.com/newest"
+                        ]
+                    , li []
+                        [ routeLink
+                            (External "https://www.reddit.com/r/csharp/new")
+                            "reddit.com/r/elm/csharp"
                         ]
                     , li []
                         [ routeLink

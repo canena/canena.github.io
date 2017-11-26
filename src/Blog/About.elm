@@ -46,11 +46,31 @@ type alias Model =
     }
 
 
+view : Model -> Html.Html ()
+view model =
+    Styled.layout []
+        [ Styled.layoutMain []
+            [ Styled.mainHeader []
+                [ Styled.defaultIntro
+                , Styled.frontmatter meta.tags
+                , Styled.articleHeader meta.abstractTagline meta.abstract
+                ]
+            , Styled.mainContent
+                [ Markdown.toHtml [] sectionProfession |> fromUnstyled
+                , Markdown.toHtml [] sectionContent |> fromUnstyled
+                , Markdown.toHtml [] sectionImpressum |> fromUnstyled
+                ]
+            ]
+        , Styled.outro
+        ]
+        |> toUnstyled
+
+
 sectionProfession : String
 sectionProfession =
     """
 
-### My professional self
+<h3>My professional self</h3>
 
 I'm a software developer by trait...
 
@@ -69,7 +89,7 @@ sectionContent : String
 sectionContent =
     """
 
-### Contact
+<h3 id="contact">Contact</h3>
 
 If you're human, you can surely make sense of the following gibberish where you need to reverse the letters of every word *anenac (ατ) liamy • moc*.
 
@@ -80,28 +100,10 @@ sectionImpressum : String
 sectionImpressum =
     """
 
-### Impressum
+<h3 id="impressum">Impressum</h3>
 
 The views expressed in this blog are my own thoughts and don't necessarily match that of my professional acquaintances like my employer or co-workers, it is a fully private endeavor. I'm not responsible for linked content that lives outside of <em>canena.de</em> and it's subdomains, the respective owner's opinions are not my own and I distance myself from them and any affiliation that is not explicitly stated on my part.
 
     """
 
 
-view : Model -> Html.Html ()
-view model =
-    Styled.layout []
-        [ Styled.layoutMain []
-            [ Styled.mainHeader []
-                [ Styled.defaultIntro
-                , Styled.frontmatter meta.tags
-                , Styled.articleHeader meta.abstractTagline meta.abstract
-                ]
-            , Styled.mainContent
-                [ Markdown.toHtml [] sectionProfession |> fromUnstyled
-                , Markdown.toHtml [] sectionContent |> fromUnstyled
-                , Markdown.toHtml [] sectionImpressum |> fromUnstyled
-                ]
-            , Styled.outro
-            ]
-        ]
-        |> toUnstyled
