@@ -64,12 +64,14 @@ view model =
                 , Styled.articleHeader meta.abstractTagline meta.abstract
                 ]
             , Styled.mainContent
-                [ Markdown.toHtml [] sectionDisclaimer |> fromUnstyled
-                , Markdown.toHtml [] sectionGroupArticles |> fromUnstyled
-                , Markdown.toHtml [] sectionGroupTalks |> fromUnstyled
+                [ Styled.articleContent
+                    [ Markdown.toHtml [] sectionDisclaimer |> fromUnstyled
+                    , Markdown.toHtml [] sectionGroupArticles |> fromUnstyled
+                    , Markdown.toHtml [] sectionGroupTalks |> fromUnstyled
+                    ]
                 ]
-            , Styled.outro
             ]
+        , Styled.outro
         ]
         |> toUnstyled
 
@@ -80,7 +82,9 @@ sectionDisclaimer =
 
 <h3>Disclaimer</h3>
 
+<p>
 I'm not in any way affiliated with the following links, I just find them useful, delightful, funny...
+</p>
 
 
     """

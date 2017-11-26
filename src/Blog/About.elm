@@ -56,9 +56,11 @@ view model =
                 , Styled.articleHeader meta.abstractTagline meta.abstract
                 ]
             , Styled.mainContent
-                [ Markdown.toHtml [] sectionProfession |> fromUnstyled
-                , Markdown.toHtml [] sectionContent |> fromUnstyled
-                , Markdown.toHtml [] sectionImpressum |> fromUnstyled
+                [ Styled.articleContent
+                    [ Markdown.toHtml [] sectionProfession |> fromUnstyled
+                    , Markdown.toHtml [] sectionContent |> fromUnstyled
+                    , Markdown.toHtml [] sectionImpressum |> fromUnstyled
+                    ]
                 ]
             ]
         , Styled.outro
@@ -72,15 +74,29 @@ sectionProfession =
 
 <h3>My professional self</h3>
 
+<p>
 I'm a software developer by trait...
+</p>
 
-* with an abundance of experience in building frontends in <abbr title="Hypertext Markup Language">HTML</abbr>, <abbr title="Cascaded Style Sheets">CSS</abbr> and JavaScript as well as a great number of libraries and frameworks that build on top of this foundation.
-* having experience building backends with <abbr title="The C Sharp programming language">C#</abbr> for most of my professional web projects.
+<ul>
+    <li>
+    with an abundance of experience in building frontends in <abbr title="Hypertext Markup Language">HTML</abbr>, <abbr title="Cascaded Style Sheets">CSS</abbr> and JavaScript as well as a great number of libraries and frameworks that build on top of this foundation.
+    </li>
+    <li>
+    having experience building backends with <abbr title="The C Sharp programming language">C#</abbr> for most of my professional web projects.
+    </li>
+</ul>
 
 Currently obsessed with...
 
-* the <abbr title="Block Element Modifier">BEM</abbr> methodology of writing <abbr title="Cascaded Style Sheets">CSS</abbr> with a little help of <a href="https://www.lesscss.org" target="_blank">LESS</a>.
-* using <a href="http://elm-lang.org" target="_blank">Elm</a> instead of JavaScript wherever it makes sense.
+<ul>
+    <li>
+    the <abbr title="Block Element Modifier">BEM</abbr> methodology of writing <abbr title="Cascaded Style Sheets">CSS</abbr> with a little help of <a href="https://www.lesscss.org" target="_blank">LESS</a>.
+    </li>
+    <li>
+    using <a href="http://elm-lang.org" target="_blank">Elm</a> instead of JavaScript wherever it makes sense.
+    </li>
+</ul>
 
     """
 
@@ -91,7 +107,9 @@ sectionContent =
 
 <h3 id="contact">Contact</h3>
 
+<p>
 If you're human, you can surely make sense of the following gibberish where you need to reverse the letters of every word *anenac (ατ) liamy • moc*.
+</p>
 
     """
 
@@ -102,7 +120,9 @@ sectionImpressum =
 
 <h3 id="impressum">Impressum</h3>
 
+<p>
 The views expressed in this blog are my own thoughts and don't necessarily match that of my professional acquaintances like my employer or co-workers, it is a fully private endeavor. I'm not responsible for linked content that lives outside of <em>canena.de</em> and it's subdomains, the respective owner's opinions are not my own and I distance myself from them and any affiliation that is not explicitly stated on my part.
+</p>
 
     """
 

@@ -1,6 +1,7 @@
 module Styled
     exposing
-        ( articleHeader
+        ( articleContent
+        , articleHeader
         , articleListItemFromMeta
         , defaultIntro
         , frontmatter
@@ -108,6 +109,12 @@ formatDate date =
 
 
 -- Building blocks
+
+
+articleContent : List (Html msg) -> Html msg
+articleContent =
+    styled div []
+        [ class "ui-content" ]
 
 
 articleHeader : Maybe String -> Maybe String -> Html msg
@@ -309,16 +316,7 @@ mainContent children =
     styled div
         []
         [ class "ui-layout__content" ]
-        (List.map mainContentSection children)
-
-
-mainContentSection : Html msg -> Html msg
-mainContentSection children =
-    div [ class "ui-grid__row" ]
-        [ section [ class "ui-grid__col-12 ui-content" ]
-            [ children
-            ]
-        ]
+        children
 
 
 mainHeader : SingleRootFragment msg
