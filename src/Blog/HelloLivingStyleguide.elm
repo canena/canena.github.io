@@ -56,7 +56,7 @@ view model =
         [ Styled.layoutMain []
             [ Styled.mainHeader []
                 [ Styled.intro "Some Grand Intro" "And Subscript"
-                , Styled.frontmatter meta.tags
+                , Styled.frontmatter Nothing meta.tags
                 , Styled.articleHeader meta.abstractTagline meta.abstract
                 ]
             , Styled.mainContent

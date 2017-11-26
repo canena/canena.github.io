@@ -22,7 +22,7 @@ meta =
     , route = Article Blog_2015_08_04_making_a_habit_of_making_a_habit
     , tags =
         [ Life
-        , SelfImprovement
+        , Selfimprovement
         , Writing
         ]
     , title = "Making a habit of making a habit"
@@ -59,7 +59,7 @@ view model =
                 [ Styled.intro
                       "Habbits are a tricky thing"
                       "Intentionally left blank"
-                , Styled.frontmatter meta.tags
+                , Styled.frontmatter Nothing meta.tags
                 , Styled.articleHeader meta.abstractTagline meta.abstract
                 ]
             , Styled.mainContent

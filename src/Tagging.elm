@@ -6,7 +6,7 @@ type Tag
     | Life
     | Misc String
     | Music
-    | SelfImprovement
+    | Selfimprovement
     | Tech
     | Writing
 
@@ -18,7 +18,7 @@ allTags =
     , Learning
     , Life
     , Music
-    , SelfImprovement
+    , Selfimprovement
     , Tech
     , Writing
     ]

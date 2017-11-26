@@ -41,7 +41,7 @@ import Html.Styled as Html
         )
 import Html.Styled.Attributes as Attr exposing (class, classList, styled)
 import Json.Encode as Encode
-import Route exposing (Route(..))
+import Route exposing (Route(..), Slug(..))
 import Tagging exposing (Tag)
 import Time.Date as Date exposing (Date, Weekday(..))
 
@@ -212,8 +212,8 @@ intro title subTitle =
         ]
 
 
-frontmatter : List Tag -> Html msg
-frontmatter tags =
+frontmatter : Maybe String -> List Tag -> Html msg
+frontmatter avatarHref tags =
     styled div
         []
         [ class "ui-layout__content" ]
@@ -222,7 +222,7 @@ frontmatter tags =
                 [ img
                     [ Attr.alt "Closeup image of the author"
                     , class "ui-user__avatar"
-                    , Attr.src "../img/ich3.jpg"
+                    , Attr.src (Maybe.withDefault "../../../img/ich3.jpg" avatarHref)
                     ]
                     []
                 ]
@@ -344,7 +344,7 @@ outro =
                             delight in learning anything new in general while living
                             The Dream in the beautiful city of Leipzig, Germany.
                             """
-                        , routeLink Route.About "Do you want to know more?"
+                        , routeLink (Route.Article About) "Do you want to know more?"
                         ]
                     ]
                 , nav [ class "ui-grid__col-4" ]
@@ -358,7 +358,7 @@ outro =
                             , routeLink Route.Links "Links"
                             ]
                         , li []
-                            [ routeLink Route.About "About"
+                            [ routeLink (Route.Article About) "About"
                             , bullet
                             , routeLink Route.Contact "Contact Me"
                             ]
@@ -377,7 +377,7 @@ outro =
                             ]
                         ]
                     , div [ class "ui-grid__col-4" ]
-                        [ p [ class "ui-outro__punchline" ]
+                        [ p [ class "ui-outro__copyright" ]
                             [ text
                                 "© 2017 CANENA - All rights reserved"
                             ]

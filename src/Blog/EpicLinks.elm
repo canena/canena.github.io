@@ -11,16 +11,11 @@ import Tagging exposing (Tag(..))
 import Time.Date as Date exposing (Date)
 
 
-decodeModel : Decoder Model
-decodeModel =
-    Decode.map Model
-        (Decode.field "who" Decode.string)
-
-
 meta : Meta
 meta =
-    { abstract = Just
-        """
+    { abstract =
+        Just
+            """
         A collection of links that I found useful, inspired me and may bring
         you enjoyment and/or enlightenment as well.
         """
@@ -30,11 +25,17 @@ meta =
     , tags =
         [ Learning
         , Music
-        , SelfImprovement
+        , Selfimprovement
         , Tech
         ]
     , title = "Epic Links"
     }
+
+
+decodeModel : Decoder Model
+decodeModel =
+    Decode.map Model
+        (Decode.field "who" Decode.string)
 
 
 main : Program Never Model ()
@@ -51,6 +52,26 @@ main =
 type alias Model =
     { who : String
     }
+
+
+view : Model -> Html.Html ()
+view model =
+    Styled.layout []
+        [ Styled.layoutMain []
+            [ Styled.mainHeader []
+                [ Styled.intro "Epic Links" "My inspirations on the web"
+                , Styled.frontmatter Nothing meta.tags
+                , Styled.articleHeader meta.abstractTagline meta.abstract
+                ]
+            , Styled.mainContent
+                [ Markdown.toHtml [] sectionDisclaimer |> fromUnstyled
+                , Markdown.toHtml [] sectionGroupArticles |> fromUnstyled
+                , Markdown.toHtml [] sectionGroupTalks |> fromUnstyled
+                ]
+            , Styled.outro
+            ]
+        ]
+        |> toUnstyled
 
 
 sectionDisclaimer : String
@@ -154,23 +175,3 @@ sectionGroupTalks =
 </ul>
 
     """
-
-
-view : Model -> Html.Html ()
-view model =
-    Styled.layout []
-        [ Styled.layoutMain []
-            [ Styled.mainHeader []
-                [ Styled.intro "Epic Links" "My inspirations on the web"
-                , Styled.frontmatter meta.tags
-                , Styled.articleHeader meta.abstractTagline meta.abstract
-                ]
-            , Styled.mainContent
-                [ Markdown.toHtml [] sectionDisclaimer |> fromUnstyled
-                , Markdown.toHtml [] sectionGroupArticles |> fromUnstyled
-                , Markdown.toHtml [] sectionGroupTalks |> fromUnstyled
-                ]
-            , Styled.outro
-            ]
-        ]
-        |> toUnstyled

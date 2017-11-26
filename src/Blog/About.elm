@@ -18,7 +18,7 @@ meta =
         """
     , abstractTagline = Just "What is this?"
     , date = Date.date 2017 1 18
-    , route = About
+    , route = Article About
     , tags = []
     , title = "About This Blog"
     }
@@ -52,7 +52,7 @@ view model =
         [ Styled.layoutMain []
             [ Styled.mainHeader []
                 [ Styled.defaultIntro
-                , Styled.frontmatter meta.tags
+                , Styled.frontmatter Nothing meta.tags
                 , Styled.articleHeader meta.abstractTagline meta.abstract
                 ]
             , Styled.mainContent
