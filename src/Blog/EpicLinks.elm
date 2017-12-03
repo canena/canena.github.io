@@ -112,6 +112,13 @@ sectionGroupArticles =
 </ul>
 
 
+<h4>Imagination</h4>
+
+<ul>
+    <li><span class="ui-content__last-update">[2017-12-03]</span><a href="https://theconversation.com/blind-in-the-mind-why-some-people-cant-see-pictures-in-their-imagination-86849" target="_blank">Blind in the Mind - Why Some People can't see pictures in their imagination</a></li>
+</ul>
+
+
 <h4>Reading</h4>
 
 <ul>
