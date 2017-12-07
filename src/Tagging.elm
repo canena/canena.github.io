@@ -1,5 +1,6 @@
 module Tagging exposing (Tag(..), allTags, makeReadable)
 
+
 type Tag
     = Design
     | Learning
@@ -11,7 +12,10 @@ type Tag
     | Writing
 
 
+
 -- Misc intentionally omitted
+
+
 allTags : List Tag
 allTags =
     [ Design

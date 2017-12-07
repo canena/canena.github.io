@@ -37,10 +37,11 @@ import Html.Styled as Html
         , p
         , section
         , span
+        , styled
         , text
         , ul
         )
-import Html.Styled.Attributes as Attr exposing (class, classList, styled)
+import Html.Styled.Attributes as Attr exposing (class, classList)
 import Json.Encode as Encode
 import Route exposing (Route(..), Slug(..))
 import Tagging exposing (Tag)
@@ -113,7 +114,8 @@ formatDate date =
 
 articleContent : List (Html msg) -> Html msg
 articleContent =
-    styled div []
+    styled div
+        []
         [ class "ui-content" ]
 
 
@@ -424,7 +426,7 @@ sidebar =
                             This is my personal blog covering various topics from music
                             to design, programming, life itself and more.
                             """
-                         , p []
+                        , p []
                             [ h4 [ Attr.id "data-usage" ] [ text "Data Usage Disclosure" ]
                             , text
                                 """
@@ -442,13 +444,14 @@ sidebar =
                                 , li [] [ text "nothing else as of now :-)" ]
                                 ]
                             ]
-                         , Html.node "noscript" []
-                              [ p []
-                                  [ Html.em []
-                                      [ text "You seem to have disabled JavaScript."
-                                      ]
-                                  ]
-                              ]
+                        , Html.node "noscript"
+                            []
+                            [ p []
+                                [ Html.em []
+                                    [ text "You seem to have disabled JavaScript."
+                                    ]
+                                ]
+                            ]
                         , text "Shiny!"
                         ]
                     ]

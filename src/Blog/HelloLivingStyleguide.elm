@@ -2,9 +2,33 @@ module Blog.HelloLivingStyleguide exposing (decodeModel, main, meta, view)
 
 import Data.Meta exposing (Meta)
 import Html
-import Html.Styled exposing (fromUnstyled, text, toUnstyled)
+import Html.Styled
+    exposing
+        ( Html
+        , a
+        , article
+        , button
+        , div
+        , form
+        , h3
+        , h4
+        , input
+        , label
+        , li
+        , main_
+        , optgroup
+        , option
+        , p
+        , section
+        , select
+        , span
+        , text
+        , textarea
+        , toUnstyled
+        , ul
+        )
+import Html.Styled.Attributes exposing (attribute, class, href, name, placeholder, type_, value)
 import Json.Decode as Decode exposing (Decoder, Value)
-import Markdown
 import Route exposing (Route(..), Slug(..))
 import Styled
 import Tagging exposing (Tag(..))
@@ -13,9 +37,12 @@ import Time.Date as Date exposing (Date)
 
 meta : Meta
 meta =
-    { abstract = Just
+    { abstract =
+        Just
         """
-        This is the living documentation for my own little set of responsive Block Element Modifier (BEM) based CSS layout blocks being used throughout my blog. Don't expect any content here :-).
+        This is the living documentation for my own little set of responsive
+        Block Element Modifier (BEM) based CSS layout blocks being used throughout
+        my blog. Don't expect any content here :-).
         """
     , abstractTagline = Just "Hello Living Styleguide"
     , date = Date.date 2017 1 18
@@ -59,414 +86,376 @@ view model =
                 , Styled.frontmatter Nothing meta.tags
                 , Styled.articleHeader meta.abstractTagline meta.abstract
                 ]
-            , Styled.mainContent
-                [ Markdown.toHtml [] legacyContent |> fromUnstyled
-                ]
+            , Styled.mainContent legacyContent
             ]
         , Styled.outro
         ]
         |> toUnstyled
 
 
-legacyContent : String
+legacyContent : List (Html msg)
 legacyContent =
-    """
-
-<div class="ui-grid__row">
-    <section class="ui-grid__col-8 ui-article-list">
-        <h3>Recent posts</h3>
-        <ul>
-            <li class="ui-article-list__item">
-                <article class="ui-article-preview">
-                    <h4 class="ui-article-preview__title">
-                        <a href="#">Second post</a>
-                        </h4>
-                    <p class="ui-article-preview__abstract">
-                        The first lines of this post that gives the reader an idea what to expect from this post.
-                    </p>
-                    <ul class="ui-article-preview__tags">
-                        <li>
-                            <div class="ui-tag">
-                                <a href="#" class="ui-tag__label">Some tag</a>
-                            </div>
-                        </li>
-                        <li>
-                            <div class="ui-tag">
-                                <a href="#" class="ui-tag__label">Another tag</a>
-                            </div>
-                        </li>
-                    </ul>
-                    <div class="ui-article-preview__date">Wednesday 2017-02-01</div>
-                    <a href="#" class="ui-button">
-                        <span class="ui-button__label">
-                            Read More...
-                        </span>
-                    </a>
-                </article>
-            </li>
-            <li class="ui-article-list__item">
-                <article class="ui-article-preview">
-                    <h4 class="ui-article-preview__title"><a href="#">First post</a></h4>
-                    <p class="ui-article-preview__abstract">
-                        The first lines of this post that gives the reader an idea what to expect from this post.
-                    </p>
-                    <ul class="ui-article-preview__tags">
-                        <li>
-                            <div class="ui-tag">
-                                <a href="#" class="ui-tag__label">Some tag</a>
-                            </div>
-                        </li>
-                        <li>
-                            <div class="ui-tag">
-                                <a href="#" class="ui-tag__label">Another tag</a>
-                            </div>
-                        </li>
-                    </ul>
-                    <div class="ui-article-preview__date">Wednesday 2017-02-01</div>
-                    <a href="#" class="ui-button">
-                        <span class="ui-button__label">
-                            Read More...
-                        </span>
-                    </a>
-                </article>
-            </li>
-            <li class="ui-article-list__item">
-                <article class="ui-article-preview x-ui-article-preview--size-compact">
-                    <h4 class="ui-article-preview__title">
-                        <a href="#">An older post with a really long title that just might wrap around</a>
-                    </h4>
-                    <p class="ui-article-preview__abstract">
-                        The first lines of this post that gives the reader an idea what to expect from this post.
-                    </p>
-                    <ul class="ui-article-preview__tags">
-                        <li>
-                            <div class="ui-tag">
-                                <a href="#" class="ui-tag__label">Some tag</a>
-                            </div>
-                        </li>
-                        <li>
-                            <div class="ui-tag">
-                                <a href="#" class="ui-tag__label">Another tag</a>
-                            </div>
-                        </li>
-                    </ul>
-                    <div class="ui-article-preview__date">Wednesday 2017-02-01</div>
-                    <a href="#" class="ui-button">
-                        <span class="ui-button__label">
-                            Read More...
-                        </span>
-                    </a>
-                </article>
-            </li>
-            <li class="ui-article-list__item">
-                <article class="ui-article-preview x-ui-article-preview--size-compact">
-                    <h4 class="ui-article-preview__title">
-                        <a href="#">An even older post</a>
-                    </h4>
-                    <p class="ui-article-preview__abstract">
-                        The first lines of this post that gives the reader an idea what to expect from this post.
-                    </p>
-                    <ul class="ui-article-preview__tags">
-                        <li>
-                            <div class="ui-tag">
-                                <a href="#" class="ui-tag__label">Some tag</a>
-                            </div>
-                        </li>
-                        <li>
-                            <div class="ui-tag">
-                                <a href="#" class="ui-tag__label">Another tag</a>
-                            </div>
-                        </li>
-                    </ul>
-                    <div class="ui-article-preview__date">Wednesday 2017-02-01</div>
-                    <a href="#" class="ui-button">
-                        <span class="ui-button__label">
-                            Read More...
-                        </span>
-                    </a>
-                </article>
-            </li>
-            <li class="ui-article-list__item">
-                <article class="ui-article-preview x-ui-article-preview--size-compact">
-                    <h4 class="ui-article-preview__title">
-                        <a href="#">The oldest post</a>
-                    </h4>
-                    <!--
-                    <p class="ui-article-preview__abstract">
-                        The first lines of this post that gives the reader an idea what to expect from this post.
-                    </p>
-                    -->
-                    <ul class="ui-article-preview__tags">
-                        <li>
-                            <div class="ui-tag">
-                                <a href="#" class="ui-tag__label">Some tag</a>
-                            </div>
-                        </li>
-                        <li>
-                            <div class="ui-tag">
-                                <a href="#" class="ui-tag__label">Another tag</a>
-                            </div>
-                        </li>
-                    </ul>
-                    <!--
-                    <div class="ui-article-preview__date">Wednesday 2017-02-01</div>
-                    -->
-                    <a href="#" class="ui-button">
-                        <span class="ui-button__label">
-                            Read More...
-                        </span>
-                    </a>
-                </article>
-            </li>
-        </ul>
-    </section>
-    <div class="ui-grid__col-4">
-        <section class="ui-tag-cloud">
-            <h3>Sidebar with Tags</h3>
-            <p>
-                Some info.
-            </p>
-            <ul>
-                <li>
-                    <div class="ui-tag">
-                        <a href="#" class="ui-tag__label">Some tag</a>
-                    </div>
-                </li>
-                <li>
-                    <div class="ui-tag">
-                        <a href="#" class="ui-tag__label">Another tag</a>
-                    </div>
-                </li>
-            </ul>
-        </section>
-
-    </div>
-</div>
-
-<section>
-    <div class="ui-grid__row">
-        <div class="ui-grid__col-12">
-            <h3>Grid</h3>
-            <p>
-                The default grid is using up to 12 flexbox columns.
-            </p>
-        </div>
-    </div>
-
-    <div class="ui-grid__row">
-        <div class="ui-grid__col-1">
-            Col-1
-        </div>
-        <div class="ui-grid__col-11">
-            Col-11
-        </div>
-    </div>
-
-    <div class="ui-grid__row">
-        <div class="ui-grid__col-2">
-            Col-2
-        </div>
-        <div class="ui-grid__col-10">
-            Col-10
-        </div>
-    </div>
-
-    <div class="ui-grid__row">
-        <div class="ui-grid__col-3">
-            Col-3
-        </div>
-        <div class="ui-grid__col-9">
-            Col-9
-        </div>
-    </div>
-
-    <div class="ui-grid__row">
-        <div class="ui-grid__col-4">
-            Col-4
-        </div>
-        <div class="ui-grid__col-8">
-            Col-8
-        </div>
-    </div>
-
-    <div class="ui-grid__row">
-        <div class="ui-grid__col-5">
-            Col-5
-        </div>
-        <div class="ui-grid__col-7">
-            Col-7
-        </div>
-    </div>
-
-    <div class="ui-grid__row">
-        <div class="ui-grid__col-6">
-            Col-6
-        </div>
-        <div class="ui-grid__col-6">
-            Col-6
-        </div>
-    </div>
-
-    <div class="ui-grid__row">
-        <div class="ui-grid__col-7">
-            Col-7
-        </div>
-        <div class="ui-grid__col-5">
-            Col-5
-        </div>
-    </div>
-
-    <div class="ui-grid__row">
-        <div class="ui-grid__col-8">
-            Col-8
-        </div>
-        <div class="ui-grid__col-4">
-            Col-4
-        </div>
-    </div>
-
-    <div class="ui-grid__row">
-        <div class="ui-grid__col-9">
-            Col-9
-        </div>
-        <div class="ui-grid__col-3">
-            Col-3
-        </div>
-    </div>
-
-    <div class="ui-grid__row">
-        <div class="ui-grid__col-10">
-            Col-10
-        </div>
-        <div class="ui-grid__col-2">
-            Col-2
-        </div>
-    </div>
-
-    <div class="ui-grid__row">
-        <div class="ui-grid__col-11">
-            Col-11
-        </div>
-        <div class="ui-grid__col-1">
-            Col-1
-        </div>
-    </div>
-
-    <div class="ui-grid__row">
-        <div class="ui-grid__col-12">
-            Fullsize (col-12)
-        </div>
-    </div>
-</section>
-
-<div class="ui-grid__row">
-    <section class="ui-grid__col-6">
-        <h3>Buttons</h3>
-        <p>
-            Inline tex with
-
-            <button class="ui-button">
-                <span class="ui-button__label">Real Button Button</span>
-            </button>
-
-            <button class="ui-button ui-button--primary">
-                <span class="ui-button__label">Primary Button</span>
-            </button>
-
-            <button class="ui-button ui-button--secondary">
-                <span class="ui-button__label">Secondary Button</span>
-            </button>
-
-            <a href="#" class="ui-button">
-                <span class="ui-button__label">Link Button</span>
-            </a>
-
-            <button class="ui-button ui-button--disabled" disabled="disabled">
-                <span class="ui-button__label">Inactive Button</span>
-            </button>
-        </p>
-    </section>
-    <section class="ui-grid__col-6">
-
-        <form class="ui-form">
-            <h3>Forms</h3>
-
-            <label class="ui-form__group">
-                <span class="ui-form__group-label">Simple Textinput</span>
-                <input class="ui-form__text" type="text" name="simple-text" placeholder="Simple text..." value="">
-
-                <button type="submit" class="ui-button">
-                    <span class="ui-button__label">OK</span>
-                </button>
-            </label>
-
-            <label class="ui-form__group">
-                <input class="ui-form__checkbox" type="checkbox"
-                name="check1"
-                >
-                <span class="ui-form__group-label">Simple Checkbox</span>
-            </label>
-
-            <label class="ui-form__group">
-                <input class="ui-form__checkbox ui-form__checkbox--disabled" type="checkbox"
-                name="check2" disabled="disabled">
-                <span class="ui-form__group-label">Simple Checkbox</span>
-            </label>
-
-            <label class="ui-form__group">
-                <input class="ui-form__radio" type="radio"
-                name="radio1"
-                value="value1"
-                >
-                <span class="ui-form__group-label">Option 1</span>
-            </label>
-
-            <label class="ui-form__group">
-                <input class="ui-form__radio" type="radio"
-                name="radio1"
-                value="value2"
-                >
-                <span class="ui-form__group-label">Option 2</span>
-            </label>
-
-            <label class="ui-form__group">
-                <input class="ui-form__radio ui-form__radio--disabled" disabled="disabled" type="radio"
-                name="radio1"
-                value="value3"
-                >
-                <span class="ui-form__group-label">Option 2</span>
-            </label>
-
-            <label class="ui-form__group">
-                <span class="ui-form__group-label">Some text</span>
-                <textarea class="ui-form__textarea" 
-                name="textarea"
-                value="value2"
-                ></textarea>
-            </label>
-
-            <label class="ui-form__group">
-                <span class="ui-form__group-label">Some text</span>
-                <select name="select1" class="ui-form__select">
-                    <option value="1">1</option>
-                    <optgroup label="Section 2">
-                        <option value="2.1">2.1</option>
-                        <option value="2.2">2.2</option>
-                    </optgroup>
-                    <optgroup label="Section 3">
-                        <option value="3.1">3.1</option>
-                        <option value="3.2">3.2</option>
-                        <option value="3.3">3.3</option>
-                    </optgroup>
-                </select>
-            </label>
-
-            <button type="submit" class="ui-button">
-                <span class="ui-button__label">Submit</span>
-            </button>
-        </form>
-
-    </section>
-</div>
-
-    """
+    [ div [ class "ui-grid__row" ]
+        [ section [ class "ui-grid__col-8 ui-article-list" ]
+            [ h3 []
+                [ text "Recent posts" ]
+            , ul []
+                [ li [ class "ui-article-list__item" ]
+                    [ article [ class "ui-article-preview" ]
+                        [ h4 [ class "ui-article-preview__title" ]
+                            [ a [ href "#" ]
+                                [ text "Second post" ]
+                            ]
+                        , p [ class "ui-article-preview__abstract" ]
+                            [ text "The first lines of this post that gives the reader an idea what to expect from this post.                    " ]
+                        , ul [ class "ui-article-preview__tags" ]
+                            [ li []
+                                [ div [ class "ui-tag" ]
+                                    [ a [ class "ui-tag__label", href "#" ]
+                                        [ text "Some tag" ]
+                                    ]
+                                ]
+                            , li []
+                                [ div [ class "ui-tag" ]
+                                    [ a [ class "ui-tag__label", href "#" ]
+                                        [ text "Another tag" ]
+                                    ]
+                                ]
+                            ]
+                        , div [ class "ui-article-preview__date" ]
+                            [ text "Wednesday 2017-02-01" ]
+                        , a [ class "ui-button", href "#" ]
+                            [ span [ class "ui-button__label" ]
+                                [ text "Read More...                        " ]
+                            ]
+                        ]
+                    ]
+                , li [ class "ui-article-list__item" ]
+                    [ article [ class "ui-article-preview" ]
+                        [ h4 [ class "ui-article-preview__title" ]
+                            [ a [ href "#" ]
+                                [ text "First post" ]
+                            ]
+                        , p [ class "ui-article-preview__abstract" ]
+                            [ text "The first lines of this post that gives the reader an idea what to expect from this post.                    " ]
+                        , ul [ class "ui-article-preview__tags" ]
+                            [ li []
+                                [ div [ class "ui-tag" ]
+                                    [ a [ class "ui-tag__label", href "#" ]
+                                        [ text "Some tag" ]
+                                    ]
+                                ]
+                            , li []
+                                [ div [ class "ui-tag" ]
+                                    [ a [ class "ui-tag__label", href "#" ]
+                                        [ text "Another tag" ]
+                                    ]
+                                ]
+                            ]
+                        , div [ class "ui-article-preview__date" ]
+                            [ text "Wednesday 2017-02-01" ]
+                        , a [ class "ui-button", href "#" ]
+                            [ span [ class "ui-button__label" ]
+                                [ text "Read More...                        " ]
+                            ]
+                        ]
+                    ]
+                , li [ class "ui-article-list__item" ]
+                    [ article [ class "ui-article-preview x-ui-article-preview--size-compact" ]
+                        [ h4 [ class "ui-article-preview__title" ]
+                            [ a [ href "#" ]
+                                [ text "An older post with a really long title that just might wrap around" ]
+                            ]
+                        , p [ class "ui-article-preview__abstract" ]
+                            [ text "The first lines of this post that gives the reader an idea what to expect from this post.                    " ]
+                        , ul [ class "ui-article-preview__tags" ]
+                            [ li []
+                                [ div [ class "ui-tag" ]
+                                    [ a [ class "ui-tag__label", href "#" ]
+                                        [ text "Some tag" ]
+                                    ]
+                                ]
+                            , li []
+                                [ div [ class "ui-tag" ]
+                                    [ a [ class "ui-tag__label", href "#" ]
+                                        [ text "Another tag" ]
+                                    ]
+                                ]
+                            ]
+                        , div [ class "ui-article-preview__date" ]
+                            [ text "Wednesday 2017-02-01" ]
+                        , a [ class "ui-button", href "#" ]
+                            [ span [ class "ui-button__label" ]
+                                [ text "Read More...                        " ]
+                            ]
+                        ]
+                    ]
+                , li [ class "ui-article-list__item" ]
+                    [ article [ class "ui-article-preview x-ui-article-preview--size-compact" ]
+                        [ h4 [ class "ui-article-preview__title" ]
+                            [ a [ href "#" ]
+                                [ text "An even older post" ]
+                            ]
+                        , p [ class "ui-article-preview__abstract" ]
+                            [ text "The first lines of this post that gives the reader an idea what to expect from this post.                    " ]
+                        , ul [ class "ui-article-preview__tags" ]
+                            [ li []
+                                [ div [ class "ui-tag" ]
+                                    [ a [ class "ui-tag__label", href "#" ]
+                                        [ text "Some tag" ]
+                                    ]
+                                ]
+                            , li []
+                                [ div [ class "ui-tag" ]
+                                    [ a [ class "ui-tag__label", href "#" ]
+                                        [ text "Another tag" ]
+                                    ]
+                                ]
+                            ]
+                        , div [ class "ui-article-preview__date" ]
+                            [ text "Wednesday 2017-02-01" ]
+                        , a [ class "ui-button", href "#" ]
+                            [ span [ class "ui-button__label" ]
+                                [ text "Read More...                        " ]
+                            ]
+                        ]
+                    ]
+                , li [ class "ui-article-list__item" ]
+                    [ article [ class "ui-article-preview x-ui-article-preview--size-compact" ]
+                        [ h4 [ class "ui-article-preview__title" ]
+                            [ a [ href "#" ]
+                                [ text "The oldest post" ]
+                            ]
+                        , ul [ class "ui-article-preview__tags" ]
+                            [ li []
+                                [ div [ class "ui-tag" ]
+                                    [ a [ class "ui-tag__label", href "#" ]
+                                        [ text "Some tag" ]
+                                    ]
+                                ]
+                            , li []
+                                [ div [ class "ui-tag" ]
+                                    [ a [ class "ui-tag__label", href "#" ]
+                                        [ text "Another tag" ]
+                                    ]
+                                ]
+                            ]
+                        , a [ class "ui-button", href "#" ]
+                            [ span [ class "ui-button__label" ]
+                                [ text "Read More...                        " ]
+                            ]
+                        ]
+                    ]
+                ]
+            ]
+        , div [ class "ui-grid__col-4" ]
+            [ section [ class "ui-tag-cloud" ]
+                [ h3 []
+                    [ text "Sidebar with Tags" ]
+                , p []
+                    [ text "Some info.            " ]
+                , ul []
+                    [ li []
+                        [ div [ class "ui-tag" ]
+                            [ a [ class "ui-tag__label", href "#" ]
+                                [ text "Some tag" ]
+                            ]
+                        ]
+                    , li []
+                        [ div [ class "ui-tag" ]
+                            [ a [ class "ui-tag__label", href "#" ]
+                                [ text "Another tag" ]
+                            ]
+                        ]
+                    ]
+                ]
+            ]
+        ]
+    , section []
+        [ div [ class "ui-grid__row" ]
+            [ div [ class "ui-grid__col-12" ]
+                [ h3 []
+                    [ text "Grid" ]
+                , p []
+                    [ text "The default grid is using up to 12 flexbox columns.            " ]
+                ]
+            ]
+        , div [ class "ui-grid__row" ]
+            [ div [ class "ui-grid__col-1" ]
+                [ text "Col-1        " ]
+            , div [ class "ui-grid__col-11" ]
+                [ text "Col-11        " ]
+            ]
+        , div [ class "ui-grid__row" ]
+            [ div [ class "ui-grid__col-2" ]
+                [ text "Col-2        " ]
+            , div [ class "ui-grid__col-10" ]
+                [ text "Col-10        " ]
+            ]
+        , div [ class "ui-grid__row" ]
+            [ div [ class "ui-grid__col-3" ]
+                [ text "Col-3        " ]
+            , div [ class "ui-grid__col-9" ]
+                [ text "Col-9        " ]
+            ]
+        , div [ class "ui-grid__row" ]
+            [ div [ class "ui-grid__col-4" ]
+                [ text "Col-4        " ]
+            , div [ class "ui-grid__col-8" ]
+                [ text "Col-8        " ]
+            ]
+        , div [ class "ui-grid__row" ]
+            [ div [ class "ui-grid__col-5" ]
+                [ text "Col-5        " ]
+            , div [ class "ui-grid__col-7" ]
+                [ text "Col-7        " ]
+            ]
+        , div [ class "ui-grid__row" ]
+            [ div [ class "ui-grid__col-6" ]
+                [ text "Col-6        " ]
+            , div [ class "ui-grid__col-6" ]
+                [ text "Col-6        " ]
+            ]
+        , div [ class "ui-grid__row" ]
+            [ div [ class "ui-grid__col-7" ]
+                [ text "Col-7        " ]
+            , div [ class "ui-grid__col-5" ]
+                [ text "Col-5        " ]
+            ]
+        , div [ class "ui-grid__row" ]
+            [ div [ class "ui-grid__col-8" ]
+                [ text "Col-8        " ]
+            , div [ class "ui-grid__col-4" ]
+                [ text "Col-4        " ]
+            ]
+        , div [ class "ui-grid__row" ]
+            [ div [ class "ui-grid__col-9" ]
+                [ text "Col-9        " ]
+            , div [ class "ui-grid__col-3" ]
+                [ text "Col-3        " ]
+            ]
+        , div [ class "ui-grid__row" ]
+            [ div [ class "ui-grid__col-10" ]
+                [ text "Col-10        " ]
+            , div [ class "ui-grid__col-2" ]
+                [ text "Col-2        " ]
+            ]
+        , div [ class "ui-grid__row" ]
+            [ div [ class "ui-grid__col-11" ]
+                [ text "Col-11        " ]
+            , div [ class "ui-grid__col-1" ]
+                [ text "Col-1        " ]
+            ]
+        , div [ class "ui-grid__row" ]
+            [ div [ class "ui-grid__col-12" ]
+                [ text "Fullsize (col-12)        " ]
+            ]
+        ]
+    , div [ class "ui-grid__row" ]
+        [ section [ class "ui-grid__col-6" ]
+            [ h3 []
+                [ text "Buttons" ]
+            , p []
+                [ text "Inline tex with            "
+                , button [ class "ui-button" ]
+                    [ span [ class "ui-button__label" ]
+                        [ text "Real Button Button" ]
+                    ]
+                , button [ class "ui-button ui-button--primary" ]
+                    [ span [ class "ui-button__label" ]
+                        [ text "Primary Button" ]
+                    ]
+                , button [ class "ui-button ui-button--secondary" ]
+                    [ span [ class "ui-button__label" ]
+                        [ text "Secondary Button" ]
+                    ]
+                , a [ class "ui-button", href "#" ]
+                    [ span [ class "ui-button__label" ]
+                        [ text "Link Button" ]
+                    ]
+                , button [ class "ui-button ui-button--disabled", attribute "disabled" "disabled" ]
+                    [ span [ class "ui-button__label" ]
+                        [ text "Inactive Button" ]
+                    ]
+                ]
+            ]
+        , section [ class "ui-grid__col-6" ]
+            [ form [ class "ui-form" ]
+                [ h3 []
+                    [ text "Forms" ]
+                , label [ class "ui-form__group" ]
+                    [ span [ class "ui-form__group-label" ]
+                        [ text "Simple Textinput" ]
+                    , input [ class "ui-form__text", name "simple-text", placeholder "Simple text...", type_ "text", value "" ]
+                        []
+                    , button [ class "ui-button", type_ "submit" ]
+                        [ span [ class "ui-button__label" ]
+                            [ text "OK" ]
+                        ]
+                    ]
+                , label [ class "ui-form__group" ]
+                    [ input [ class "ui-form__checkbox", name "check1", type_ "checkbox" ]
+                        []
+                    , span [ class "ui-form__group-label" ]
+                        [ text "Simple Checkbox" ]
+                    ]
+                , label [ class "ui-form__group" ]
+                    [ input [ class "ui-form__checkbox ui-form__checkbox--disabled", attribute "disabled" "disabled", name "check2", type_ "checkbox" ]
+                        []
+                    , span [ class "ui-form__group-label" ]
+                        [ text "Simple Checkbox" ]
+                    ]
+                , label [ class "ui-form__group" ]
+                    [ input [ class "ui-form__radio", name "radio1", type_ "radio", value "value1" ]
+                        []
+                    , span [ class "ui-form__group-label" ]
+                        [ text "Option 1" ]
+                    ]
+                , label [ class "ui-form__group" ]
+                    [ input [ class "ui-form__radio", name "radio1", type_ "radio", value "value2" ]
+                        []
+                    , span [ class "ui-form__group-label" ]
+                        [ text "Option 2" ]
+                    ]
+                , label [ class "ui-form__group" ]
+                    [ input [ class "ui-form__radio ui-form__radio--disabled", attribute "disabled" "disabled", name "radio1", type_ "radio", value "value3" ]
+                        []
+                    , span [ class "ui-form__group-label" ]
+                        [ text "Option 2" ]
+                    ]
+                , label [ class "ui-form__group" ]
+                    [ span [ class "ui-form__group-label" ]
+                        [ text "Some text" ]
+                    , textarea [ class "ui-form__textarea", name "textarea", value "value2" ]
+                        []
+                    ]
+                , label [ class "ui-form__group" ]
+                    [ span [ class "ui-form__group-label" ]
+                        [ text "Some text" ]
+                    , select [ class "ui-form__select", name "select1" ]
+                        [ option [ value "1" ]
+                            [ text "1" ]
+                        , optgroup [ attribute "label" "Section 2" ]
+                            [ option [ value "2.1" ]
+                                [ text "2.1" ]
+                            , option [ value "2.2" ]
+                                [ text "2.2" ]
+                            ]
+                        , optgroup [ attribute "label" "Section 3" ]
+                            [ option [ value "3.1" ]
+                                [ text "3.1" ]
+                            , option [ value "3.2" ]
+                                [ text "3.2" ]
+                            , option [ value "3.3" ]
+                                [ text "3.3" ]
+                            ]
+                        ]
+                    ]
+                , button [ class "ui-button", type_ "submit" ]
+                    [ span [ class "ui-button__label" ]
+                        [ text "Submit" ]
+                    ]
+                ]
+            ]
+        ]
+    ]

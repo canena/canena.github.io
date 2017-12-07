@@ -1,6 +1,5 @@
 module Route exposing (Route(..), Slug(..), href)
 
-
 import Html.Styled exposing (Attribute)
 import Html.Styled.Attributes as Attr
 import Regex exposing (HowMany(..), Match, Regex)
@@ -38,8 +37,8 @@ routeToString route =
         Article slug ->
             toString slug
                 |> String.toLower
-                |> Regex.replace All slugPrefixRegex (\{match} -> "/blog/")
-                |> Regex.replace All slugSeparatorRegex (\{match} -> "-")
+                |> Regex.replace All slugPrefixRegex (\{ match } -> "/blog/")
+                |> Regex.replace All slugSeparatorRegex (\{ match } -> "-")
 
         Contact ->
             "/blog/about#contact"
@@ -71,4 +70,3 @@ slugPrefixRegex =
 slugSeparatorRegex : Regex
 slugSeparatorRegex =
     Regex.regex "_"
-
