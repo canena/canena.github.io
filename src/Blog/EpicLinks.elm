@@ -95,6 +95,25 @@ sectionGroupArticles =
 
 ### Articles
 
+#### Design & Layout
+
+<ul>
+    <li>
+        <span class="ui-content__last-update">[2017-03-20]</span>
+        <a href="http://lea.verou.me/css3patterns/" target="_blank">CSS3 Patterns Gallery</a>
+    </li>
+    <li>
+        <span class="ui-content__last-update">[2017-03-20]</span>
+        <a href="https://css-tricks.com/dont-overthink-it-grids/" target="_blank">Don't overthink it grids</a>
+    </li>
+    <li>
+        <span class="ui-content__last-update">[2017-03-20]</span>
+        <a href="https://www.lightningdesignsystem.com/getting-started/" target="_blank">Lightning Design System</a>
+        <em>I'm not a fan of salesforce but their BEM design system is inspired.</em>
+    </li>
+</ul>
+
+
 #### Learning
 - <span class="ui-content__last-update">[2017-03-20]</span>
   <a href="https://aeon.co/essays/the-terror-and-the-bliss-of-sleep-paralysis" target="_blank">The Terror and the Bliss of Sleep Paralysis</a>
@@ -121,7 +140,24 @@ sectionGroupArticles =
   <a href="http://www.depauw.edu/sfs/backissues/5/lem5art.htm" target="_blank">Stanislaw Lem: Philip K. Dick: A Visionary Among the Charlatans</a>
 
 
-#### Tech
+#### Software Architecture
+
+<ul>
+    <li>
+        <span class="ui-content__last-update">[2017-12-08]</span>
+        <a href="http://joeduffyblog.com/2015/11/03/blogging-about-midori/" target="_blank">Blogging About Midori (MS Async First OS Experiment)</a>
+    </li>
+    <li>
+        <span class="ui-content__last-update">[2017-12-08]</span>
+        <a href="https://gustafnk.github.io/microservice-websites/" target="_blank">Microservice Websites (Full Article)</a>
+    </li>
+    <li>
+        <span class="ui-content__last-update">[2017-12-08]</span>
+        <a href="http://microservice-websites.netlify.com/" target="_blank">Microservice Websites (Just the Gist)</a>
+    </li>
+</ul>
+
+#### Tech/Programming
 
 <ul>
     <li>
@@ -130,23 +166,9 @@ sectionGroupArticles =
     </li>
     <li>
         <span class="ui-content__last-update">[2017-03-20]</span>
-        <a href="http://lea.verou.me/css3patterns/" target="_blank">CSS3 Patterns Gallery</a>
-    </li>
-    <li>
-        <span class="ui-content__last-update">[2017-03-20]</span>
-        <a href="https://css-tricks.com/dont-overthink-it-grids/" target="_blank">Don't overthink it grids</a>
-    </li>
-    <li>
-        <span class="ui-content__last-update">[2017-03-20]</span>
-        <a href="https://www.lightningdesignsystem.com/getting-started/" target="_blank">Lightning Design System</a>
-        <em>I'm not a fan of salesforce but their BEM design system is inspired.</em>
-    </li>
-    <li>
-        <span class="ui-content__last-update">[2017-03-20]</span>
         <a href="http://dev.stephendiehl.com/hask/" target="_blank">What I wish I knew when learning Haskell</a>
     </li>
 </ul>
-
     """
 
 
