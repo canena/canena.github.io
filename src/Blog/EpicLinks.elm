@@ -114,13 +114,13 @@ sectionGroupArticles =
 </ul>
 
 
-#### Learning
+#### Sleeping
 - <span class="ui-content__last-update">[2017-03-20]</span>
   <a href="https://aeon.co/essays/the-terror-and-the-bliss-of-sleep-paralysis" target="_blank">The Terror and the Bliss of Sleep Paralysis</a>
+- <span class="ui-content__last-update">[2017-12-17]</span>
+  <a href="https://www.stevepavlina.com/blog/2005/10/polyphasic-sleep/" target="_blank">Polyphasic Sleep</a>
 - <span class="ui-content__last-update">[2017-03-20]</span>
   <a href="https://aeon.co/essays/why-broken-sleep-is-a-golden-time-for-creativity" target="_blank">Why broken sleep is a golden time for creativity</a>
-- <span class="ui-content__last-update">[2017-03-20]</span>
-  <a href="https://aeon.co/essays/why-pregnancy-is-a-biological-war-between-mother-and-baby" target="_blank">Why Pregnancy is a Biological War Between Mother and Baby</a>
 
 
 #### Music
@@ -139,6 +139,9 @@ sectionGroupArticles =
 - <span class="ui-content__last-update">[2017-03-20]</span>
   <a href="http://www.depauw.edu/sfs/backissues/5/lem5art.htm" target="_blank">Stanislaw Lem: Philip K. Dick: A Visionary Among the Charlatans</a>
 
+#### Science
+- <span class="ui-content__last-update">[2017-03-20]</span>
+  <a href="https://aeon.co/essays/why-pregnancy-is-a-biological-war-between-mother-and-baby" target="_blank">Why Pregnancy is a Biological War Between Mother and Baby</a>
 
 #### Software Architecture
 
