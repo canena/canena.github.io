@@ -8,9 +8,9 @@ const path = require("path");
 const { minify } = require('html-minifier');
 const { contains, join, map, pipe, replace, toLower } = require("ramda");
 const elmStaticHtml = require("elm-static-html-lib").default;
-const { promisify } = require("bluebird");
+const Promise = require("bluebird");
 
-const liftedReaddir = promisify(fs.readdir);
+const liftedReaddir = Promise.promisify(fs.readdir);
 
 // Constants
 
@@ -91,7 +91,7 @@ const renderPage = ({ isToplevel, moduleName, modulePath, model, route, title })
         trace(`generating ${moduleName} at "${filePath}"...`);
 
         try {
-            fs.writeFile(
+            return fs.writeFile(
                 filePath,
                 generatePageMarkup({
                     body: prefix + minifyHTML(generatedHtml),
@@ -185,7 +185,9 @@ dispatch(`Home`, `Welcome to my blog`, `/`).then(() => (
         map(replace(/\.elm$/i, ``)),
         map(file => `${ARTICLE_SRC_DIR_NAME}.${file}`)
     )).then(articles => (
-        Promise.all(map(dispatch, articles))
+        Promise.reduce(articles, (results, moduleName) => (
+            results.concat([dispatch(moduleName)])
+        ))
     ))
 )).catch(err => fail(err.message));
 
