@@ -232,6 +232,10 @@ sectionGroupTalks =
         <a href="https://www.youtube.com/watch?v=KaLROwp-VDY" target="_blank">Greg Young - "How to get productive in a project in 24h"</a>
     </li>
     <li>
+        <span class="ui-content__last-update">[2018-01-26]</span>
+        <a href="https://vimeo.com/108441214" target="_blank">Greg Young — The art of destroying software</a>
+    </li>
+    <li>
         <span class="ui-content__last-update">[2017-03-20]</span>
         <a href="https://www.youtube.com/watch?v=IcgmSRJHu_8" target="_blank">Richard Feldman - "Making Impossible States Impossible" </a>
     </li>
