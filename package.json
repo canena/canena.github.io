@@ -6,6 +6,7 @@
   "scripts": {
     "build": "NODE_ENV=production node build.js",
     "debug": "NODE_ENV=debug node build.js",
+    "reactor": "elm reactor",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -26,6 +27,7 @@
   },
   "homepage": "https://github.com/canena/canena.github.io#readme",
   "devDependencies": {
+    "elm": "^0.18.0",
     "html-minifier": "^3.5.7"
   },
   "dependencies": {

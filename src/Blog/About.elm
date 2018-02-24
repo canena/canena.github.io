@@ -84,9 +84,12 @@ I'm a software developer by trait...
 
 Currently obsessed with...
 
+- using <a href="http://elm-lang.org" target="_blank">Elm</a> instead of JavaScript wherever it makes sense.
+
+Formerly obsessed with...
+
 - the <abbr title="Block Element Modifier">BEM</abbr> methodology of writing <abbr title="Cascaded Style Sheets">CSS</abbr> with a little help of <a href="https://www.lesscss.org" target="_blank">LESS</a>.
 
-- using <a href="http://elm-lang.org" target="_blank">Elm</a> instead of JavaScript wherever it makes sense.
 
     """
 

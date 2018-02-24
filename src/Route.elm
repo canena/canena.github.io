@@ -7,6 +7,7 @@ import Regex exposing (HowMany(..), Match, Regex)
 
 type Slug
     = Blog_About
+    | Blog_2018_02_24_an_elm_to_the_past
     | Blog_2017_03_20_epic_links
     | Blog_2017_01_18_hello_living_style_guide
     | Blog_2015_08_04_making_a_habit_of_making_a_habit

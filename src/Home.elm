@@ -1,6 +1,7 @@
 module Home exposing (decodeModel, main, view)
 
 import Blog.About
+import Blog.AnElmToThePast
 import Blog.EpicLinks
 import Blog.HelloLivingStyleguide
 import Blog.MakingAHabitOfMakingAHabit
@@ -52,7 +53,8 @@ staticPages =
 
 published : List Meta
 published =
-    [ Blog.EpicLinks.meta
+    [ Blog.AnElmToThePast.meta
+    , Blog.EpicLinks.meta
     , Blog.HelloLivingStyleguide.meta
     , Blog.MakingAHabitOfMakingAHabit.meta
     ]

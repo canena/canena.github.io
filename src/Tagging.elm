@@ -3,12 +3,15 @@ module Tagging exposing (Tag(..), allTags, makeReadable)
 
 type Tag
     = Design
+    | Elm
     | Learning
+    | LegacyCode
     | Life
     | Misc String
     | Music
     | Selfimprovement
     | Tech
+    | Web
     | Writing
 
 
@@ -18,12 +21,15 @@ type Tag
 
 allTags : List Tag
 allTags =
-    [ Design
+    [ Elm
+    , Design
     , Learning
+    , LegacyCode
     , Life
     , Music
     , Selfimprovement
     , Tech
+    , Web
     , Writing
     ]
 

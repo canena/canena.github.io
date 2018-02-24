@@ -189,5 +189,5 @@ dispatch(`Home`, `Welcome to my blog`, `/`).then(() => (
             results.concat([dispatch(moduleName)])
         ))
     ))
-)).catch(err => fail(err.message));
+)).then(dispatch(`Blog.About`)).catch(err => fail(err.message));
 
