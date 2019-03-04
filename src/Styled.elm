@@ -379,7 +379,7 @@ outro =
                     , div [ class "ui-grid__col-4" ]
                         [ p [ class "ui-outro__copyright" ]
                             [ text
-                                "© 2017 CANENA - All rights reserved"
+                                "© 2019 CANENA - All rights reserved"
                             ]
                         ]
                     ]
