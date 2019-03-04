@@ -5,6 +5,7 @@ import Blog.AnElmToThePast
 import Blog.EpicLinks
 import Blog.HelloLivingStyleguide
 import Blog.MakingAHabitOfMakingAHabit
+import Blog.TypeScriptVsTheRealWorld
 import Data.Meta exposing (Meta)
 import Html
 import Html.Styled exposing (Html, text, toUnstyled)
@@ -53,7 +54,8 @@ staticPages =
 
 published : List Meta
 published =
-    [ Blog.AnElmToThePast.meta
+    [ Blog.TypeScriptVsTheRealWorld.meta
+    , Blog.AnElmToThePast.meta
     , Blog.EpicLinks.meta
     , Blog.HelloLivingStyleguide.meta
     , Blog.MakingAHabitOfMakingAHabit.meta
