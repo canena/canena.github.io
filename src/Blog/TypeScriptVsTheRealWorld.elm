@@ -11,9 +11,14 @@ import Tagging exposing (Tag(..))
 import Time.Date as Date exposing (Date)
 
 
+tagline : String
+tagline =
+    "On making informed decisions in frontend development"
+
+
 meta : Meta
 meta =
-    { abstract = Nothing
+    { abstract = Just tagline
     , abstractTagline = Nothing
     , date = Date.date 2019 3 4
     , route = Article Blog_2019_03_04_typescript_vs_the_real_world
@@ -53,11 +58,9 @@ view model =
     Styled.layout []
         [ Styled.layoutMain []
             [ Styled.mainHeader []
-                [ Styled.intro
-                    "TypeScript vs The Real World"
-                    "On making informed decisions in frontend development"
+                [ Styled.intro "TypeScript vs The Real World" tagline
                 , Styled.frontmatter Nothing meta.tags
-                , Styled.articleHeader meta.abstractTagline meta.abstract
+                , Styled.articleHeader meta.abstractTagline Nothing
                 ]
             , Styled.mainContent
                 [ Styled.articleContent
