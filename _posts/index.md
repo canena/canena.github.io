@@ -1,5 +1,6 @@
 ---
-title: "All posts"
+includeIntro: true
 layout: Posts
+title: All Posts
 ---
 

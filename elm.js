@@ -784,11 +784,11 @@ function _Debug_crash_UNUSED(identifier, fact1, fact2, fact3, fact4)
 
 function _Debug_regionToString(region)
 {
-	if (region.a3.au === region.bm.au)
+	if (region.a4.au === region.bn.au)
 	{
-		return 'on line ' + region.a3.au;
+		return 'on line ' + region.a4.au;
 	}
-	return 'on lines ' + region.a3.au + ' through ' + region.bm.au;
+	return 'on lines ' + region.a4.au + ' through ' + region.bn.au;
 }
 
 
@@ -1857,9 +1857,9 @@ var _Platform_worker = F4(function(impl, flagDecoder, debugMetadata, args)
 	return _Platform_initialize(
 		flagDecoder,
 		args,
-		impl.b8,
-		impl.cq,
-		impl.cn,
+		impl.b9,
+		impl.cr,
+		impl.co,
 		function() { return function() {} }
 	);
 });
@@ -2660,8 +2660,8 @@ var _VirtualDom_mapEventRecord = F2(function(func, record)
 {
 	return {
 		B: func(record.B),
-		a4: record.a4,
-		a2: record.a2
+		a5: record.a5,
+		a3: record.a3
 	}
 });
 
@@ -2930,10 +2930,10 @@ function _VirtualDom_makeCallback(eventNode, initialHandler)
 
 		var value = result.a;
 		var message = !tag ? value : tag < 3 ? value.a : value.B;
-		var stopPropagation = tag == 1 ? value.b : tag == 3 && value.a4;
+		var stopPropagation = tag == 1 ? value.b : tag == 3 && value.a5;
 		var currentEventNode = (
 			stopPropagation && event.stopPropagation(),
-			(tag == 2 ? value.b : tag == 3 && value.a2) && event.preventDefault(),
+			(tag == 2 ? value.b : tag == 3 && value.a3) && event.preventDefault(),
 			eventNode
 		);
 		var tagger;
@@ -3872,6 +3872,43 @@ function _VirtualDom_dekey(keyedNode)
 
 
 
+var _Bitwise_and = F2(function(a, b)
+{
+	return a & b;
+});
+
+var _Bitwise_or = F2(function(a, b)
+{
+	return a | b;
+});
+
+var _Bitwise_xor = F2(function(a, b)
+{
+	return a ^ b;
+});
+
+function _Bitwise_complement(a)
+{
+	return ~a;
+};
+
+var _Bitwise_shiftLeftBy = F2(function(offset, a)
+{
+	return a << offset;
+});
+
+var _Bitwise_shiftRightBy = F2(function(offset, a)
+{
+	return a >> offset;
+});
+
+var _Bitwise_shiftRightZfBy = F2(function(offset, a)
+{
+	return a >>> offset;
+});
+
+
+
 
 // ELEMENT
 
@@ -3883,11 +3920,11 @@ var _Browser_element = _Debugger_element || F4(function(impl, flagDecoder, debug
 	return _Platform_initialize(
 		flagDecoder,
 		args,
-		impl.b8,
-		impl.cq,
-		impl.cn,
+		impl.b9,
+		impl.cr,
+		impl.co,
 		function(sendToApp, initialModel) {
-			var view = impl.ct;
+			var view = impl.cu;
 			/**/
 			var domNode = args['node'];
 			//*/
@@ -3919,12 +3956,12 @@ var _Browser_document = _Debugger_document || F4(function(impl, flagDecoder, deb
 	return _Platform_initialize(
 		flagDecoder,
 		args,
-		impl.b8,
-		impl.cq,
-		impl.cn,
+		impl.b9,
+		impl.cr,
+		impl.co,
 		function(sendToApp, initialModel) {
 			var divertHrefToApp = impl.ay && impl.ay(sendToApp)
-			var view = impl.ct;
+			var view = impl.cu;
 			var title = _VirtualDom_doc.title;
 			var bodyNode = _VirtualDom_doc.body;
 			var currNode = _VirtualDom_virtualize(bodyNode);
@@ -3932,7 +3969,7 @@ var _Browser_document = _Debugger_document || F4(function(impl, flagDecoder, deb
 			{
 				_VirtualDom_divertHrefToApp = divertHrefToApp;
 				var doc = view(model);
-				var nextNode = _VirtualDom_node('body')(_List_Nil)(doc.bf);
+				var nextNode = _VirtualDom_node('body')(_List_Nil)(doc.bg);
 				var patches = _VirtualDom_diff(currNode, nextNode);
 				bodyNode = _VirtualDom_applyPatches(bodyNode, currNode, patches, sendToApp);
 				currNode = nextNode;
@@ -3993,8 +4030,8 @@ function _Browser_makeAnimator(model, draw)
 
 function _Browser_application(impl)
 {
-	var onUrlChange = impl.cd;
-	var onUrlRequest = impl.ce;
+	var onUrlChange = impl.ce;
+	var onUrlRequest = impl.cf;
 	var key = function() { key.a(onUrlChange(_Browser_getUrl())); };
 
 	return _Browser_document({
@@ -4014,9 +4051,9 @@ function _Browser_application(impl)
 					var next = elm$url$Url$fromString(href).a;
 					sendToApp(onUrlRequest(
 						(next
-							&& curr.bF === next.bF
-							&& curr.bq === next.bq
-							&& curr.bC.a === next.bC.a
+							&& curr.bG === next.bG
+							&& curr.br === next.br
+							&& curr.bD.a === next.bD.a
 						)
 							? elm$browser$Browser$Internal(next)
 							: elm$browser$Browser$External(href)
@@ -4024,13 +4061,13 @@ function _Browser_application(impl)
 				}
 			});
 		},
-		b8: function(flags)
+		b9: function(flags)
 		{
-			return A3(impl.b8, flags, _Browser_getUrl(), key);
+			return A3(impl.b9, flags, _Browser_getUrl(), key);
 		},
-		ct: impl.ct,
-		cq: impl.cq,
-		cn: impl.cn
+		cu: impl.cu,
+		cr: impl.cr,
+		co: impl.co
 	});
 }
 
@@ -4096,17 +4133,17 @@ var _Browser_decodeEvent = F2(function(decoder, event)
 function _Browser_visibilityInfo()
 {
 	return (typeof _VirtualDom_doc.hidden !== 'undefined')
-		? { b5: 'hidden', bY: 'visibilitychange' }
+		? { b6: 'hidden', bZ: 'visibilitychange' }
 		:
 	(typeof _VirtualDom_doc.mozHidden !== 'undefined')
-		? { b5: 'mozHidden', bY: 'mozvisibilitychange' }
+		? { b6: 'mozHidden', bZ: 'mozvisibilitychange' }
 		:
 	(typeof _VirtualDom_doc.msHidden !== 'undefined')
-		? { b5: 'msHidden', bY: 'msvisibilitychange' }
+		? { b6: 'msHidden', bZ: 'msvisibilitychange' }
 		:
 	(typeof _VirtualDom_doc.webkitHidden !== 'undefined')
-		? { b5: 'webkitHidden', bY: 'webkitvisibilitychange' }
-		: { b5: 'hidden', bY: 'visibilitychange' };
+		? { b6: 'webkitHidden', bZ: 'webkitvisibilitychange' }
+		: { b6: 'hidden', bZ: 'visibilitychange' };
 }
 
 
@@ -4187,10 +4224,10 @@ var _Browser_call = F2(function(functionName, id)
 function _Browser_getViewport()
 {
 	return {
-		bK: _Browser_getScene(),
-		bS: {
-			aU: _Browser_window.pageXOffset,
-			aV: _Browser_window.pageYOffset,
+		bL: _Browser_getScene(),
+		bT: {
+			aV: _Browser_window.pageXOffset,
+			aW: _Browser_window.pageYOffset,
 			am: _Browser_doc.documentElement.clientWidth,
 			Z: _Browser_doc.documentElement.clientHeight
 		}
@@ -4226,13 +4263,13 @@ function _Browser_getViewportOf(id)
 	return _Browser_withNode(id, function(node)
 	{
 		return {
-			bK: {
+			bL: {
 				am: node.scrollWidth,
 				Z: node.scrollHeight
 			},
-			bS: {
-				aU: node.scrollLeft,
-				aV: node.scrollTop,
+			bT: {
+				aV: node.scrollLeft,
+				aW: node.scrollTop,
 				am: node.clientWidth,
 				Z: node.clientHeight
 			}
@@ -4264,16 +4301,16 @@ function _Browser_getElement(id)
 		var x = _Browser_window.pageXOffset;
 		var y = _Browser_window.pageYOffset;
 		return {
-			bK: _Browser_getScene(),
-			bS: {
-				aU: x,
-				aV: y,
+			bL: _Browser_getScene(),
+			bT: {
+				aV: x,
+				aW: y,
 				am: _Browser_doc.documentElement.clientWidth,
 				Z: _Browser_doc.documentElement.clientHeight
 			},
-			b1: {
-				aU: x + rect.left,
-				aV: y + rect.top,
+			b2: {
+				aV: x + rect.left,
+				aW: y + rect.top,
 				am: rect.width,
 				Z: rect.height
 			}
@@ -4310,43 +4347,6 @@ function _Browser_load(url)
 		}
 	}));
 }
-
-
-
-var _Bitwise_and = F2(function(a, b)
-{
-	return a & b;
-});
-
-var _Bitwise_or = F2(function(a, b)
-{
-	return a | b;
-});
-
-var _Bitwise_xor = F2(function(a, b)
-{
-	return a ^ b;
-});
-
-function _Bitwise_complement(a)
-{
-	return ~a;
-};
-
-var _Bitwise_shiftLeftBy = F2(function(offset, a)
-{
-	return a << offset;
-});
-
-var _Bitwise_shiftRightBy = F2(function(offset, a)
-{
-	return a >> offset;
-});
-
-var _Bitwise_shiftRightZfBy = F2(function(offset, a)
-{
-	return a >>> offset;
-});
 
 
 
@@ -4422,9 +4422,9 @@ function _Markdown_formatOptions(options)
 {
 	function toHighlight(code, lang)
 	{
-		if (!lang && elm$core$Maybe$isJust(options.b0))
+		if (!lang && elm$core$Maybe$isJust(options.b1))
 		{
-			lang = options.b0.a;
+			lang = options.b1.a;
 		}
 
 		if (typeof hljs !== 'undefined' && lang && hljs.listLanguages().indexOf(lang) >= 0)
@@ -4435,27 +4435,25 @@ function _Markdown_formatOptions(options)
 		return code;
 	}
 
-	var gfm = options.b4.a;
+	var gfm = options.b5.a;
 
 	return {
 		highlight: toHighlight,
 		gfm: gfm,
-		tables: gfm && gfm.co,
-		breaks: gfm && gfm.bX,
-		sanitize: options.cj,
-		smartypants: options.cm
+		tables: gfm && gfm.cp,
+		breaks: gfm && gfm.bY,
+		sanitize: options.ck,
+		smartypants: options.cn
 	};
 }
-var author$project$Elmstatic$PostList = F4(
-	function (posts, section, siteTitle, title) {
-		return {ch: posts, bL: section, aR: siteTitle, aA: title};
+var author$project$Elmstatic$PostList = F5(
+	function (includeIntro, posts, section, siteTitle, title) {
+		return {aJ: includeIntro, ci: posts, bM: section, aS: siteTitle, aA: title};
 	});
-var author$project$Elmstatic$Post = F7(
-	function (date, link, markdown, section, siteTitle, tags, title) {
-		return {bZ: date, ca: link, bw: markdown, bL: section, aR: siteTitle, cp: tags, aA: title};
-	});
-var elm$core$Basics$apL = F2(
-	function (f, x) {
+var elm$core$Basics$False = 1;
+var elm$core$Basics$True = 0;
+var elm$core$Basics$apR = F2(
+	function (x, f) {
 		return f(x);
 	});
 var elm$core$Array$branchFactor = 32;
@@ -4605,10 +4603,6 @@ var elm$core$Array$compressNodes = F2(
 			}
 		}
 	});
-var elm$core$Basics$apR = F2(
-	function (x, f) {
-		return f(x);
-	});
 var elm$core$Basics$eq = _Utils_equal;
 var elm$core$Tuple$first = function (_n0) {
 	var x = _n0.a;
@@ -4631,6 +4625,10 @@ var elm$core$Array$treeFromBuilder = F2(
 		}
 	});
 var elm$core$Basics$add = _Basics_add;
+var elm$core$Basics$apL = F2(
+	function (f, x) {
+		return f(x);
+	});
 var elm$core$Basics$floor = _Basics_floor;
 var elm$core$Basics$gt = _Utils_gt;
 var elm$core$Basics$max = F2(
@@ -4663,7 +4661,6 @@ var elm$core$Array$builderToArray = F2(
 				builder.i);
 		}
 	});
-var elm$core$Basics$False = 1;
 var elm$core$Basics$idiv = _Basics_idiv;
 var elm$core$Basics$lt = _Utils_lt;
 var elm$core$Elm$JsArray$initialize = _JsArray_initialize;
@@ -4716,7 +4713,6 @@ var elm$core$Result$Err = function (a) {
 var elm$core$Result$Ok = function (a) {
 	return {$: 0, a: a};
 };
-var elm$core$Basics$True = 0;
 var elm$core$Result$isOk = function (result) {
 	if (!result.$) {
 		return true;
@@ -4929,14 +4925,48 @@ var elm$json$Json$Decode$errorToStringHelp = F2(
 			}
 		}
 	});
+var elm$json$Json$Decode$andThen = _Json_andThen;
 var elm$json$Json$Decode$field = _Json_decodeField;
-var elm$json$Json$Decode$list = _Json_decodeList;
-var elm$json$Json$Decode$map7 = _Json_map7;
+var elm$json$Json$Decode$map = _Json_map1;
+var elm$json$Json$Decode$oneOf = _Json_oneOf;
+var elm$json$Json$Decode$succeed = _Json_succeed;
+var elm$json$Json$Decode$maybe = function (decoder) {
+	return elm$json$Json$Decode$oneOf(
+		_List_fromArray(
+			[
+				A2(elm$json$Json$Decode$map, elm$core$Maybe$Just, decoder),
+				elm$json$Json$Decode$succeed(elm$core$Maybe$Nothing)
+			]));
+};
 var elm$json$Json$Decode$string = _Json_decodeString;
-var author$project$Elmstatic$decodePost = A8(
-	elm$json$Json$Decode$map7,
+var author$project$Elmstatic$decodeBoolMeta = function (prop) {
+	return A2(
+		elm$json$Json$Decode$andThen,
+		function (value) {
+			if (value.$ === 1) {
+				return elm$json$Json$Decode$succeed(false);
+			} else {
+				if (value.a === 'true') {
+					return elm$json$Json$Decode$succeed(true);
+				} else {
+					return elm$json$Json$Decode$succeed(false);
+				}
+			}
+		},
+		elm$json$Json$Decode$maybe(
+			A2(elm$json$Json$Decode$field, prop, elm$json$Json$Decode$string)));
+};
+var author$project$Elmstatic$Post = F8(
+	function (date, includeIntro, link, markdown, section, siteTitle, tags, title) {
+		return {b_: date, aJ: includeIntro, cb: link, bx: markdown, bM: section, aS: siteTitle, cq: tags, aA: title};
+	});
+var elm$json$Json$Decode$list = _Json_decodeList;
+var elm$json$Json$Decode$map8 = _Json_map8;
+var author$project$Elmstatic$decodePost = A9(
+	elm$json$Json$Decode$map8,
 	author$project$Elmstatic$Post,
 	A2(elm$json$Json$Decode$field, 'date', elm$json$Json$Decode$string),
+	author$project$Elmstatic$decodeBoolMeta('includeIntro'),
 	A2(elm$json$Json$Decode$field, 'link', elm$json$Json$Decode$string),
 	A2(elm$json$Json$Decode$field, 'markdown', elm$json$Json$Decode$string),
 	A2(elm$json$Json$Decode$field, 'section', elm$json$Json$Decode$string),
@@ -4946,10 +4976,11 @@ var author$project$Elmstatic$decodePost = A8(
 		'tags',
 		elm$json$Json$Decode$list(elm$json$Json$Decode$string)),
 	A2(elm$json$Json$Decode$field, 'title', elm$json$Json$Decode$string));
-var elm$json$Json$Decode$map4 = _Json_map4;
-var author$project$Elmstatic$decodePostList = A5(
-	elm$json$Json$Decode$map4,
+var elm$json$Json$Decode$map5 = _Json_map5;
+var author$project$Elmstatic$decodePostList = A6(
+	elm$json$Json$Decode$map5,
 	author$project$Elmstatic$PostList,
+	author$project$Elmstatic$decodeBoolMeta('includeIntro'),
 	A2(
 		elm$json$Json$Decode$field,
 		'posts',
@@ -4960,9 +4991,7 @@ var author$project$Elmstatic$decodePostList = A5(
 var elm$core$Basics$identity = function (x) {
 	return x;
 };
-var elm$json$Json$Decode$map = _Json_map1;
 var elm$json$Json$Decode$map2 = _Json_map2;
-var elm$json$Json$Decode$succeed = _Json_succeed;
 var elm$virtual_dom$VirtualDom$toHandlerInt = function (handler) {
 	switch (handler.$) {
 		case 0:
@@ -4980,6 +5009,42 @@ var elm$virtual_dom$VirtualDom$node = function (tag) {
 		_VirtualDom_noScript(tag));
 };
 var elm$html$Html$node = elm$virtual_dom$VirtualDom$node;
+var elm$virtual_dom$VirtualDom$attribute = F2(
+	function (key, value) {
+		return A2(
+			_VirtualDom_attribute,
+			_VirtualDom_noOnOrFormAction(key),
+			_VirtualDom_noJavaScriptOrHtmlUri(value));
+	});
+var elm$html$Html$Attributes$attribute = elm$virtual_dom$VirtualDom$attribute;
+var author$project$Elmstatic$cdnScript = F3(
+	function (src, integrity, crossorigin) {
+		return A3(
+			elm$html$Html$node,
+			'citatsmle-script',
+			_List_fromArray(
+				[
+					A2(elm$html$Html$Attributes$attribute, 'src', src),
+					A2(elm$html$Html$Attributes$attribute, 'integrity', integrity),
+					A2(elm$html$Html$Attributes$attribute, 'crossorigin', crossorigin)
+				]),
+			_List_Nil);
+	});
+var author$project$Elmstatic$cdnStylesheet = F3(
+	function (href, integrity, crossorigin) {
+		return A3(
+			elm$html$Html$node,
+			'link',
+			_List_fromArray(
+				[
+					A2(elm$html$Html$Attributes$attribute, 'href', href),
+					A2(elm$html$Html$Attributes$attribute, 'rel', 'stylesheet'),
+					A2(elm$html$Html$Attributes$attribute, 'type', 'text/css'),
+					A2(elm$html$Html$Attributes$attribute, 'integrity', integrity),
+					A2(elm$html$Html$Attributes$attribute, 'crossorigin', crossorigin)
+				]),
+			_List_Nil);
+	});
 var elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
 var elm$html$Html$text = elm$virtual_dom$VirtualDom$text;
 var author$project$Elmstatic$inlineScript = function (js) {
@@ -4991,24 +5056,6 @@ var author$project$Elmstatic$inlineScript = function (js) {
 			[
 				elm$html$Html$text(js)
 			]));
-};
-var elm$virtual_dom$VirtualDom$attribute = F2(
-	function (key, value) {
-		return A2(
-			_VirtualDom_attribute,
-			_VirtualDom_noOnOrFormAction(key),
-			_VirtualDom_noJavaScriptOrHtmlUri(value));
-	});
-var elm$html$Html$Attributes$attribute = elm$virtual_dom$VirtualDom$attribute;
-var author$project$Elmstatic$script = function (src) {
-	return A3(
-		elm$html$Html$node,
-		'citatsmle-script',
-		_List_fromArray(
-			[
-				A2(elm$html$Html$Attributes$attribute, 'src', src)
-			]),
-		_List_Nil);
 };
 var author$project$Elmstatic$stylesheet = function (href) {
 	return A3(
@@ -5022,64 +5069,191 @@ var author$project$Elmstatic$stylesheet = function (href) {
 			]),
 		_List_Nil);
 };
-var author$project$Elmstatic$htmlTemplate = F2(
-	function (title, contentNodes) {
-		return A3(
-			elm$html$Html$node,
-			'html',
-			_List_Nil,
-			_List_fromArray(
-				[
-					A3(
-					elm$html$Html$node,
-					'head',
-					_List_Nil,
-					_List_fromArray(
-						[
-							A3(
-							elm$html$Html$node,
-							'title',
-							_List_Nil,
-							_List_fromArray(
-								[
-									elm$html$Html$text(title)
-								])),
-							A3(
-							elm$html$Html$node,
-							'meta',
-							_List_fromArray(
-								[
-									A2(elm$html$Html$Attributes$attribute, 'charset', 'utf-8')
-								]),
-							_List_Nil),
-							author$project$Elmstatic$script('//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.1/highlight.min.js'),
-							author$project$Elmstatic$script('//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.1/languages/elm.min.js'),
-							author$project$Elmstatic$inlineScript('hljs.initHighlightingOnLoad();'),
-							author$project$Elmstatic$stylesheet('//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.1/styles/default.min.css'),
-							author$project$Elmstatic$stylesheet('//fonts.googleapis.com/css?family=Open+Sans|Proza+Libre|Inconsolata')
-						])),
-					A3(elm$html$Html$node, 'body', _List_Nil, contentNodes)
-				]));
-	});
-var elm$browser$Browser$External = function (a) {
-	return {$: 1, a: a};
+var elm$core$Basics$negate = function (n) {
+	return -n;
 };
-var elm$browser$Browser$Internal = function (a) {
+var rtfeldman$elm_css$Css$Structure$Compatible = 0;
+var rtfeldman$elm_css$Css$auto = {bV: 0, a: 0, V: 0, aK: 0, ca: 0, _: 0, A: 0, t: 0, ac: 0, q: 0, aT: 0, aj: 0, o: 0, a7: 'auto'};
+var rtfeldman$elm_css$Css$Preprocess$AppendProperty = function (a) {
 	return {$: 0, a: a};
 };
-var elm$browser$Browser$Dom$NotFound = elm$core$Basics$identity;
-var elm$core$Basics$never = function (_n0) {
-	never:
-	while (true) {
-		var nvr = _n0;
-		var $temp$_n0 = nvr;
-		_n0 = $temp$_n0;
-		continue never;
+var rtfeldman$elm_css$Css$property = F2(
+	function (key, value) {
+		return rtfeldman$elm_css$Css$Preprocess$AppendProperty(key + (':' + value));
+	});
+var rtfeldman$elm_css$Css$backgroundColor = function (c) {
+	return A2(rtfeldman$elm_css$Css$property, 'background-color', c.a7);
+};
+var rtfeldman$elm_css$Css$prop1 = F2(
+	function (key, arg) {
+		return A2(rtfeldman$elm_css$Css$property, key, arg.a7);
+	});
+var rtfeldman$elm_css$Css$baseline = rtfeldman$elm_css$Css$prop1('baseline');
+var rtfeldman$elm_css$Css$block = {f: 0, a7: 'block'};
+var rtfeldman$elm_css$Css$prop3 = F4(
+	function (key, argA, argB, argC) {
+		return A2(
+			rtfeldman$elm_css$Css$property,
+			key,
+			A2(
+				elm$core$String$join,
+				' ',
+				_List_fromArray(
+					[argA.a7, argB.a7, argC.a7])));
+	});
+var rtfeldman$elm_css$Css$border3 = rtfeldman$elm_css$Css$prop3('border');
+var rtfeldman$elm_css$Css$borderBottom3 = rtfeldman$elm_css$Css$prop3('border-bottom');
+var rtfeldman$elm_css$Css$borderColor = function (c) {
+	return A2(rtfeldman$elm_css$Css$property, 'border-color', c.a7);
+};
+var rtfeldman$elm_css$Css$borderRadius = rtfeldman$elm_css$Css$prop1('border-radius');
+var rtfeldman$elm_css$Css$borderStyle = rtfeldman$elm_css$Css$prop1('border-style');
+var rtfeldman$elm_css$Css$prop4 = F5(
+	function (key, argA, argB, argC, argD) {
+		return A2(
+			rtfeldman$elm_css$Css$property,
+			key,
+			A2(
+				elm$core$String$join,
+				' ',
+				_List_fromArray(
+					[argA.a7, argB.a7, argC.a7, argD.a7])));
+	});
+var rtfeldman$elm_css$Css$borderWidth4 = rtfeldman$elm_css$Css$prop4('border-width');
+var rtfeldman$elm_css$Css$center = rtfeldman$elm_css$Css$prop1('center');
+var rtfeldman$elm_css$Css$color = function (c) {
+	return A2(rtfeldman$elm_css$Css$property, 'color', c.a7);
+};
+var rtfeldman$elm_css$Css$display = rtfeldman$elm_css$Css$prop1('display');
+var rtfeldman$elm_css$Css$EmUnits = 0;
+var elm$core$String$fromFloat = _String_fromNumber;
+var rtfeldman$elm_css$Css$Internal$lengthConverter = F3(
+	function (units, unitLabel, numericValue) {
+		return {
+			a8: 0,
+			bi: 0,
+			V: 0,
+			k: 0,
+			at: 0,
+			_: 0,
+			A: 0,
+			aa: 0,
+			ab: 0,
+			I: 0,
+			J: 0,
+			t: 0,
+			D: numericValue,
+			ai: 0,
+			ak: unitLabel,
+			aD: units,
+			a7: _Utils_ap(
+				elm$core$String$fromFloat(numericValue),
+				unitLabel)
+		};
+	});
+var rtfeldman$elm_css$Css$em = A2(rtfeldman$elm_css$Css$Internal$lengthConverter, 0, 'em');
+var elm$core$List$head = function (list) {
+	if (list.b) {
+		var x = list.a;
+		var xs = list.b;
+		return elm$core$Maybe$Just(x);
+	} else {
+		return elm$core$Maybe$Nothing;
 	}
 };
-var elm$core$Task$Perform = elm$core$Basics$identity;
-var elm$core$Task$succeed = _Scheduler_succeed;
-var elm$core$Task$init = elm$core$Task$succeed(0);
+var elm$core$Maybe$withDefault = F2(
+	function (_default, maybe) {
+		if (!maybe.$) {
+			var value = maybe.a;
+			return value;
+		} else {
+			return _default;
+		}
+	});
+var rtfeldman$elm_css$Css$Internal$property = F2(
+	function (key, value) {
+		return rtfeldman$elm_css$Css$Preprocess$AppendProperty(key + (':' + value));
+	});
+var rtfeldman$elm_css$Css$Preprocess$ApplyStyles = function (a) {
+	return {$: 6, a: a};
+};
+var rtfeldman$elm_css$Css$Internal$getOverloadedProperty = F3(
+	function (functionName, desiredKey, style) {
+		getOverloadedProperty:
+		while (true) {
+			switch (style.$) {
+				case 0:
+					var str = style.a;
+					var key = A2(
+						elm$core$Maybe$withDefault,
+						'',
+						elm$core$List$head(
+							A2(elm$core$String$split, ':', str)));
+					return A2(rtfeldman$elm_css$Css$Internal$property, desiredKey, key);
+				case 1:
+					var selector = style.a;
+					return A2(rtfeldman$elm_css$Css$Internal$property, desiredKey, 'elm-css-error-cannot-apply-' + (functionName + '-with-inapplicable-Style-for-selector'));
+				case 2:
+					var combinator = style.a;
+					return A2(rtfeldman$elm_css$Css$Internal$property, desiredKey, 'elm-css-error-cannot-apply-' + (functionName + '-with-inapplicable-Style-for-combinator'));
+				case 3:
+					var pseudoElement = style.a;
+					return A2(rtfeldman$elm_css$Css$Internal$property, desiredKey, 'elm-css-error-cannot-apply-' + (functionName + '-with-inapplicable-Style-for-pseudo-element setter'));
+				case 4:
+					return A2(rtfeldman$elm_css$Css$Internal$property, desiredKey, 'elm-css-error-cannot-apply-' + (functionName + '-with-inapplicable-Style-for-media-query'));
+				case 5:
+					return A2(rtfeldman$elm_css$Css$Internal$property, desiredKey, 'elm-css-error-cannot-apply-' + (functionName + '-with-inapplicable-Style-for-keyframes'));
+				default:
+					if (!style.a.b) {
+						return A2(rtfeldman$elm_css$Css$Internal$property, desiredKey, 'elm-css-error-cannot-apply-' + (functionName + '-with-empty-Style'));
+					} else {
+						if (!style.a.b.b) {
+							var _n1 = style.a;
+							var only = _n1.a;
+							var $temp$functionName = functionName,
+								$temp$desiredKey = desiredKey,
+								$temp$style = only;
+							functionName = $temp$functionName;
+							desiredKey = $temp$desiredKey;
+							style = $temp$style;
+							continue getOverloadedProperty;
+						} else {
+							var _n2 = style.a;
+							var first = _n2.a;
+							var rest = _n2.b;
+							var $temp$functionName = functionName,
+								$temp$desiredKey = desiredKey,
+								$temp$style = rtfeldman$elm_css$Css$Preprocess$ApplyStyles(rest);
+							functionName = $temp$functionName;
+							desiredKey = $temp$desiredKey;
+							style = $temp$style;
+							continue getOverloadedProperty;
+						}
+					}
+			}
+		}
+	});
+var rtfeldman$elm_css$Css$Internal$IncompatibleUnits = 0;
+var rtfeldman$elm_css$Css$Internal$lengthForOverloadedProperty = A3(rtfeldman$elm_css$Css$Internal$lengthConverter, 0, '', 0);
+var rtfeldman$elm_css$Css$float = function (fn) {
+	return A3(
+		rtfeldman$elm_css$Css$Internal$getOverloadedProperty,
+		'float',
+		'float',
+		fn(rtfeldman$elm_css$Css$Internal$lengthForOverloadedProperty));
+};
+var elm$core$Basics$composeL = F3(
+	function (g, f, x) {
+		return g(
+			f(x));
+	});
+var elm$core$List$isEmpty = function (xs) {
+	if (!xs.b) {
+		return true;
+	} else {
+		return false;
+	}
+};
 var elm$core$List$foldrHelper = F4(
 	function (fn, acc, ctr, ls) {
 		if (!ls.b) {
@@ -5149,576 +5323,9 @@ var elm$core$List$map = F2(
 			_List_Nil,
 			xs);
 	});
-var elm$core$Task$andThen = _Scheduler_andThen;
-var elm$core$Task$map = F2(
-	function (func, taskA) {
-		return A2(
-			elm$core$Task$andThen,
-			function (a) {
-				return elm$core$Task$succeed(
-					func(a));
-			},
-			taskA);
-	});
-var elm$core$Task$map2 = F3(
-	function (func, taskA, taskB) {
-		return A2(
-			elm$core$Task$andThen,
-			function (a) {
-				return A2(
-					elm$core$Task$andThen,
-					function (b) {
-						return elm$core$Task$succeed(
-							A2(func, a, b));
-					},
-					taskB);
-			},
-			taskA);
-	});
-var elm$core$Task$sequence = function (tasks) {
-	return A3(
-		elm$core$List$foldr,
-		elm$core$Task$map2(elm$core$List$cons),
-		elm$core$Task$succeed(_List_Nil),
-		tasks);
-};
-var elm$core$Platform$sendToApp = _Platform_sendToApp;
-var elm$core$Task$spawnCmd = F2(
-	function (router, _n0) {
-		var task = _n0;
-		return _Scheduler_spawn(
-			A2(
-				elm$core$Task$andThen,
-				elm$core$Platform$sendToApp(router),
-				task));
-	});
-var elm$core$Task$onEffects = F3(
-	function (router, commands, state) {
-		return A2(
-			elm$core$Task$map,
-			function (_n0) {
-				return 0;
-			},
-			elm$core$Task$sequence(
-				A2(
-					elm$core$List$map,
-					elm$core$Task$spawnCmd(router),
-					commands)));
-	});
-var elm$core$Task$onSelfMsg = F3(
-	function (_n0, _n1, _n2) {
-		return elm$core$Task$succeed(0);
-	});
-var elm$core$Task$cmdMap = F2(
-	function (tagger, _n0) {
-		var task = _n0;
-		return A2(elm$core$Task$map, tagger, task);
-	});
-_Platform_effectManagers['Task'] = _Platform_createManager(elm$core$Task$init, elm$core$Task$onEffects, elm$core$Task$onSelfMsg, elm$core$Task$cmdMap);
-var elm$core$Task$command = _Platform_leaf('Task');
-var elm$core$Task$perform = F2(
-	function (toMessage, task) {
-		return elm$core$Task$command(
-			A2(elm$core$Task$map, toMessage, task));
-	});
-var elm$core$String$length = _String_length;
-var elm$core$String$slice = _String_slice;
-var elm$core$String$dropLeft = F2(
-	function (n, string) {
-		return (n < 1) ? string : A3(
-			elm$core$String$slice,
-			n,
-			elm$core$String$length(string),
-			string);
-	});
-var elm$core$String$startsWith = _String_startsWith;
-var elm$url$Url$Http = 0;
-var elm$url$Url$Https = 1;
-var elm$core$String$indexes = _String_indexes;
-var elm$core$String$isEmpty = function (string) {
-	return string === '';
-};
-var elm$core$String$left = F2(
-	function (n, string) {
-		return (n < 1) ? '' : A3(elm$core$String$slice, 0, n, string);
-	});
-var elm$core$String$contains = _String_contains;
-var elm$core$String$toInt = _String_toInt;
-var elm$url$Url$Url = F6(
-	function (protocol, host, port_, path, query, fragment) {
-		return {bp: fragment, bq: host, bA: path, bC: port_, bF: protocol, bG: query};
-	});
-var elm$url$Url$chompBeforePath = F5(
-	function (protocol, path, params, frag, str) {
-		if (elm$core$String$isEmpty(str) || A2(elm$core$String$contains, '@', str)) {
-			return elm$core$Maybe$Nothing;
-		} else {
-			var _n0 = A2(elm$core$String$indexes, ':', str);
-			if (!_n0.b) {
-				return elm$core$Maybe$Just(
-					A6(elm$url$Url$Url, protocol, str, elm$core$Maybe$Nothing, path, params, frag));
-			} else {
-				if (!_n0.b.b) {
-					var i = _n0.a;
-					var _n1 = elm$core$String$toInt(
-						A2(elm$core$String$dropLeft, i + 1, str));
-					if (_n1.$ === 1) {
-						return elm$core$Maybe$Nothing;
-					} else {
-						var port_ = _n1;
-						return elm$core$Maybe$Just(
-							A6(
-								elm$url$Url$Url,
-								protocol,
-								A2(elm$core$String$left, i, str),
-								port_,
-								path,
-								params,
-								frag));
-					}
-				} else {
-					return elm$core$Maybe$Nothing;
-				}
-			}
-		}
-	});
-var elm$url$Url$chompBeforeQuery = F4(
-	function (protocol, params, frag, str) {
-		if (elm$core$String$isEmpty(str)) {
-			return elm$core$Maybe$Nothing;
-		} else {
-			var _n0 = A2(elm$core$String$indexes, '/', str);
-			if (!_n0.b) {
-				return A5(elm$url$Url$chompBeforePath, protocol, '/', params, frag, str);
-			} else {
-				var i = _n0.a;
-				return A5(
-					elm$url$Url$chompBeforePath,
-					protocol,
-					A2(elm$core$String$dropLeft, i, str),
-					params,
-					frag,
-					A2(elm$core$String$left, i, str));
-			}
-		}
-	});
-var elm$url$Url$chompBeforeFragment = F3(
-	function (protocol, frag, str) {
-		if (elm$core$String$isEmpty(str)) {
-			return elm$core$Maybe$Nothing;
-		} else {
-			var _n0 = A2(elm$core$String$indexes, '?', str);
-			if (!_n0.b) {
-				return A4(elm$url$Url$chompBeforeQuery, protocol, elm$core$Maybe$Nothing, frag, str);
-			} else {
-				var i = _n0.a;
-				return A4(
-					elm$url$Url$chompBeforeQuery,
-					protocol,
-					elm$core$Maybe$Just(
-						A2(elm$core$String$dropLeft, i + 1, str)),
-					frag,
-					A2(elm$core$String$left, i, str));
-			}
-		}
-	});
-var elm$url$Url$chompAfterProtocol = F2(
-	function (protocol, str) {
-		if (elm$core$String$isEmpty(str)) {
-			return elm$core$Maybe$Nothing;
-		} else {
-			var _n0 = A2(elm$core$String$indexes, '#', str);
-			if (!_n0.b) {
-				return A3(elm$url$Url$chompBeforeFragment, protocol, elm$core$Maybe$Nothing, str);
-			} else {
-				var i = _n0.a;
-				return A3(
-					elm$url$Url$chompBeforeFragment,
-					protocol,
-					elm$core$Maybe$Just(
-						A2(elm$core$String$dropLeft, i + 1, str)),
-					A2(elm$core$String$left, i, str));
-			}
-		}
-	});
-var elm$url$Url$fromString = function (str) {
-	return A2(elm$core$String$startsWith, 'http://', str) ? A2(
-		elm$url$Url$chompAfterProtocol,
-		0,
-		A2(elm$core$String$dropLeft, 7, str)) : (A2(elm$core$String$startsWith, 'https://', str) ? A2(
-		elm$url$Url$chompAfterProtocol,
-		1,
-		A2(elm$core$String$dropLeft, 8, str)) : elm$core$Maybe$Nothing);
-};
-var elm$browser$Browser$document = _Browser_document;
-var elm$core$Platform$Cmd$batch = _Platform_batch;
-var elm$core$Platform$Cmd$none = elm$core$Platform$Cmd$batch(_List_Nil);
-var elm$core$Platform$Sub$batch = _Platform_batch;
-var elm$core$Platform$Sub$none = elm$core$Platform$Sub$batch(_List_Nil);
-var elm$json$Json$Decode$decodeValue = _Json_run;
-var author$project$Elmstatic$layout = F2(
-	function (decoder, view) {
-		return elm$browser$Browser$document(
-			{
-				b8: function (contentJson) {
-					return _Utils_Tuple2(contentJson, elm$core$Platform$Cmd$none);
-				},
-				cn: function (_n0) {
-					return elm$core$Platform$Sub$none;
-				},
-				cq: F2(
-					function (msg, contentJson) {
-						return _Utils_Tuple2(contentJson, elm$core$Platform$Cmd$none);
-					}),
-				ct: function (contentJson) {
-					var _n1 = A2(elm$json$Json$Decode$decodeValue, decoder, contentJson);
-					if (_n1.$ === 1) {
-						var error = _n1.a;
-						return {
-							bf: _List_fromArray(
-								[
-									A2(
-									author$project$Elmstatic$htmlTemplate,
-									'Error',
-									_List_fromArray(
-										[
-											elm$html$Html$text(
-											elm$json$Json$Decode$errorToString(error))
-										]))
-								]),
-							aA: ''
-						};
-					} else {
-						var content = _n1.a;
-						return {
-							bf: _List_fromArray(
-								[
-									A2(
-									author$project$Elmstatic$htmlTemplate,
-									content.aR,
-									view(content))
-								]),
-							aA: ''
-						};
-					}
-				}
-			});
-	});
-var author$project$Page$githubIcon = function () {
-	var pathNode = A3(
-		elm$html$Html$node,
-		'path',
-		_List_fromArray(
-			[
-				A2(elm$html$Html$Attributes$attribute, 'fill', '#fff'),
-				A2(elm$html$Html$Attributes$attribute, 'd', '\nM7.999,0.431c-4.285,0-7.76,3.474-7.76,7.761 c0,3.428,2.223,6.337,5.307,7.363c0.388,0.071,0.53-0.168,0.53-0.374c0-0.184-0.007-0.672-0.01-1.32 c-2.159,0.469-2.614-1.04-2.614-1.04c-0.353-0.896-0.862-1.135-0.862-1.135c-0.705-0.481,0.053-0.472,0.053-0.472 c0.779,0.055,1.189,0.8,1.189,0.8c0.692,1.186,1.816,0.843,2.258,0.645c0.071-0.502,0.271-0.843,0.493-1.037 C4.86,11.425,3.049,10.76,3.049,7.786c0-0.847,0.302-1.54,0.799-2.082C3.768,5.507,3.501,4.718,3.924,3.65 c0,0,0.652-0.209,2.134,0.796C6.677,4.273,7.34,4.187,8,4.184c0.659,0.003,1.323,0.089,1.943,0.261 c1.482-1.004,2.132-0.796,2.132-0.796c0.423,1.068,0.157,1.857,0.077,2.054c0.497,0.542,0.798,1.235,0.798,2.082 c0,2.981-1.814,3.637-3.543,3.829c0.279,0.24,0.527,0.713,0.527,1.437c0,1.037-0.01,1.874-0.01,2.129 c0,0.208,0.14,0.449,0.534,0.373c3.081-1.028,5.302-3.935,5.302-7.362C15.76,3.906,12.285,0.431,7.999,0.431z\n            ')
-			]),
-		_List_Nil);
-	return A3(
-		elm$html$Html$node,
-		'svg',
-		_List_fromArray(
-			[
-				A2(elm$html$Html$Attributes$attribute, 'width', '16'),
-				A2(elm$html$Html$Attributes$attribute, 'height', '16'),
-				A2(elm$html$Html$Attributes$attribute, 'viewBox', '0 0 16 16')
-			]),
-		_List_fromArray(
-			[pathNode]));
-}();
-var author$project$Page$twitterIcon = function () {
-	var pathNode = A3(
-		elm$html$Html$node,
-		'path',
-		_List_fromArray(
-			[
-				A2(elm$html$Html$Attributes$attribute, 'fill', '#fff'),
-				A2(elm$html$Html$Attributes$attribute, 'd', '\nM15.969,3.058c-0.586,0.26-1.217,0.436-1.878,0.515c0.675-0.405,1.194-1.045,1.438-1.809 c-0.632,0.375-1.332,0.647-2.076,0.793c-0.596-0.636-1.446-1.033-2.387-1.033c-1.806,0-3.27,1.464-3.27,3.27 c0,0.256,0.029,0.506,0.085,0.745C5.163,5.404,2.753,4.102,1.14,2.124C0.859,2.607,0.698,3.168,0.698,3.767 c0,1.134,0.577,2.135,1.455,2.722C1.616,6.472,1.112,6.325,0.671,6.08c0,0.014,0,0.027,0,0.041c0,1.584,1.127,2.906,2.623,3.206 C3.02,9.402,2.731,9.442,2.433,9.442c-0.211,0-0.416-0.021-0.615-0.059c0.416,1.299,1.624,2.245,3.055,2.271 c-1.119,0.877-2.529,1.4-4.061,1.4c-0.264,0-0.524-0.015-0.78-0.046c1.447,0.928,3.166,1.469,5.013,1.469 c6.015,0,9.304-4.983,9.304-9.304c0-0.142-0.003-0.283-0.009-0.423C14.976,4.29,15.531,3.714,15.969,3.058z\n            ')
-			]),
-		_List_Nil);
-	return A3(
-		elm$html$Html$node,
-		'svg',
-		_List_fromArray(
-			[
-				A2(elm$html$Html$Attributes$attribute, 'width', '16'),
-				A2(elm$html$Html$Attributes$attribute, 'height', '16'),
-				A2(elm$html$Html$Attributes$attribute, 'viewBox', '0 0 16 16')
-			]),
-		_List_fromArray(
-			[pathNode]));
-}();
-var elm$html$Html$a = _VirtualDom_node('a');
-var elm$html$Html$div = _VirtualDom_node('div');
-var elm$html$Html$img = _VirtualDom_node('img');
-var elm$json$Json$Encode$string = _Json_wrap;
-var elm$html$Html$Attributes$stringProperty = F2(
-	function (key, string) {
-		return A2(
-			_VirtualDom_property,
-			key,
-			elm$json$Json$Encode$string(string));
-	});
-var elm$html$Html$Attributes$alt = elm$html$Html$Attributes$stringProperty('alt');
-var elm$html$Html$Attributes$class = elm$html$Html$Attributes$stringProperty('className');
-var elm$html$Html$Attributes$href = function (url) {
-	return A2(
-		elm$html$Html$Attributes$stringProperty,
-		'href',
-		_VirtualDom_noJavaScriptUri(url));
-};
-var elm$html$Html$Attributes$src = function (url) {
-	return A2(
-		elm$html$Html$Attributes$stringProperty,
-		'src',
-		_VirtualDom_noJavaScriptOrHtmlUri(url));
-};
-var author$project$Page$footer = A2(
-	elm$html$Html$div,
-	_List_fromArray(
-		[
-			elm$html$Html$Attributes$class('footer')
-		]),
-	_List_fromArray(
-		[
-			A2(
-			elm$html$Html$img,
-			_List_fromArray(
-				[
-					elm$html$Html$Attributes$alt('Author\'s blog'),
-					elm$html$Html$Attributes$src('/img/logo.png'),
-					A2(elm$html$Html$Attributes$attribute, 'style', 'float: left; padding-top: 7px'),
-					A2(elm$html$Html$Attributes$attribute, 'width', '75')
-				]),
-			_List_Nil),
-			A2(
-			elm$html$Html$div,
-			_List_fromArray(
-				[
-					elm$html$Html$Attributes$class('link')
-				]),
-			_List_fromArray(
-				[
-					author$project$Page$githubIcon,
-					A2(
-					elm$html$Html$a,
-					_List_fromArray(
-						[
-							elm$html$Html$Attributes$href('https://github.com')
-						]),
-					_List_fromArray(
-						[
-							elm$html$Html$text('Author\'s GitHub')
-						]))
-				])),
-			A2(
-			elm$html$Html$div,
-			_List_fromArray(
-				[
-					elm$html$Html$Attributes$class('link')
-				]),
-			_List_fromArray(
-				[
-					author$project$Page$twitterIcon,
-					A2(
-					elm$html$Html$a,
-					_List_fromArray(
-						[
-							elm$html$Html$Attributes$href('https://twitter.com')
-						]),
-					_List_fromArray(
-						[
-							elm$html$Html$text('Author\'s Twitter')
-						]))
-				])),
-			A2(
-			elm$html$Html$div,
-			_List_fromArray(
-				[
-					elm$html$Html$Attributes$class('link')
-				]),
-			_List_fromArray(
-				[
-					A2(
-					elm$html$Html$a,
-					_List_fromArray(
-						[
-							elm$html$Html$Attributes$href('https://www.npmjs.com/package/elmstatic')
-						]),
-					_List_fromArray(
-						[
-							elm$html$Html$text('Created with Elmstatic')
-						]))
-				]))
-		]));
-var elm$html$Html$li = _VirtualDom_node('li');
-var elm$html$Html$ul = _VirtualDom_node('ul');
-var author$project$Page$header = _List_fromArray(
-	[
-		A2(
-		elm$html$Html$div,
-		_List_fromArray(
-			[
-				elm$html$Html$Attributes$class('header-logo')
-			]),
-		_List_fromArray(
-			[
-				A2(
-				elm$html$Html$img,
-				_List_fromArray(
-					[
-						elm$html$Html$Attributes$alt('Author\'s blog'),
-						elm$html$Html$Attributes$src('/img/logo.png'),
-						A2(elm$html$Html$Attributes$attribute, 'width', '100')
-					]),
-				_List_Nil)
-			])),
-		A2(
-		elm$html$Html$div,
-		_List_fromArray(
-			[
-				elm$html$Html$Attributes$class('navigation')
-			]),
-		_List_fromArray(
-			[
-				A2(
-				elm$html$Html$ul,
-				_List_Nil,
-				_List_fromArray(
-					[
-						A2(
-						elm$html$Html$li,
-						_List_Nil,
-						_List_fromArray(
-							[
-								A2(
-								elm$html$Html$a,
-								_List_fromArray(
-									[
-										elm$html$Html$Attributes$href('/posts')
-									]),
-								_List_fromArray(
-									[
-										elm$html$Html$text('Posts')
-									]))
-							])),
-						A2(
-						elm$html$Html$li,
-						_List_Nil,
-						_List_fromArray(
-							[
-								A2(
-								elm$html$Html$a,
-								_List_fromArray(
-									[
-										elm$html$Html$Attributes$href('/about')
-									]),
-								_List_fromArray(
-									[
-										elm$html$Html$text('About')
-									]))
-							])),
-						A2(
-						elm$html$Html$li,
-						_List_Nil,
-						_List_fromArray(
-							[
-								A2(
-								elm$html$Html$a,
-								_List_fromArray(
-									[
-										elm$html$Html$Attributes$href('/contact')
-									]),
-								_List_fromArray(
-									[
-										elm$html$Html$text('Contact')
-									]))
-							]))
-					]))
-			]))
-	]);
-var elm$core$Basics$negate = function (n) {
-	return -n;
-};
-var rtfeldman$elm_css$Css$Structure$Compatible = 0;
-var rtfeldman$elm_css$Css$auto = {bU: 0, a: 0, V: 0, aJ: 0, b9: 0, _: 0, A: 0, t: 0, ac: 0, q: 0, aS: 0, aj: 0, o: 0, a6: 'auto'};
-var rtfeldman$elm_css$Css$Preprocess$AppendProperty = function (a) {
-	return {$: 0, a: a};
-};
-var rtfeldman$elm_css$Css$property = F2(
-	function (key, value) {
-		return rtfeldman$elm_css$Css$Preprocess$AppendProperty(key + (':' + value));
-	});
-var rtfeldman$elm_css$Css$backgroundColor = function (c) {
-	return A2(rtfeldman$elm_css$Css$property, 'background-color', c.a6);
-};
-var rtfeldman$elm_css$Css$prop1 = F2(
-	function (key, arg) {
-		return A2(rtfeldman$elm_css$Css$property, key, arg.a6);
-	});
-var rtfeldman$elm_css$Css$baseline = rtfeldman$elm_css$Css$prop1('baseline');
-var rtfeldman$elm_css$Css$prop3 = F4(
-	function (key, argA, argB, argC) {
-		return A2(
-			rtfeldman$elm_css$Css$property,
-			key,
-			A2(
-				elm$core$String$join,
-				' ',
-				_List_fromArray(
-					[argA.a6, argB.a6, argC.a6])));
-	});
-var rtfeldman$elm_css$Css$border3 = rtfeldman$elm_css$Css$prop3('border');
-var rtfeldman$elm_css$Css$borderBottom3 = rtfeldman$elm_css$Css$prop3('border-bottom');
-var rtfeldman$elm_css$Css$borderRadius = rtfeldman$elm_css$Css$prop1('border-radius');
-var rtfeldman$elm_css$Css$borderTop3 = rtfeldman$elm_css$Css$prop3('border-top');
-var rtfeldman$elm_css$Css$center = rtfeldman$elm_css$Css$prop1('center');
-var rtfeldman$elm_css$Css$color = function (c) {
-	return A2(rtfeldman$elm_css$Css$property, 'color', c.a6);
-};
-var rtfeldman$elm_css$Css$display = rtfeldman$elm_css$Css$prop1('display');
-var rtfeldman$elm_css$Css$EmUnits = 0;
-var elm$core$String$fromFloat = _String_fromNumber;
-var rtfeldman$elm_css$Css$Internal$lengthConverter = F3(
-	function (units, unitLabel, numericValue) {
-		return {
-			a7: 0,
-			bh: 0,
-			V: 0,
-			k: 0,
-			at: 0,
-			_: 0,
-			A: 0,
-			aa: 0,
-			ab: 0,
-			I: 0,
-			J: 0,
-			t: 0,
-			D: numericValue,
-			ai: 0,
-			ak: unitLabel,
-			aD: units,
-			a6: _Utils_ap(
-				elm$core$String$fromFloat(numericValue),
-				unitLabel)
-		};
-	});
-var rtfeldman$elm_css$Css$em = A2(rtfeldman$elm_css$Css$Internal$lengthConverter, 0, 'em');
-var elm$core$Basics$composeL = F3(
-	function (g, f, x) {
-		return g(
-			f(x));
-	});
-var elm$core$List$isEmpty = function (xs) {
-	if (!xs.b) {
-		return true;
-	} else {
-		return false;
-	}
-};
 var rtfeldman$elm_css$Css$stringsToValue = function (list) {
-	return elm$core$List$isEmpty(list) ? {a6: 'none'} : {
-		a6: A2(
+	return elm$core$List$isEmpty(list) ? {a7: 'none'} : {
+		a7: A2(
 			elm$core$String$join,
 			', ',
 			A2(
@@ -5734,6 +5341,17 @@ var rtfeldman$elm_css$Css$fontFamilies = A2(
 	rtfeldman$elm_css$Css$prop1('font-family'),
 	rtfeldman$elm_css$Css$stringsToValue);
 var rtfeldman$elm_css$Css$fontSize = rtfeldman$elm_css$Css$prop1('font-size');
+var elm$core$String$length = _String_length;
+var elm$core$String$slice = _String_slice;
+var elm$core$String$dropLeft = F2(
+	function (n, string) {
+		return (n < 1) ? string : A3(
+			elm$core$String$slice,
+			n,
+			elm$core$String$length(string),
+			string);
+	});
+var elm$core$String$startsWith = _String_startsWith;
 var elm$core$String$foldr = _String_foldr;
 var elm$core$String$toList = function (string) {
 	return A3(elm$core$String$foldr, elm$core$List$cons, _List_Nil, string);
@@ -5749,7 +5367,7 @@ var rtfeldman$elm_css$Css$erroneousHex = function (str) {
 		s: 0,
 		as: 0,
 		ax: 0,
-		a6: rtfeldman$elm_css$Css$withPrecedingHash(str)
+		a7: rtfeldman$elm_css$Css$withPrecedingHash(str)
 	};
 };
 var elm$core$Basics$composeR = F3(
@@ -5768,15 +5386,6 @@ var elm$core$List$tail = function (list) {
 		return elm$core$Maybe$Nothing;
 	}
 };
-var elm$core$Maybe$withDefault = F2(
-	function (_default, maybe) {
-		if (!maybe.$) {
-			var value = maybe.a;
-			return value;
-		} else {
-			return _default;
-		}
-	});
 var elm$core$Result$map = F2(
 	function (func, ra) {
 		if (!ra.$) {
@@ -5799,6 +5408,9 @@ var elm$core$Result$mapError = F2(
 				f(e));
 		}
 	});
+var elm$core$String$isEmpty = function (string) {
+	return string === '';
+};
 var elm$core$Basics$pow = _Basics_pow;
 var elm$core$String$fromChar = function (_char) {
 	return A2(elm$core$String$cons, _char, '');
@@ -6028,7 +5640,7 @@ var rtfeldman$elm_css$Css$validHex = F5(
 				s: 0,
 				as: green,
 				ax: red,
-				a6: rtfeldman$elm_css$Css$withPrecedingHash(str)
+				a7: rtfeldman$elm_css$Css$withPrecedingHash(str)
 			};
 		} else {
 			return rtfeldman$elm_css$Css$erroneousHex(str);
@@ -6129,15 +5741,13 @@ var rtfeldman$elm_css$Css$hex = function (str) {
 	}
 	return rtfeldman$elm_css$Css$erroneousHex(str);
 };
+var rtfeldman$elm_css$Css$hidden = {m: 0, ac: 0, a7: 'hidden', aE: 0};
 var elm$core$String$endsWith = _String_endsWith;
 var rtfeldman$elm_css$Css$makeImportant = function (str) {
 	return A2(
 		elm$core$String$endsWith,
 		' !important',
 		elm$core$String$toLower(str)) ? str : (str + ' !important');
-};
-var rtfeldman$elm_css$Css$Preprocess$ApplyStyles = function (a) {
-	return {$: 6, a: a};
 };
 var rtfeldman$elm_css$Css$Preprocess$ExtendSelector = F2(
 	function (a, b) {
@@ -6217,19 +5827,35 @@ var rtfeldman$elm_css$Css$Preprocess$mapLastProperty = F2(
 		}
 	});
 var rtfeldman$elm_css$Css$important = rtfeldman$elm_css$Css$Preprocess$mapLastProperty(rtfeldman$elm_css$Css$makeImportant);
-var rtfeldman$elm_css$Css$inlineBlock = {f: 0, a6: 'inline-block'};
+var rtfeldman$elm_css$Css$inlineBlock = {f: 0, a7: 'inline-block'};
 var rtfeldman$elm_css$Css$left = rtfeldman$elm_css$Css$prop1('left');
 var rtfeldman$elm_css$Css$lineHeight = rtfeldman$elm_css$Css$prop1('line-height');
+var rtfeldman$elm_css$Css$listStyle = rtfeldman$elm_css$Css$prop1('list-style');
 var rtfeldman$elm_css$Css$margin = rtfeldman$elm_css$Css$prop1('margin');
-var rtfeldman$elm_css$Css$margin3 = rtfeldman$elm_css$Css$prop3('margin');
+var rtfeldman$elm_css$Css$prop2 = F3(
+	function (key, argA, argB) {
+		return A2(
+			rtfeldman$elm_css$Css$property,
+			key,
+			A2(
+				elm$core$String$join,
+				' ',
+				_List_fromArray(
+					[argA.a7, argB.a7])));
+	});
+var rtfeldman$elm_css$Css$margin2 = rtfeldman$elm_css$Css$prop2('margin');
+var rtfeldman$elm_css$Css$margin4 = rtfeldman$elm_css$Css$prop4('margin');
 var rtfeldman$elm_css$Css$marginBottom = rtfeldman$elm_css$Css$prop1('margin-bottom');
 var rtfeldman$elm_css$Css$marginRight = rtfeldman$elm_css$Css$prop1('margin-right');
 var rtfeldman$elm_css$Css$marginTop = rtfeldman$elm_css$Css$prop1('margin-top');
 var rtfeldman$elm_css$Css$maxWidth = rtfeldman$elm_css$Css$prop1('max-width');
-var rtfeldman$elm_css$Css$monospace = {G: 0, a6: 'monospace'};
-var rtfeldman$elm_css$Css$none = {Q: 0, be: 0, m: 0, a: 0, f: 0, b6: 0, bt: 0, aZ: 0, ab: 0, I: 0, t: 0, c: 0, b: 0, a$: 0, aN: 0, cg: 0, q: 0, aO: 0, ck: 0, ah: 0, O: 0, o: 0, e: 0, cr: 0, a6: 'none'};
+var rtfeldman$elm_css$Css$minWidth = rtfeldman$elm_css$Css$prop1('min-width');
+var rtfeldman$elm_css$Css$monospace = {G: 0, a7: 'monospace'};
+var rtfeldman$elm_css$Css$none = {Q: 0, bf: 0, m: 0, a: 0, f: 0, b7: 0, bu: 0, a_: 0, ab: 0, I: 0, t: 0, c: 0, b: 0, a0: 0, aO: 0, ch: 0, q: 0, aP: 0, cl: 0, ah: 0, O: 0, o: 0, e: 0, cs: 0, a7: 'none'};
+var rtfeldman$elm_css$Css$overflow = rtfeldman$elm_css$Css$prop1('overflow');
 var rtfeldman$elm_css$Css$overflowX = rtfeldman$elm_css$Css$prop1('overflow-x');
 var rtfeldman$elm_css$Css$padding = rtfeldman$elm_css$Css$prop1('padding');
+var rtfeldman$elm_css$Css$paddingBottom = rtfeldman$elm_css$Css$prop1('padding-bottom');
 var rtfeldman$elm_css$Css$paddingLeft = rtfeldman$elm_css$Css$prop1('padding-left');
 var rtfeldman$elm_css$Css$paddingRight = rtfeldman$elm_css$Css$prop1('padding-right');
 var rtfeldman$elm_css$Css$paddingTop = rtfeldman$elm_css$Css$prop1('padding-top');
@@ -6237,83 +5863,10 @@ var rtfeldman$elm_css$Css$PercentageUnits = 0;
 var rtfeldman$elm_css$Css$pct = A2(rtfeldman$elm_css$Css$Internal$lengthConverter, 0, '%');
 var rtfeldman$elm_css$Css$PxUnits = 0;
 var rtfeldman$elm_css$Css$px = A2(rtfeldman$elm_css$Css$Internal$lengthConverter, 0, 'px');
-var rtfeldman$elm_css$Css$RemUnits = 0;
-var rtfeldman$elm_css$Css$rem = A2(rtfeldman$elm_css$Css$Internal$lengthConverter, 0, 'rem');
 var rtfeldman$elm_css$Css$right = rtfeldman$elm_css$Css$prop1('right');
-var rtfeldman$elm_css$Css$sansSerif = {G: 0, a6: 'sans-serif'};
-var rtfeldman$elm_css$Css$scroll = {ap: 0, be: 0, bt: 0, ac: 0, cl: 0, a6: 'scroll'};
-var rtfeldman$elm_css$Css$solid = {m: 0, N: 0, a6: 'solid'};
-var elm$core$List$head = function (list) {
-	if (list.b) {
-		var x = list.a;
-		var xs = list.b;
-		return elm$core$Maybe$Just(x);
-	} else {
-		return elm$core$Maybe$Nothing;
-	}
-};
-var rtfeldman$elm_css$Css$Internal$property = F2(
-	function (key, value) {
-		return rtfeldman$elm_css$Css$Preprocess$AppendProperty(key + (':' + value));
-	});
-var rtfeldman$elm_css$Css$Internal$getOverloadedProperty = F3(
-	function (functionName, desiredKey, style) {
-		getOverloadedProperty:
-		while (true) {
-			switch (style.$) {
-				case 0:
-					var str = style.a;
-					var key = A2(
-						elm$core$Maybe$withDefault,
-						'',
-						elm$core$List$head(
-							A2(elm$core$String$split, ':', str)));
-					return A2(rtfeldman$elm_css$Css$Internal$property, desiredKey, key);
-				case 1:
-					var selector = style.a;
-					return A2(rtfeldman$elm_css$Css$Internal$property, desiredKey, 'elm-css-error-cannot-apply-' + (functionName + '-with-inapplicable-Style-for-selector'));
-				case 2:
-					var combinator = style.a;
-					return A2(rtfeldman$elm_css$Css$Internal$property, desiredKey, 'elm-css-error-cannot-apply-' + (functionName + '-with-inapplicable-Style-for-combinator'));
-				case 3:
-					var pseudoElement = style.a;
-					return A2(rtfeldman$elm_css$Css$Internal$property, desiredKey, 'elm-css-error-cannot-apply-' + (functionName + '-with-inapplicable-Style-for-pseudo-element setter'));
-				case 4:
-					return A2(rtfeldman$elm_css$Css$Internal$property, desiredKey, 'elm-css-error-cannot-apply-' + (functionName + '-with-inapplicable-Style-for-media-query'));
-				case 5:
-					return A2(rtfeldman$elm_css$Css$Internal$property, desiredKey, 'elm-css-error-cannot-apply-' + (functionName + '-with-inapplicable-Style-for-keyframes'));
-				default:
-					if (!style.a.b) {
-						return A2(rtfeldman$elm_css$Css$Internal$property, desiredKey, 'elm-css-error-cannot-apply-' + (functionName + '-with-empty-Style'));
-					} else {
-						if (!style.a.b.b) {
-							var _n1 = style.a;
-							var only = _n1.a;
-							var $temp$functionName = functionName,
-								$temp$desiredKey = desiredKey,
-								$temp$style = only;
-							functionName = $temp$functionName;
-							desiredKey = $temp$desiredKey;
-							style = $temp$style;
-							continue getOverloadedProperty;
-						} else {
-							var _n2 = style.a;
-							var first = _n2.a;
-							var rest = _n2.b;
-							var $temp$functionName = functionName,
-								$temp$desiredKey = desiredKey,
-								$temp$style = rtfeldman$elm_css$Css$Preprocess$ApplyStyles(rest);
-							functionName = $temp$functionName;
-							desiredKey = $temp$desiredKey;
-							style = $temp$style;
-							continue getOverloadedProperty;
-						}
-					}
-			}
-		}
-	});
-var rtfeldman$elm_css$Css$Internal$IncompatibleUnits = 0;
-var rtfeldman$elm_css$Css$Internal$lengthForOverloadedProperty = A3(rtfeldman$elm_css$Css$Internal$lengthConverter, 0, '', 0);
+var rtfeldman$elm_css$Css$sansSerif = {G: 0, a7: 'sans-serif'};
+var rtfeldman$elm_css$Css$scroll = {ap: 0, bf: 0, bu: 0, ac: 0, cm: 0, a7: 'scroll'};
+var rtfeldman$elm_css$Css$solid = {m: 0, N: 0, a7: 'solid'};
 var rtfeldman$elm_css$Css$textAlign = function (fn) {
 	return A3(
 		rtfeldman$elm_css$Css$Internal$getOverloadedProperty,
@@ -6331,6 +5884,8 @@ var rtfeldman$elm_css$Css$verticalAlign = function (fn) {
 };
 var rtfeldman$elm_css$Css$VwUnits = 0;
 var rtfeldman$elm_css$Css$vw = A2(rtfeldman$elm_css$Css$Internal$lengthConverter, 0, 'vw');
+var rtfeldman$elm_css$Css$UnitlessInteger = 0;
+var rtfeldman$elm_css$Css$zero = {at: 0, _: 0, A: 0, aa: 0, ab: 0, I: 0, J: 0, av: 0, D: 0, aO: 0, ak: '', aD: 0, a7: '0'};
 var rtfeldman$elm_css$Css$Preprocess$Snippet = elm$core$Basics$identity;
 var rtfeldman$elm_css$Css$Preprocess$StyleBlock = F3(
 	function (a, b, c) {
@@ -6553,7 +6108,7 @@ var elm$core$List$singleton = function (value) {
 		[value]);
 };
 var rtfeldman$elm_css$Css$Preprocess$stylesheet = function (snippets) {
-	return {bj: elm$core$Maybe$Nothing, br: _List_Nil, by: _List_Nil, bM: snippets};
+	return {bk: elm$core$Maybe$Nothing, bs: _List_Nil, bz: _List_Nil, bN: snippets};
 };
 var elm$core$Basics$neq = _Utils_notEqual;
 var elm$core$List$takeReverse = F3(
@@ -7535,7 +7090,7 @@ var rtfeldman$elm_css$Css$Preprocess$Resolve$applyStyles = F2(
 						_List_fromArray(
 							[
 								rtfeldman$elm_css$Css$Structure$Keyframes(
-								{b_: str, cc: name})
+								{b$: str, cd: name})
 							]));
 				case 4:
 					var _n12 = styles.a;
@@ -7670,13 +7225,13 @@ var rtfeldman$elm_css$Css$Preprocess$Resolve$toDeclarations = function (snippetD
 	}
 };
 var rtfeldman$elm_css$Css$Preprocess$Resolve$toStructure = function (_n0) {
-	var charset = _n0.bj;
-	var imports = _n0.br;
-	var namespaces = _n0.by;
-	var snippets = _n0.bM;
+	var charset = _n0.bk;
+	var imports = _n0.bs;
+	var namespaces = _n0.bz;
+	var snippets = _n0.bN;
 	var declarations = rtfeldman$elm_css$Css$Preprocess$Resolve$extract(
 		A2(elm$core$List$concatMap, rtfeldman$elm_css$Css$Preprocess$unwrapSnippet, snippets));
-	return {bj: charset, b$: declarations, br: imports, by: namespaces};
+	return {bk: charset, b0: declarations, bs: imports, bz: namespaces};
 };
 var elm$core$Dict$RBEmpty_elm_builtin = {$: -2};
 var elm$core$Dict$empty = elm$core$Dict$RBEmpty_elm_builtin;
@@ -7861,8 +7416,8 @@ var rtfeldman$elm_css$Css$Structure$compactHelp = F2(
 					A2(elm$core$List$cons, declaration, declarations));
 			case 6:
 				var record = declaration.a;
-				return elm$core$String$isEmpty(record.b_) ? _Utils_Tuple2(keyframesByName, declarations) : _Utils_Tuple2(
-					A3(elm$core$Dict$insert, record.cc, record.b_, keyframesByName),
+				return elm$core$String$isEmpty(record.b$) ? _Utils_Tuple2(keyframesByName, declarations) : _Utils_Tuple2(
+					A3(elm$core$Dict$insert, record.cd, record.b$, keyframesByName),
 					declarations);
 			case 7:
 				var properties = declaration.a;
@@ -7897,16 +7452,16 @@ var rtfeldman$elm_css$Css$Structure$withKeyframeDeclarations = F2(
 					var name = _n0.a;
 					var decl = _n0.b;
 					return rtfeldman$elm_css$Css$Structure$Keyframes(
-						{b_: decl, cc: name});
+						{b$: decl, cd: name});
 				},
 				elm$core$Dict$toList(keyframesByName)),
 			compactedDeclarations);
 	});
 var rtfeldman$elm_css$Css$Structure$compactStylesheet = function (_n0) {
-	var charset = _n0.bj;
-	var imports = _n0.br;
-	var namespaces = _n0.by;
-	var declarations = _n0.b$;
+	var charset = _n0.bk;
+	var imports = _n0.bs;
+	var namespaces = _n0.bz;
+	var declarations = _n0.b0;
 	var _n1 = A3(
 		elm$core$List$foldr,
 		rtfeldman$elm_css$Css$Structure$compactHelp,
@@ -7915,7 +7470,7 @@ var rtfeldman$elm_css$Css$Structure$compactStylesheet = function (_n0) {
 	var keyframesByName = _n1.a;
 	var compactedDeclarations = _n1.b;
 	var finalDeclarations = A2(rtfeldman$elm_css$Css$Structure$withKeyframeDeclarations, keyframesByName, compactedDeclarations);
-	return {bj: charset, b$: finalDeclarations, br: imports, by: namespaces};
+	return {bk: charset, b0: finalDeclarations, bs: imports, bz: namespaces};
 };
 var elm$core$List$filter = F2(
 	function (isGood, list) {
@@ -7940,13 +7495,13 @@ var rtfeldman$elm_css$Css$Structure$Output$charsetToString = function (charset) 
 			charset));
 };
 var rtfeldman$elm_css$Css$Structure$Output$mediaExpressionToString = function (expression) {
-	return '(' + (expression.bo + (A2(
+	return '(' + (expression.bp + (A2(
 		elm$core$Maybe$withDefault,
 		'',
 		A2(
 			elm$core$Maybe$map,
 			elm$core$Basics$append(': '),
-			expression.a6)) + ')'));
+			expression.a7)) + ')'));
 };
 var rtfeldman$elm_css$Css$Structure$Output$mediaTypeToString = function (mediaType) {
 	switch (mediaType) {
@@ -8188,8 +7743,8 @@ var rtfeldman$elm_css$Css$Structure$Output$prettyPrintDeclaration = function (de
 		case 5:
 			return 'TODO';
 		case 6:
-			var name = decl.a.cc;
-			var declaration = decl.a.b_;
+			var name = decl.a.cd;
+			var declaration = decl.a.b$;
 			return '@keyframes ' + (name + (' {\n' + (declaration + '\n}')));
 		case 7:
 			return 'TODO';
@@ -8200,10 +7755,10 @@ var rtfeldman$elm_css$Css$Structure$Output$prettyPrintDeclaration = function (de
 	}
 };
 var rtfeldman$elm_css$Css$Structure$Output$prettyPrint = function (_n0) {
-	var charset = _n0.bj;
-	var imports = _n0.br;
-	var namespaces = _n0.by;
-	var declarations = _n0.b$;
+	var charset = _n0.bk;
+	var imports = _n0.bs;
+	var namespaces = _n0.bz;
+	var declarations = _n0.b0;
 	return A2(
 		elm$core$String$join,
 		'\n\n',
@@ -8261,7 +7816,6 @@ var rtfeldman$elm_css$Css$Global$h4 = rtfeldman$elm_css$Css$Global$typeSelector(
 var rtfeldman$elm_css$Css$Global$h5 = rtfeldman$elm_css$Css$Global$typeSelector('h5');
 var rtfeldman$elm_css$Css$Global$h6 = rtfeldman$elm_css$Css$Global$typeSelector('h6');
 var rtfeldman$elm_css$Css$Global$li = rtfeldman$elm_css$Css$Global$typeSelector('li');
-var rtfeldman$elm_css$Css$Global$p = rtfeldman$elm_css$Css$Global$typeSelector('p');
 var rtfeldman$elm_css$Css$Global$pre = rtfeldman$elm_css$Css$Global$typeSelector('pre');
 var rtfeldman$elm_css$Css$Global$small = rtfeldman$elm_css$Css$Global$typeSelector('small');
 var rtfeldman$elm_css$Css$Global$span = rtfeldman$elm_css$Css$Global$typeSelector('span');
@@ -8269,10 +7823,10 @@ var rtfeldman$elm_css$Css$Global$svg = rtfeldman$elm_css$Css$Global$typeSelector
 var rtfeldman$elm_css$Css$Global$ul = rtfeldman$elm_css$Css$Global$typeSelector('ul');
 var rtfeldman$elm_css$Css$Media$feature = F2(
 	function (key, _n0) {
-		var value = _n0.a6;
+		var value = _n0.a7;
 		return {
-			bo: key,
-			a6: elm$core$Maybe$Just(value)
+			bp: key,
+			a7: elm$core$Maybe$Just(value)
 		};
 	});
 var rtfeldman$elm_css$Css$Media$minWidth = function (value) {
@@ -8784,7 +8338,7 @@ var author$project$Styles$styles = function () {
 				[
 					'Inconsolata',
 					function ($) {
-					return $.a6;
+					return $.a7;
 				}(rtfeldman$elm_css$Css$monospace)
 				]))
 		]);
@@ -8799,19 +8353,18 @@ var author$project$Styles$styles = function () {
 							rtfeldman$elm_css$Css$px(0)),
 							rtfeldman$elm_css$Css$margin(
 							rtfeldman$elm_css$Css$px(0)),
-							rtfeldman$elm_css$Css$backgroundColor(
-							rtfeldman$elm_css$Css$hex('ffffff')),
 							rtfeldman$elm_css$Css$color(
 							rtfeldman$elm_css$Css$hex('363636')),
 							rtfeldman$elm_css$Css$fontFamilies(
 							_List_fromArray(
 								[
-									'Open Sans',
+									'Roboto Condensed',
 									'Arial',
 									function ($) {
-									return $.a6;
+									return $.a7;
 								}(rtfeldman$elm_css$Css$sansSerif)
 								])),
+							A2(rtfeldman$elm_css$Css$property, 'font-display', 'swap'),
 							rtfeldman$elm_css$Css$fontSize(
 							rtfeldman$elm_css$Css$px(18)),
 							rtfeldman$elm_css$Css$lineHeight(
@@ -8848,66 +8401,13 @@ var author$project$Styles$styles = function () {
 							rtfeldman$elm_css$Css$fontFamilies(
 							_List_fromArray(
 								[
-									'Proza Libre',
+									'Roboto Condensed',
 									'Helvetica',
+									'Arial',
 									function ($) {
-									return $.a6;
+									return $.a7;
 								}(rtfeldman$elm_css$Css$sansSerif)
-								])),
-							rtfeldman$elm_css$Css$lineHeight(
-							rtfeldman$elm_css$Css$em(1.1))
-						])),
-					rtfeldman$elm_css$Css$Global$h1(
-					_List_fromArray(
-						[
-							rtfeldman$elm_css$Css$fontSize(
-							rtfeldman$elm_css$Css$em(2.66667)),
-							rtfeldman$elm_css$Css$marginBottom(
-							rtfeldman$elm_css$Css$rem(2.0202))
-						])),
-					rtfeldman$elm_css$Css$Global$h2(
-					_List_fromArray(
-						[
-							rtfeldman$elm_css$Css$fontSize(
-							rtfeldman$elm_css$Css$em(2.0)),
-							rtfeldman$elm_css$Css$marginBottom(
-							rtfeldman$elm_css$Css$rem(1.61616))
-						])),
-					rtfeldman$elm_css$Css$Global$h3(
-					_List_fromArray(
-						[
-							rtfeldman$elm_css$Css$fontSize(
-							rtfeldman$elm_css$Css$em(1.33333)),
-							rtfeldman$elm_css$Css$marginBottom(
-							rtfeldman$elm_css$Css$rem(1.21212))
-						])),
-					rtfeldman$elm_css$Css$Global$h4(
-					_List_fromArray(
-						[
-							rtfeldman$elm_css$Css$fontSize(
-							rtfeldman$elm_css$Css$em(1.2)),
-							rtfeldman$elm_css$Css$marginBottom(
-							rtfeldman$elm_css$Css$rem(0.80808))
-						])),
-					A2(
-					rtfeldman$elm_css$Css$Global$each,
-					_List_fromArray(
-						[rtfeldman$elm_css$Css$Global$h5, rtfeldman$elm_css$Css$Global$h6]),
-					_List_fromArray(
-						[
-							rtfeldman$elm_css$Css$fontSize(
-							rtfeldman$elm_css$Css$em(1.0)),
-							rtfeldman$elm_css$Css$marginBottom(
-							rtfeldman$elm_css$Css$rem(0.60606))
-						])),
-					rtfeldman$elm_css$Css$Global$p(
-					_List_fromArray(
-						[
-							A3(
-							rtfeldman$elm_css$Css$margin3,
-							rtfeldman$elm_css$Css$auto,
-							rtfeldman$elm_css$Css$auto,
-							rtfeldman$elm_css$Css$rem(1.5))
+								]))
 						])),
 					rtfeldman$elm_css$Css$Global$small(
 					_List_fromArray(
@@ -8917,80 +8417,86 @@ var author$project$Styles$styles = function () {
 						])),
 					A2(
 					rtfeldman$elm_css$Css$Global$class,
-					'header-logo',
+					'header',
 					_List_fromArray(
 						[
-							rtfeldman$elm_css$Css$paddingTop(
-							rtfeldman$elm_css$Css$px(6)),
-							rtfeldman$elm_css$Css$textAlign(rtfeldman$elm_css$Css$center),
 							rtfeldman$elm_css$Css$backgroundColor(
 							rtfeldman$elm_css$Css$hex('f2fae8')),
-							wideScreen(
-							_List_fromArray(
-								[
-									rtfeldman$elm_css$Css$textAlign(rtfeldman$elm_css$Css$left),
-									A3(
-									rtfeldman$elm_css$Css$borderBottom3,
-									rtfeldman$elm_css$Css$px(2),
-									rtfeldman$elm_css$Css$solid,
-									rtfeldman$elm_css$Css$hex('3c8765'))
-								]))
-						])),
-					A2(
-					rtfeldman$elm_css$Css$Global$class,
-					'navigation',
-					_List_fromArray(
-						[
-							rtfeldman$elm_css$Css$textAlign(rtfeldman$elm_css$Css$center),
 							A3(
 							rtfeldman$elm_css$Css$borderBottom3,
 							rtfeldman$elm_css$Css$px(2),
 							rtfeldman$elm_css$Css$solid,
 							rtfeldman$elm_css$Css$hex('3c8765')),
-							rtfeldman$elm_css$Css$backgroundColor(
-							rtfeldman$elm_css$Css$hex('f2fae8')),
-							rtfeldman$elm_css$Css$padding(
+							rtfeldman$elm_css$Css$paddingTop(
+							rtfeldman$elm_css$Css$px(6)),
+							rtfeldman$elm_css$Css$overflow(rtfeldman$elm_css$Css$hidden)
+						])),
+					A2(
+					rtfeldman$elm_css$Css$Global$class,
+					'header__content',
+					_List_fromArray(
+						[
+							A2(rtfeldman$elm_css$Css$margin2, rtfeldman$elm_css$Css$zero, rtfeldman$elm_css$Css$auto),
+							rtfeldman$elm_css$Css$maxWidth(
+							rtfeldman$elm_css$Css$px(600)),
+							rtfeldman$elm_css$Css$minWidth(
+							rtfeldman$elm_css$Css$px(280)),
+							rtfeldman$elm_css$Css$paddingLeft(
 							rtfeldman$elm_css$Css$px(10)),
-							rtfeldman$elm_css$Css$marginTop(
-							rtfeldman$elm_css$Css$px(-20)),
+							rtfeldman$elm_css$Css$paddingRight(
+							rtfeldman$elm_css$Css$px(10))
+						])),
+					A2(
+					rtfeldman$elm_css$Css$Global$class,
+					'header__logo',
+					_List_fromArray(
+						[
+							rtfeldman$elm_css$Css$display(rtfeldman$elm_css$Css$inlineBlock),
+							rtfeldman$elm_css$Css$textAlign(rtfeldman$elm_css$Css$center),
+							wideScreen(
+							_List_fromArray(
+								[
+									rtfeldman$elm_css$Css$textAlign(rtfeldman$elm_css$Css$left)
+								]))
+						])),
+					A2(
+					rtfeldman$elm_css$Css$Global$class,
+					'header__navigation',
+					_List_fromArray(
+						[
 							rtfeldman$elm_css$Css$Global$descendants(
 							_List_fromArray(
 								[
 									rtfeldman$elm_css$Css$Global$ul(
 									_List_fromArray(
 										[
-											rtfeldman$elm_css$Css$margin(
-											rtfeldman$elm_css$Css$px(0)),
-											rtfeldman$elm_css$Css$padding(
-											rtfeldman$elm_css$Css$px(0)),
-											wideScreen(
-											_List_fromArray(
-												[
-													rtfeldman$elm_css$Css$lineHeight(
-													rtfeldman$elm_css$Css$px(100))
-												]))
+											rtfeldman$elm_css$Css$listStyle(rtfeldman$elm_css$Css$none),
+											rtfeldman$elm_css$Css$margin(rtfeldman$elm_css$Css$zero),
+											rtfeldman$elm_css$Css$padding(rtfeldman$elm_css$Css$zero)
 										])),
 									rtfeldman$elm_css$Css$Global$li(
 									_List_fromArray(
 										[
 											rtfeldman$elm_css$Css$display(rtfeldman$elm_css$Css$inlineBlock),
-											rtfeldman$elm_css$Css$marginRight(
-											rtfeldman$elm_css$Css$px(20))
+											rtfeldman$elm_css$Css$paddingLeft(
+											rtfeldman$elm_css$Css$em(1))
 										]))
 								])),
+							rtfeldman$elm_css$Css$float(rtfeldman$elm_css$Css$right),
+							rtfeldman$elm_css$Css$lineHeight(
+							rtfeldman$elm_css$Css$px(70)),
+							rtfeldman$elm_css$Css$paddingRight(
+							rtfeldman$elm_css$Css$px(10)),
+							rtfeldman$elm_css$Css$textAlign(rtfeldman$elm_css$Css$center),
 							wideScreen(
 							_List_fromArray(
 								[
-									rtfeldman$elm_css$Css$marginTop(
-									rtfeldman$elm_css$Css$px(0)),
-									rtfeldman$elm_css$Css$padding(
-									rtfeldman$elm_css$Css$px(0)),
-									rtfeldman$elm_css$Css$textAlign(rtfeldman$elm_css$Css$right)
+									rtfeldman$elm_css$Css$textAlign(rtfeldman$elm_css$Css$left)
 								]))
 						])),
 					A2(
 					rtfeldman$elm_css$Css$Global$class,
-					'content',
+					'main',
 					_List_fromArray(
 						[
 							rtfeldman$elm_css$Css$maxWidth(
@@ -8998,29 +8504,32 @@ var author$project$Styles$styles = function () {
 						])),
 					A2(
 					rtfeldman$elm_css$Css$Global$class,
+					'main__content',
+					_List_fromArray(
+						[
+							A4(
+							rtfeldman$elm_css$Css$margin4,
+							rtfeldman$elm_css$Css$px(50),
+							rtfeldman$elm_css$Css$auto,
+							rtfeldman$elm_css$Css$zero,
+							rtfeldman$elm_css$Css$auto),
+							rtfeldman$elm_css$Css$maxWidth(
+							rtfeldman$elm_css$Css$px(600)),
+							rtfeldman$elm_css$Css$minWidth(
+							rtfeldman$elm_css$Css$px(280)),
+							rtfeldman$elm_css$Css$paddingLeft(
+							rtfeldman$elm_css$Css$px(10)),
+							rtfeldman$elm_css$Css$paddingRight(
+							rtfeldman$elm_css$Css$px(10))
+						])),
+					A2(
+					rtfeldman$elm_css$Css$Global$class,
 					'footer',
 					_List_fromArray(
 						[
-							rtfeldman$elm_css$Css$textAlign(rtfeldman$elm_css$Css$center),
-							A3(
-							rtfeldman$elm_css$Css$borderTop3,
-							rtfeldman$elm_css$Css$px(2),
-							rtfeldman$elm_css$Css$solid,
-							rtfeldman$elm_css$Css$hex('2f4858')),
-							rtfeldman$elm_css$Css$backgroundColor(
-							rtfeldman$elm_css$Css$hex('348aa7')),
-							rtfeldman$elm_css$Css$color(
-							rtfeldman$elm_css$Css$hex('ffffff')),
 							rtfeldman$elm_css$Css$Global$descendants(
 							_List_fromArray(
 								[
-									rtfeldman$elm_css$Css$Global$a(
-									_List_fromArray(
-										[
-											rtfeldman$elm_css$Css$color(
-											rtfeldman$elm_css$Css$hex('ffffff')),
-											rtfeldman$elm_css$Css$textDecoration(rtfeldman$elm_css$Css$none)
-										])),
 									rtfeldman$elm_css$Css$Global$svg(
 									_List_fromArray(
 										[
@@ -9028,27 +8537,96 @@ var author$project$Styles$styles = function () {
 											rtfeldman$elm_css$Css$px(5)),
 											rtfeldman$elm_css$Css$verticalAlign(rtfeldman$elm_css$Css$baseline)
 										]))
-								])),
+								]))
+						])),
+					A2(
+					rtfeldman$elm_css$Css$Global$class,
+					'footer__content',
+					_List_fromArray(
+						[
+							rtfeldman$elm_css$Css$borderColor(
+							rtfeldman$elm_css$Css$hex('e0e0e0')),
+							rtfeldman$elm_css$Css$borderStyle(rtfeldman$elm_css$Css$solid),
+							A4(
+							rtfeldman$elm_css$Css$borderWidth4,
+							rtfeldman$elm_css$Css$px(1),
+							rtfeldman$elm_css$Css$zero,
+							rtfeldman$elm_css$Css$zero,
+							rtfeldman$elm_css$Css$zero),
+							A2(rtfeldman$elm_css$Css$margin2, rtfeldman$elm_css$Css$zero, rtfeldman$elm_css$Css$auto),
+							rtfeldman$elm_css$Css$maxWidth(
+							rtfeldman$elm_css$Css$px(600)),
+							rtfeldman$elm_css$Css$minWidth(
+							rtfeldman$elm_css$Css$px(280)),
+							rtfeldman$elm_css$Css$paddingLeft(
+							rtfeldman$elm_css$Css$px(10)),
+							rtfeldman$elm_css$Css$paddingRight(
+							rtfeldman$elm_css$Css$px(10))
+						])),
+					A2(
+					rtfeldman$elm_css$Css$Global$class,
+					'footer__copyright',
+					_List_fromArray(
+						[
+							rtfeldman$elm_css$Css$display(rtfeldman$elm_css$Css$block),
+							rtfeldman$elm_css$Css$paddingBottom(
+							rtfeldman$elm_css$Css$em(1)),
+							rtfeldman$elm_css$Css$paddingTop(
+							rtfeldman$elm_css$Css$em(1)),
+							rtfeldman$elm_css$Css$textAlign(rtfeldman$elm_css$Css$center),
 							wideScreen(
 							_List_fromArray(
 								[
-									rtfeldman$elm_css$Css$lineHeight(
-									rtfeldman$elm_css$Css$px(80)),
-									rtfeldman$elm_css$Css$textAlign(rtfeldman$elm_css$Css$right),
-									rtfeldman$elm_css$Css$Global$descendants(
+									rtfeldman$elm_css$Css$display(rtfeldman$elm_css$Css$inlineBlock),
+									rtfeldman$elm_css$Css$textAlign(rtfeldman$elm_css$Css$left)
+								]))
+						])),
+					A2(
+					rtfeldman$elm_css$Css$Global$class,
+					'footer__acknowledgements',
+					_List_fromArray(
+						[
+							rtfeldman$elm_css$Css$display(rtfeldman$elm_css$Css$block),
+							rtfeldman$elm_css$Css$paddingBottom(
+							rtfeldman$elm_css$Css$em(1)),
+							rtfeldman$elm_css$Css$paddingTop(
+							rtfeldman$elm_css$Css$em(1)),
+							rtfeldman$elm_css$Css$textAlign(rtfeldman$elm_css$Css$center),
+							wideScreen(
+							_List_fromArray(
+								[
+									rtfeldman$elm_css$Css$float(rtfeldman$elm_css$Css$right),
+									rtfeldman$elm_css$Css$overflow(rtfeldman$elm_css$Css$hidden),
+									rtfeldman$elm_css$Css$textAlign(rtfeldman$elm_css$Css$right)
+								]))
+						])),
+					A2(
+					rtfeldman$elm_css$Css$Global$class,
+					'footer__navigation',
+					_List_fromArray(
+						[
+							rtfeldman$elm_css$Css$Global$descendants(
+							_List_fromArray(
+								[
+									rtfeldman$elm_css$Css$Global$ul(
 									_List_fromArray(
 										[
-											A2(
-											rtfeldman$elm_css$Css$Global$class,
-											'link',
-											_List_fromArray(
-												[
-													rtfeldman$elm_css$Css$display(rtfeldman$elm_css$Css$inlineBlock),
-													rtfeldman$elm_css$Css$marginRight(
-													rtfeldman$elm_css$Css$px(20))
-												]))
+											rtfeldman$elm_css$Css$listStyle(rtfeldman$elm_css$Css$none),
+											rtfeldman$elm_css$Css$margin(rtfeldman$elm_css$Css$zero),
+											rtfeldman$elm_css$Css$padding(rtfeldman$elm_css$Css$zero)
+										])),
+									rtfeldman$elm_css$Css$Global$li(
+									_List_fromArray(
+										[
+											rtfeldman$elm_css$Css$display(rtfeldman$elm_css$Css$inlineBlock),
+											rtfeldman$elm_css$Css$paddingRight(
+											rtfeldman$elm_css$Css$em(1))
 										]))
-								]))
+								])),
+							rtfeldman$elm_css$Css$paddingBottom(
+							rtfeldman$elm_css$Css$em(1)),
+							rtfeldman$elm_css$Css$paddingTop(
+							rtfeldman$elm_css$Css$em(1))
 						])),
 					A2(
 					rtfeldman$elm_css$Css$Global$class,
@@ -9093,6 +8671,687 @@ var author$project$Styles$styles = function () {
 						]))
 				])));
 }();
+var author$project$Elmstatic$htmlTemplate = F2(
+	function (title, contentNodes) {
+		return A3(
+			elm$html$Html$node,
+			'html',
+			_List_fromArray(
+				[
+					A2(elm$html$Html$Attributes$attribute, 'lang', 'en')
+				]),
+			_List_fromArray(
+				[
+					A3(
+					elm$html$Html$node,
+					'head',
+					_List_Nil,
+					_List_fromArray(
+						[
+							A3(
+							elm$html$Html$node,
+							'meta',
+							_List_fromArray(
+								[
+									A2(elm$html$Html$Attributes$attribute, 'charset', 'utf-8')
+								]),
+							_List_Nil),
+							A3(
+							elm$html$Html$node,
+							'meta',
+							_List_fromArray(
+								[
+									A2(elm$html$Html$Attributes$attribute, 'http-equiv', 'X-UA-Compatible'),
+									A2(elm$html$Html$Attributes$attribute, 'content', 'IE=edge')
+								]),
+							_List_Nil),
+							A3(
+							elm$html$Html$node,
+							'meta',
+							_List_fromArray(
+								[
+									A2(elm$html$Html$Attributes$attribute, 'name', 'author'),
+									A2(elm$html$Html$Attributes$attribute, 'content', 'Martin Feineis')
+								]),
+							_List_Nil),
+							A3(
+							elm$html$Html$node,
+							'meta',
+							_List_fromArray(
+								[
+									A2(elm$html$Html$Attributes$attribute, 'name', 'creator'),
+									A2(elm$html$Html$Attributes$attribute, 'content', 'Canena')
+								]),
+							_List_Nil),
+							A3(
+							elm$html$Html$node,
+							'meta',
+							_List_fromArray(
+								[
+									A2(elm$html$Html$Attributes$attribute, 'name', 'description'),
+									A2(elm$html$Html$Attributes$attribute, 'content', 'A blog about life')
+								]),
+							_List_Nil),
+							A3(
+							elm$html$Html$node,
+							'meta',
+							_List_fromArray(
+								[
+									A2(elm$html$Html$Attributes$attribute, 'name', 'viewport'),
+									A2(elm$html$Html$Attributes$attribute, 'content', 'width=device-width, user-scalable=yes, initial-scale=1.0, minimum-scale=1.0')
+								]),
+							_List_Nil),
+							A3(
+							elm$html$Html$node,
+							'title',
+							_List_Nil,
+							_List_fromArray(
+								[
+									elm$html$Html$text(title)
+								])),
+							author$project$Elmstatic$stylesheet('/normalize-8.0.1.css'),
+							author$project$Elmstatic$stylesheet('/styles.css?v1'),
+							A3(author$project$Elmstatic$cdnStylesheet, 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.8/styles/default.min.css', 'sha256-zcunqSn1llgADaIPFyzrQ8USIjX2VpuxHzUwYisOwo8=', 'anonymous'),
+							author$project$Styles$styles,
+							A3(author$project$Elmstatic$cdnScript, 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.8/highlight.min.js', 'sha256-js+I1fdbke/DJrW2qXQlrw7VUEqmdeFeOW37UC0bEiU=', 'anonymous'),
+							A3(author$project$Elmstatic$cdnScript, 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.8/languages/elm.min.js', 'sha256-5ZDjmDRr7i9DNIGlJKzPImNcoVZ2KGsPch+qoZuYq5M=', 'anonymous'),
+							author$project$Elmstatic$inlineScript('hljs.initHighlightingOnLoad();'),
+							author$project$Elmstatic$inlineScript('var requirejs = { baseUrl: \"js\", paths: { greeshka: \"libs/greeshka-0.3.0\" } };'),
+							A3(author$project$Elmstatic$cdnScript, 'https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js', 'sha256-1fEPhSsRKlFKGfK3eO710tEweHh1fwokU5wFGDHO+vg=', 'anonymous'),
+							author$project$Elmstatic$stylesheet('https://fonts.googleapis.com/css?family=Roboto+Condensed|Inconsolata')
+						])),
+					A3(elm$html$Html$node, 'body', _List_Nil, contentNodes)
+				]));
+	});
+var author$project$Intro$inlineScript = function (js) {
+	return A3(
+		elm$html$Html$node,
+		'citatsmle-script',
+		_List_Nil,
+		_List_fromArray(
+			[
+				elm$html$Html$text(js)
+			]));
+};
+var elm$html$Html$div = _VirtualDom_node('div');
+var author$project$Intro$banner = A2(
+	elm$html$Html$div,
+	_List_Nil,
+	_List_fromArray(
+		[
+			elm$html$Html$text('Hello, Intro!'),
+			author$project$Intro$inlineScript('require([\"intro\"]);')
+		]));
+var elm$browser$Browser$External = function (a) {
+	return {$: 1, a: a};
+};
+var elm$browser$Browser$Internal = function (a) {
+	return {$: 0, a: a};
+};
+var elm$browser$Browser$Dom$NotFound = elm$core$Basics$identity;
+var elm$core$Basics$never = function (_n0) {
+	never:
+	while (true) {
+		var nvr = _n0;
+		var $temp$_n0 = nvr;
+		_n0 = $temp$_n0;
+		continue never;
+	}
+};
+var elm$core$Task$Perform = elm$core$Basics$identity;
+var elm$core$Task$succeed = _Scheduler_succeed;
+var elm$core$Task$init = elm$core$Task$succeed(0);
+var elm$core$Task$andThen = _Scheduler_andThen;
+var elm$core$Task$map = F2(
+	function (func, taskA) {
+		return A2(
+			elm$core$Task$andThen,
+			function (a) {
+				return elm$core$Task$succeed(
+					func(a));
+			},
+			taskA);
+	});
+var elm$core$Task$map2 = F3(
+	function (func, taskA, taskB) {
+		return A2(
+			elm$core$Task$andThen,
+			function (a) {
+				return A2(
+					elm$core$Task$andThen,
+					function (b) {
+						return elm$core$Task$succeed(
+							A2(func, a, b));
+					},
+					taskB);
+			},
+			taskA);
+	});
+var elm$core$Task$sequence = function (tasks) {
+	return A3(
+		elm$core$List$foldr,
+		elm$core$Task$map2(elm$core$List$cons),
+		elm$core$Task$succeed(_List_Nil),
+		tasks);
+};
+var elm$core$Platform$sendToApp = _Platform_sendToApp;
+var elm$core$Task$spawnCmd = F2(
+	function (router, _n0) {
+		var task = _n0;
+		return _Scheduler_spawn(
+			A2(
+				elm$core$Task$andThen,
+				elm$core$Platform$sendToApp(router),
+				task));
+	});
+var elm$core$Task$onEffects = F3(
+	function (router, commands, state) {
+		return A2(
+			elm$core$Task$map,
+			function (_n0) {
+				return 0;
+			},
+			elm$core$Task$sequence(
+				A2(
+					elm$core$List$map,
+					elm$core$Task$spawnCmd(router),
+					commands)));
+	});
+var elm$core$Task$onSelfMsg = F3(
+	function (_n0, _n1, _n2) {
+		return elm$core$Task$succeed(0);
+	});
+var elm$core$Task$cmdMap = F2(
+	function (tagger, _n0) {
+		var task = _n0;
+		return A2(elm$core$Task$map, tagger, task);
+	});
+_Platform_effectManagers['Task'] = _Platform_createManager(elm$core$Task$init, elm$core$Task$onEffects, elm$core$Task$onSelfMsg, elm$core$Task$cmdMap);
+var elm$core$Task$command = _Platform_leaf('Task');
+var elm$core$Task$perform = F2(
+	function (toMessage, task) {
+		return elm$core$Task$command(
+			A2(elm$core$Task$map, toMessage, task));
+	});
+var elm$url$Url$Http = 0;
+var elm$url$Url$Https = 1;
+var elm$core$String$indexes = _String_indexes;
+var elm$core$String$left = F2(
+	function (n, string) {
+		return (n < 1) ? '' : A3(elm$core$String$slice, 0, n, string);
+	});
+var elm$core$String$contains = _String_contains;
+var elm$core$String$toInt = _String_toInt;
+var elm$url$Url$Url = F6(
+	function (protocol, host, port_, path, query, fragment) {
+		return {bq: fragment, br: host, bB: path, bD: port_, bG: protocol, bH: query};
+	});
+var elm$url$Url$chompBeforePath = F5(
+	function (protocol, path, params, frag, str) {
+		if (elm$core$String$isEmpty(str) || A2(elm$core$String$contains, '@', str)) {
+			return elm$core$Maybe$Nothing;
+		} else {
+			var _n0 = A2(elm$core$String$indexes, ':', str);
+			if (!_n0.b) {
+				return elm$core$Maybe$Just(
+					A6(elm$url$Url$Url, protocol, str, elm$core$Maybe$Nothing, path, params, frag));
+			} else {
+				if (!_n0.b.b) {
+					var i = _n0.a;
+					var _n1 = elm$core$String$toInt(
+						A2(elm$core$String$dropLeft, i + 1, str));
+					if (_n1.$ === 1) {
+						return elm$core$Maybe$Nothing;
+					} else {
+						var port_ = _n1;
+						return elm$core$Maybe$Just(
+							A6(
+								elm$url$Url$Url,
+								protocol,
+								A2(elm$core$String$left, i, str),
+								port_,
+								path,
+								params,
+								frag));
+					}
+				} else {
+					return elm$core$Maybe$Nothing;
+				}
+			}
+		}
+	});
+var elm$url$Url$chompBeforeQuery = F4(
+	function (protocol, params, frag, str) {
+		if (elm$core$String$isEmpty(str)) {
+			return elm$core$Maybe$Nothing;
+		} else {
+			var _n0 = A2(elm$core$String$indexes, '/', str);
+			if (!_n0.b) {
+				return A5(elm$url$Url$chompBeforePath, protocol, '/', params, frag, str);
+			} else {
+				var i = _n0.a;
+				return A5(
+					elm$url$Url$chompBeforePath,
+					protocol,
+					A2(elm$core$String$dropLeft, i, str),
+					params,
+					frag,
+					A2(elm$core$String$left, i, str));
+			}
+		}
+	});
+var elm$url$Url$chompBeforeFragment = F3(
+	function (protocol, frag, str) {
+		if (elm$core$String$isEmpty(str)) {
+			return elm$core$Maybe$Nothing;
+		} else {
+			var _n0 = A2(elm$core$String$indexes, '?', str);
+			if (!_n0.b) {
+				return A4(elm$url$Url$chompBeforeQuery, protocol, elm$core$Maybe$Nothing, frag, str);
+			} else {
+				var i = _n0.a;
+				return A4(
+					elm$url$Url$chompBeforeQuery,
+					protocol,
+					elm$core$Maybe$Just(
+						A2(elm$core$String$dropLeft, i + 1, str)),
+					frag,
+					A2(elm$core$String$left, i, str));
+			}
+		}
+	});
+var elm$url$Url$chompAfterProtocol = F2(
+	function (protocol, str) {
+		if (elm$core$String$isEmpty(str)) {
+			return elm$core$Maybe$Nothing;
+		} else {
+			var _n0 = A2(elm$core$String$indexes, '#', str);
+			if (!_n0.b) {
+				return A3(elm$url$Url$chompBeforeFragment, protocol, elm$core$Maybe$Nothing, str);
+			} else {
+				var i = _n0.a;
+				return A3(
+					elm$url$Url$chompBeforeFragment,
+					protocol,
+					elm$core$Maybe$Just(
+						A2(elm$core$String$dropLeft, i + 1, str)),
+					A2(elm$core$String$left, i, str));
+			}
+		}
+	});
+var elm$url$Url$fromString = function (str) {
+	return A2(elm$core$String$startsWith, 'http://', str) ? A2(
+		elm$url$Url$chompAfterProtocol,
+		0,
+		A2(elm$core$String$dropLeft, 7, str)) : (A2(elm$core$String$startsWith, 'https://', str) ? A2(
+		elm$url$Url$chompAfterProtocol,
+		1,
+		A2(elm$core$String$dropLeft, 8, str)) : elm$core$Maybe$Nothing);
+};
+var elm$browser$Browser$document = _Browser_document;
+var elm$core$Platform$Cmd$batch = _Platform_batch;
+var elm$core$Platform$Cmd$none = elm$core$Platform$Cmd$batch(_List_Nil);
+var elm$core$Platform$Sub$batch = _Platform_batch;
+var elm$core$Platform$Sub$none = elm$core$Platform$Sub$batch(_List_Nil);
+var elm$json$Json$Decode$decodeValue = _Json_run;
+var author$project$Elmstatic$layout = F2(
+	function (decoder, view) {
+		return elm$browser$Browser$document(
+			{
+				b9: function (contentJson) {
+					return _Utils_Tuple2(contentJson, elm$core$Platform$Cmd$none);
+				},
+				co: function (_n0) {
+					return elm$core$Platform$Sub$none;
+				},
+				cr: F2(
+					function (msg, contentJson) {
+						return _Utils_Tuple2(contentJson, elm$core$Platform$Cmd$none);
+					}),
+				cu: function (contentJson) {
+					var _n1 = A2(elm$json$Json$Decode$decodeValue, decoder, contentJson);
+					if (_n1.$ === 1) {
+						var error = _n1.a;
+						return {
+							bg: _List_fromArray(
+								[
+									A2(
+									author$project$Elmstatic$htmlTemplate,
+									'Error',
+									_List_fromArray(
+										[
+											elm$html$Html$text(
+											elm$json$Json$Decode$errorToString(error))
+										]))
+								]),
+							aA: ''
+						};
+					} else {
+						var content = _n1.a;
+						return {
+							bg: _List_fromArray(
+								[
+									A2(
+									author$project$Elmstatic$htmlTemplate,
+									content.aS,
+									A2(
+										elm$core$List$cons,
+										content.aJ ? author$project$Intro$banner : elm$html$Html$text(''),
+										view(content)))
+								]),
+							aA: ''
+						};
+					}
+				}
+			});
+	});
+var elm$html$Html$a = _VirtualDom_node('a');
+var elm$html$Html$h3 = _VirtualDom_node('h3');
+var elm$html$Html$img = _VirtualDom_node('img');
+var elm$html$Html$li = _VirtualDom_node('li');
+var elm$html$Html$p = _VirtualDom_node('p');
+var elm$html$Html$ul = _VirtualDom_node('ul');
+var elm$json$Json$Encode$string = _Json_wrap;
+var elm$html$Html$Attributes$stringProperty = F2(
+	function (key, string) {
+		return A2(
+			_VirtualDom_property,
+			key,
+			elm$json$Json$Encode$string(string));
+	});
+var elm$html$Html$Attributes$alt = elm$html$Html$Attributes$stringProperty('alt');
+var elm$html$Html$Attributes$class = elm$html$Html$Attributes$stringProperty('className');
+var elm$html$Html$Attributes$href = function (url) {
+	return A2(
+		elm$html$Html$Attributes$stringProperty,
+		'href',
+		_VirtualDom_noJavaScriptUri(url));
+};
+var elm$html$Html$Attributes$src = function (url) {
+	return A2(
+		elm$html$Html$Attributes$stringProperty,
+		'src',
+		_VirtualDom_noJavaScriptOrHtmlUri(url));
+};
+var author$project$Page$footer = A2(
+	elm$html$Html$div,
+	_List_fromArray(
+		[
+			elm$html$Html$Attributes$class('footer')
+		]),
+	_List_fromArray(
+		[
+			A2(
+			elm$html$Html$div,
+			_List_fromArray(
+				[
+					elm$html$Html$Attributes$class('footer__content')
+				]),
+			_List_fromArray(
+				[
+					A2(
+					elm$html$Html$h3,
+					_List_Nil,
+					_List_fromArray(
+						[
+							elm$html$Html$text('About the author')
+						])),
+					A2(
+					elm$html$Html$p,
+					_List_Nil,
+					_List_fromArray(
+						[
+							A2(
+							elm$html$Html$img,
+							_List_fromArray(
+								[
+									elm$html$Html$Attributes$alt('Author\'s blog'),
+									elm$html$Html$Attributes$src('/img/logo.png'),
+									A2(elm$html$Html$Attributes$attribute, 'style', 'float: right'),
+									A2(elm$html$Html$Attributes$attribute, 'width', '75')
+								]),
+							_List_Nil),
+							elm$html$Html$text('\nI love listening to and making music myself, enjoy reading, get excited when watching a decent movie, flourish in creating artwork, marvel in coding and grocking other people\'s code and delight in learning anything new in general while living The Dream in the beautiful city of Leipzig, Germany.\n                    ')
+						]))
+				])),
+			A2(
+			elm$html$Html$div,
+			_List_fromArray(
+				[
+					elm$html$Html$Attributes$class('footer__content')
+				]),
+			_List_fromArray(
+				[
+					A2(
+					elm$html$Html$div,
+					_List_fromArray(
+						[
+							elm$html$Html$Attributes$class('footer__navigation')
+						]),
+					_List_fromArray(
+						[
+							A2(
+							elm$html$Html$ul,
+							_List_Nil,
+							_List_fromArray(
+								[
+									A2(
+									elm$html$Html$li,
+									_List_Nil,
+									_List_fromArray(
+										[
+											A2(
+											elm$html$Html$a,
+											_List_fromArray(
+												[
+													elm$html$Html$Attributes$href('/posts')
+												]),
+											_List_fromArray(
+												[
+													elm$html$Html$text('Posts')
+												]))
+										])),
+									A2(
+									elm$html$Html$li,
+									_List_Nil,
+									_List_fromArray(
+										[
+											A2(
+											elm$html$Html$a,
+											_List_fromArray(
+												[
+													elm$html$Html$Attributes$href('/about')
+												]),
+											_List_fromArray(
+												[
+													elm$html$Html$text('About')
+												]))
+										])),
+									A2(
+									elm$html$Html$li,
+									_List_Nil,
+									_List_fromArray(
+										[
+											A2(
+											elm$html$Html$a,
+											_List_fromArray(
+												[
+													elm$html$Html$Attributes$href('/posts/2017-03-20-epic-links')
+												]),
+											_List_fromArray(
+												[
+													elm$html$Html$text('Links')
+												]))
+										])),
+									A2(
+									elm$html$Html$li,
+									_List_Nil,
+									_List_fromArray(
+										[
+											A2(
+											elm$html$Html$a,
+											_List_fromArray(
+												[
+													elm$html$Html$Attributes$href('/about#contact')
+												]),
+											_List_fromArray(
+												[
+													elm$html$Html$text('Contact')
+												]))
+										])),
+									A2(
+									elm$html$Html$li,
+									_List_Nil,
+									_List_fromArray(
+										[
+											A2(
+											elm$html$Html$a,
+											_List_fromArray(
+												[
+													elm$html$Html$Attributes$href('/about#impressum')
+												]),
+											_List_fromArray(
+												[
+													elm$html$Html$text('Impressum')
+												]))
+										]))
+								]))
+						]))
+				])),
+			A2(
+			elm$html$Html$div,
+			_List_fromArray(
+				[
+					elm$html$Html$Attributes$class('footer__content')
+				]),
+			_List_fromArray(
+				[
+					A2(
+					elm$html$Html$div,
+					_List_fromArray(
+						[
+							elm$html$Html$Attributes$class('footer__copyright')
+						]),
+					_List_fromArray(
+						[
+							elm$html$Html$text('© 2019 CANENA - All rights reserved')
+						])),
+					A2(
+					elm$html$Html$div,
+					_List_fromArray(
+						[
+							elm$html$Html$Attributes$class('footer__acknowledgements')
+						]),
+					_List_fromArray(
+						[
+							A2(
+							elm$html$Html$a,
+							_List_fromArray(
+								[
+									elm$html$Html$Attributes$href('https://www.npmjs.com/package/elmstatic')
+								]),
+							_List_fromArray(
+								[
+									elm$html$Html$text('Created with Elmstatic')
+								]))
+						]))
+				]))
+		]));
+var author$project$Page$header = _List_fromArray(
+	[
+		A2(
+		elm$html$Html$div,
+		_List_fromArray(
+			[
+				elm$html$Html$Attributes$class('header')
+			]),
+		_List_fromArray(
+			[
+				A2(
+				elm$html$Html$div,
+				_List_fromArray(
+					[
+						elm$html$Html$Attributes$class('header__content')
+					]),
+				_List_fromArray(
+					[
+						A2(
+						elm$html$Html$div,
+						_List_fromArray(
+							[
+								elm$html$Html$Attributes$class('header__logo')
+							]),
+						_List_fromArray(
+							[
+								A2(
+								elm$html$Html$a,
+								_List_fromArray(
+									[
+										elm$html$Html$Attributes$href('/')
+									]),
+								_List_fromArray(
+									[
+										A2(
+										elm$html$Html$img,
+										_List_fromArray(
+											[
+												elm$html$Html$Attributes$alt('Author\'s blog'),
+												elm$html$Html$Attributes$src('/img/logo.png'),
+												A2(elm$html$Html$Attributes$attribute, 'width', '70')
+											]),
+										_List_Nil)
+									]))
+							])),
+						A2(
+						elm$html$Html$div,
+						_List_fromArray(
+							[
+								elm$html$Html$Attributes$class('header__navigation')
+							]),
+						_List_fromArray(
+							[
+								A2(
+								elm$html$Html$ul,
+								_List_Nil,
+								_List_fromArray(
+									[
+										A2(
+										elm$html$Html$li,
+										_List_Nil,
+										_List_fromArray(
+											[
+												A2(
+												elm$html$Html$a,
+												_List_fromArray(
+													[
+														elm$html$Html$Attributes$href('/posts')
+													]),
+												_List_fromArray(
+													[
+														elm$html$Html$text('Posts')
+													]))
+											])),
+										A2(
+										elm$html$Html$li,
+										_List_Nil,
+										_List_fromArray(
+											[
+												A2(
+												elm$html$Html$a,
+												_List_fromArray(
+													[
+														elm$html$Html$Attributes$href('/about')
+													]),
+												_List_fromArray(
+													[
+														elm$html$Html$text('About')
+													]))
+											]))
+									]))
+							]))
+					]))
+			]))
+	]);
 var elm$html$Html$h1 = _VirtualDom_node('h1');
 var author$project$Page$layout = F2(
 	function (title, contentItems) {
@@ -9104,37 +9363,30 @@ var author$project$Page$layout = F2(
 					elm$html$Html$div,
 					_List_fromArray(
 						[
-							elm$html$Html$Attributes$class('sidebar')
+							elm$html$Html$Attributes$class('main')
 						]),
-					_List_Nil),
-					A2(
-					elm$html$Html$div,
 					_List_fromArray(
 						[
-							elm$html$Html$Attributes$class('sidebar2')
-						]),
-					_List_Nil),
-					A2(
-					elm$html$Html$div,
-					_List_fromArray(
-						[
-							elm$html$Html$Attributes$class('content')
-						]),
-					_Utils_ap(
-						_List_fromArray(
-							[
-								A2(
-								elm$html$Html$h1,
-								_List_Nil,
+							A2(
+							elm$html$Html$div,
+							_List_fromArray(
+								[
+									elm$html$Html$Attributes$class('main__content')
+								]),
+							_Utils_ap(
 								_List_fromArray(
 									[
-										elm$html$Html$text(title)
-									]))
-							]),
-						contentItems)),
-					author$project$Page$footer,
-					author$project$Elmstatic$stylesheet('/styles.css'),
-					author$project$Styles$styles
+										A2(
+										elm$html$Html$h1,
+										_List_Nil,
+										_List_fromArray(
+											[
+												elm$html$Html$text(title)
+											]))
+									]),
+								contentItems))
+						])),
+					author$project$Page$footer
 				]));
 	});
 var author$project$Post$tagsToHtml = function (tags) {
@@ -9172,7 +9424,7 @@ var author$project$Post$metadataHtml = function (post) {
 					_List_Nil,
 					_List_fromArray(
 						[
-							elm$html$Html$text(post.bZ)
+							elm$html$Html$text(post.b_)
 						])),
 					A2(
 					elm$html$Html$span,
@@ -9182,7 +9434,7 @@ var author$project$Post$metadataHtml = function (post) {
 							elm$html$Html$text('•')
 						]))
 				]),
-			author$project$Post$tagsToHtml(post.cp)));
+			author$project$Post$tagsToHtml(post.cq)));
 };
 var elm$core$List$sortBy = _List_sortBy;
 var elm$html$Html$h2 = _VirtualDom_node('h2');
@@ -9193,7 +9445,7 @@ var author$project$Posts$main = function () {
 			A2(
 				elm$core$List$sortBy,
 				function ($) {
-					return $.bZ;
+					return $.b_;
 				},
 				posts));
 	};
@@ -9207,7 +9459,7 @@ var author$project$Posts$main = function () {
 					elm$html$Html$a,
 					_List_fromArray(
 						[
-							elm$html$Html$Attributes$href('/' + post.ca)
+							elm$html$Html$Attributes$href('/' + post.cb)
 						]),
 					_List_fromArray(
 						[
@@ -9236,7 +9488,7 @@ var author$project$Posts$main = function () {
 				author$project$Page$layout,
 				content.aA,
 				postListContent(
-					sortPosts(content.ch)));
+					sortPosts(content.ci)));
 		});
 }();
 var author$project$Tag$main = author$project$Posts$main;
@@ -9250,11 +9502,11 @@ var elm$core$Maybe$isJust = function (maybe) {
 var elm_explorations$markdown$Markdown$toHtmlWith = _Markdown_toHtml;
 var author$project$Page$markdown = function (s) {
 	var mdOptions = {
-		b0: elm$core$Maybe$Just('elm'),
-		b4: elm$core$Maybe$Just(
-			{bX: false, co: false}),
-		cj: false,
-		cm: true
+		b1: elm$core$Maybe$Just('elm'),
+		b5: elm$core$Maybe$Just(
+			{bY: false, cp: false}),
+		ck: false,
+		cn: true
 	};
 	return A3(
 		elm_explorations$markdown$Markdown$toHtmlWith,
@@ -9275,17 +9527,18 @@ var author$project$Post$main = A2(
 			_List_fromArray(
 				[
 					author$project$Post$metadataHtml(content),
-					author$project$Page$markdown(content.bw)
+					author$project$Page$markdown(content.bx)
 				]));
 	});
-var author$project$Elmstatic$Page = F3(
-	function (markdown, siteTitle, title) {
-		return {bw: markdown, aR: siteTitle, aA: title};
+var author$project$Elmstatic$Page = F4(
+	function (includeIntro, markdown, siteTitle, title) {
+		return {aJ: includeIntro, bx: markdown, aS: siteTitle, aA: title};
 	});
-var elm$json$Json$Decode$map3 = _Json_map3;
-var author$project$Elmstatic$decodePage = A4(
-	elm$json$Json$Decode$map3,
+var elm$json$Json$Decode$map4 = _Json_map4;
+var author$project$Elmstatic$decodePage = A5(
+	elm$json$Json$Decode$map4,
 	author$project$Elmstatic$Page,
+	author$project$Elmstatic$decodeBoolMeta('includeIntro'),
 	A2(elm$json$Json$Decode$field, 'markdown', elm$json$Json$Decode$string),
 	A2(elm$json$Json$Decode$field, 'siteTitle', elm$json$Json$Decode$string),
 	A2(elm$json$Json$Decode$field, 'title', elm$json$Json$Decode$string));
@@ -9298,7 +9551,7 @@ var author$project$Page$main = A2(
 			content.aA,
 			_List_fromArray(
 				[
-					author$project$Page$markdown(content.bw)
+					author$project$Page$markdown(content.bx)
 				]));
 	});
 _Platform_export({'Page':{'init':author$project$Page$main(elm$json$Json$Decode$value)(0)},'Tag':{'init':author$project$Tag$main(elm$json$Json$Decode$value)(0)},'Posts':{'init':author$project$Posts$main(elm$json$Json$Decode$value)(0)},'Post':{'init':author$project$Post$main(elm$json$Json$Decode$value)(0)}});}(this));

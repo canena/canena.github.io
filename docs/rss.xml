@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0">
+    <channel>
+        <title>A blog about life</title>
+        <link>http://canena.de/posts</link>
+        <description>Life/Music/Art/Code/Stuff</description>
+        <lastBuildDate>Mon, 03 Jun 2019 17:34:26 GMT</lastBuildDate>
+        <docs>http://blogs.law.harvard.edu/tech/rss</docs>
+        <generator>Elmstatic</generator>
+        <language>en</language>
+        <image>
+            <title>A blog about life</title>
+            <url>http://canena.de/img/logo.png</url>
+            <link>http://canena.de/posts</link>
+        </image>
+        <copyright>© 2019 CANENA - All rights reserved</copyright>
+        <item>
+            <title><![CDATA[Making a habit of making a habit]]></title>
+            <link>http://canena.de/posts/2015-08-04-making-a-habit-of-making-a-habit</link>
+            <guid>http://canena.de/posts/2015-08-04-making-a-habit-of-making-a-habit</guid>
+            <pubDate>Tue, 04 Aug 2015 00:00:00 GMT</pubDate>
+            <description><![CDATA[
+Making a habit of making a habit
+
+Lately I’ve been thinking a lot about writing and whether I could do it myself. “Yes, I could do it if I really wanted” is what I’d tell the spectre in the mirror. I just always had the nagging feeling that I didn’t care enough so the outcome surely wouldn’t be worth the digital ink. I’d be jealous of the interesting stuff people have to say and the sense of style that would let me almost inhale their stories at times. Why is it that I couldn’t start something?...]]></description>
+        </item>
+        <item>
+            <title><![CDATA[Epic Links]]></title>
+            <link>http://canena.de/posts/2017-03-20-epic-links</link>
+            <guid>http://canena.de/posts/2017-03-20-epic-links</guid>
+            <pubDate>Mon, 20 Mar 2017 00:00:00 GMT</pubDate>
+            <description><![CDATA[
+Disclaimer
+
+I'm not in any way affiliated with the following links, I just find them useful, delightful, funny...
+
+Useful Tools
+
+https://caniuse.com
+https://css-tricks.com
+
+Favorite Developer Blogs
+
+https://ayende.com
+http://blog.ploeh.dk/
+https://cuttingedge.it/blogs/steven/
+https://ericlippert.com
+
+Daily Dose
+
+https://aeon.co
+https://news.ycombinator.com/newest
+https://www.reddit.com/r/elm/new
+https://discourse.elm-lang.org
+https://groups.google.com/forum/#!forum/elm-dev
+https://groups.google...]]></description>
+        </item>
+        <item>
+            <title><![CDATA[An Elm to the Past]]></title>
+            <link>http://canena.de/posts/2018-02-24-an-elm-to-the-past</link>
+            <guid>http://canena.de/posts/2018-02-24-an-elm-to-the-past</guid>
+            <pubDate>Sat, 24 Feb 2018 00:00:00 GMT</pubDate>
+            <description><![CDATA[
+This blog post compiles the advice I posted in
+a discussion on Elm Discourse
+on support of Elm for older browsers and is pretty much reproduced verbatim, thanks to the power Markdown.
+
+I've put all the information in here to good use so head to
+https://github.com/mfeineis/elm-legacy-browser-setup
+if you want to see some code right away. I even managed to bring support for IE8+, which I didn't expect, tbh.
+
+Original Post Gist
+
+"Is there an official list of supported browsers for Elm? If not, wha...]]></description>
+        </item>
+        <item>
+            <title><![CDATA[TypeScript vs the Real World]]></title>
+            <link>http://canena.de/posts/2019-03-04-typescript-vs-the-real-world</link>
+            <guid>http://canena.de/posts/2019-03-04-typescript-vs-the-real-world</guid>
+            <pubDate>Mon, 04 Mar 2019 00:00:00 GMT</pubDate>
+            <description><![CDATA[
+This started out as a YouTube comment on a talk about TypeScript that got out of control in scope so I created a blog post instead.
+
+Go watch Why I Was Wrong About TypeScript.
+
+Questions You Should Be Asking Yourself
+
+The speaker largely highlights positive aspects of TypeScript. How many technologies do you know that have no flaws? TS obviously has a lot of benefits but here are some questions I would put up for discussion that nobody seems to talk about:
+
+1) How accurate do you think bolted o...]]></description>
+        </item>
+        <item>
+            <title><![CDATA[All Posts]]></title>
+            <link>http://canena.de/posts/undefined-undefined</link>
+            <guid>http://canena.de/posts/undefined-undefined</guid>
+            <pubDate>Invalid Date</pubDate>
+            <description><![CDATA[
+...]]></description>
+        </item>
+    </channel>
+</rss>
