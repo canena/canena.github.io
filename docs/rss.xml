@@ -4,7 +4,7 @@
         <title>A blog about life</title>
         <link>http://canena.de/posts</link>
         <description>Life/Music/Art/Code/Stuff</description>
-        <lastBuildDate>Mon, 03 Jun 2019 20:58:20 GMT</lastBuildDate>
+        <lastBuildDate>Mon, 03 Jun 2019 21:59:55 GMT</lastBuildDate>
         <docs>http://blogs.law.harvard.edu/tech/rss</docs>
         <generator>Elmstatic</generator>
         <language>en</language>
@@ -90,7 +90,7 @@ The speaker largely highlights positive aspects of TypeScript. How many technolo
 1) How accurate do you think bolted o...]]></description>
         </item>
         <item>
-            <title><![CDATA[Hello, There!]]></title>
+            <title><![CDATA[A blog about life]]></title>
             <link>http://canena.de/posts/undefined-undefined</link>
             <guid>http://canena.de/posts/undefined-undefined</guid>
             <pubDate>Invalid Date</pubDate>

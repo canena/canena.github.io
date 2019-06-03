@@ -8419,7 +8419,15 @@ var author$project$Styles$styles = function () {
 					function ($) {
 					return $.a7;
 				}(rtfeldman$elm_css$Css$monospace)
-				]))
+				])),
+			rtfeldman$elm_css$Css$important(
+			rtfeldman$elm_css$Css$backgroundColor(
+				rtfeldman$elm_css$Css$hex('fdfdfd'))),
+			A3(
+			rtfeldman$elm_css$Css$border3,
+			rtfeldman$elm_css$Css$px(1),
+			rtfeldman$elm_css$Css$solid,
+			rtfeldman$elm_css$Css$hex('d6d6d6'))
 		]);
 	return rtfeldman$elm_css$Html$Styled$toUnstyled(
 		rtfeldman$elm_css$Css$Global$global(
@@ -8501,6 +8509,14 @@ var author$project$Styles$styles = function () {
 						])),
 					A2(
 					rtfeldman$elm_css$Css$Global$class,
+					'intro',
+					_List_fromArray(
+						[
+							rtfeldman$elm_css$Css$marginTop(
+							rtfeldman$elm_css$Css$px(4))
+						])),
+					A2(
+					rtfeldman$elm_css$Css$Global$class,
 					'header',
 					_List_fromArray(
 						[
@@ -8519,7 +8535,7 @@ var author$project$Styles$styles = function () {
 							rtfeldman$elm_css$Css$solid,
 							author$project$Styles$linkColorHover),
 							rtfeldman$elm_css$Css$paddingTop(
-							rtfeldman$elm_css$Css$px(6)),
+							rtfeldman$elm_css$Css$px(4)),
 							rtfeldman$elm_css$Css$overflow(rtfeldman$elm_css$Css$hidden)
 						])),
 					A2(
@@ -8904,7 +8920,7 @@ var author$project$Elmstatic$htmlTemplate = F2(
 								])),
 							author$project$Elmstatic$stylesheet('/normalize-8.0.1.css'),
 							author$project$Elmstatic$stylesheet('/styles.css?v1'),
-							A3(author$project$Elmstatic$cdnStylesheet, 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.8/styles/default.min.css', 'sha256-zcunqSn1llgADaIPFyzrQ8USIjX2VpuxHzUwYisOwo8=', 'anonymous'),
+							A3(author$project$Elmstatic$cdnStylesheet, 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.8/styles/xcode.min.css', 'sha256-fjO4CUN/XJTfsDmlIBojCwY4EV94jfOJpPzqd19TSko=', 'anonymous'),
 							author$project$Styles$styles,
 							A3(author$project$Elmstatic$cdnScript, 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.8/highlight.min.js', 'sha256-js+I1fdbke/DJrW2qXQlrw7VUEqmdeFeOW37UC0bEiU=', 'anonymous'),
 							A3(author$project$Elmstatic$cdnScript, 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.8/languages/elm.min.js', 'sha256-5ZDjmDRr7i9DNIGlJKzPImNcoVZ2KGsPch+qoZuYq5M=', 'anonymous'),
@@ -8927,9 +8943,21 @@ var author$project$Intro$inlineScript = function (js) {
 			]));
 };
 var elm$html$Html$div = _VirtualDom_node('div');
+var elm$json$Json$Encode$string = _Json_wrap;
+var elm$html$Html$Attributes$stringProperty = F2(
+	function (key, string) {
+		return A2(
+			_VirtualDom_property,
+			key,
+			elm$json$Json$Encode$string(string));
+	});
+var elm$html$Html$Attributes$class = elm$html$Html$Attributes$stringProperty('className');
 var author$project$Intro$banner = A2(
 	elm$html$Html$div,
-	_List_Nil,
+	_List_fromArray(
+		[
+			elm$html$Html$Attributes$class('intro')
+		]),
 	_List_fromArray(
 		[
 			elm$html$Html$text('Hello, Intro!'),
@@ -9204,16 +9232,7 @@ var elm$html$Html$img = _VirtualDom_node('img');
 var elm$html$Html$li = _VirtualDom_node('li');
 var elm$html$Html$p = _VirtualDom_node('p');
 var elm$html$Html$ul = _VirtualDom_node('ul');
-var elm$json$Json$Encode$string = _Json_wrap;
-var elm$html$Html$Attributes$stringProperty = F2(
-	function (key, string) {
-		return A2(
-			_VirtualDom_property,
-			key,
-			elm$json$Json$Encode$string(string));
-	});
 var elm$html$Html$Attributes$alt = elm$html$Html$Attributes$stringProperty('alt');
-var elm$html$Html$Attributes$class = elm$html$Html$Attributes$stringProperty('className');
 var elm$html$Html$Attributes$href = function (url) {
 	return A2(
 		elm$html$Html$Attributes$stringProperty,
@@ -9646,7 +9665,7 @@ var author$project$Posts$main = function () {
 						_List_Nil,
 						_List_fromArray(
 							[
-								elm$html$Html$text('\nThis is my personal blog covering various topics from music to design, programming, life itself and more.\n                        ')
+								elm$html$Html$text('\nHello, There! This is my personal blog covering various topics from music to design, programming, life itself and more.\n                        ')
 							])),
 						A2(
 						elm$html$Html$ul,
