@@ -11,15 +11,15 @@ I've put all the information in here to good use so head to
 [https://github.com/mfeineis/elm-legacy-browser-setup](https://github.com/mfeineis/elm-legacy-browser-setup)
 if you want to see some code right away. I even managed to bring support for IE8+, which I didn't expect, tbh.
 
-### Original Post Gist
+## Original Post Gist
 
 "Is there an official list of supported browsers for Elm? If not, what is the oldest browser you’ve tested Elm against? Lastly, is there a way to make Elm work on at least IE9 and IE10?"
 
-### TL;DR
+## TL;DR
 
 if you have a valid HTML5 doctype and the mentioned polyfills in place an Elm program should run without problems in IE9+, iff you don't have any other ancient JS lingering around the same page that messes with global variables.
 
-### The Long Version
+## The Long Version
 The following are potential issues I've dealt with in the past with ancient JS engines. This is a quick run-down I compiled while looking through the generated code of one of my small Elm projects.
 
 Low hanging fruit that is easily polyfillable, remember to include these *before* including your elmish JS:
@@ -48,7 +48,7 @@ Trivia:
 
 The generated JS isn't that idiomatic especially with the usage of the curlies on the next line and the variable declarations that make the impression that JS has block scope where it actually has function scope. There are also a lot of unguarded `for (... in ...)` traversals that might throw off older IE, even more so if other JS lives on the same site that potentially modifies shared globals.
 
-### General Advice:
+## General Advice:
 
 Don't trust IE :-), no, seriously, don't trust it. Microsoft did a good job in keeping most of the behavior of their old JScript engine versions in their compatibility mode, kudos to the team that had that miserable job on their plate. The problems arise with the combinatorial explosion of the various document modes and their interaction with the legacy engines that are being carried around since days of yore. Multiply that by the fact that an IE version potentially behaves different on every major windows version, times the supported architectures. To sum up: the engine recreation is pretty good but the host objects and especially the document models will haunt you forever. My advice for managment still stands: if even Microsoft isn't supporting IE lt 11, why should you? Usually numbers work better with management, so my anecdotal tally is
 
@@ -57,7 +57,7 @@ Don't trust IE :-), no, seriously, don't trust it. Microsoft did a good job in k
 , so go figure.
 
 
-### EDIT
+## EDIT
 
 I created a [small but useful example project](https://github.com/mfeineis/elm-legacy-browser-setup)
 based on the advice given in this article. The README should fill in the blanks.

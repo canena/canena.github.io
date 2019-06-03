@@ -1,6 +1,6 @@
 ---
 includeIntro: true
 layout: Posts
-title: All Posts
+title: Hello, There!
 ---
 

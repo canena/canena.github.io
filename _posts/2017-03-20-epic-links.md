@@ -3,23 +3,23 @@ title: "Epic Links"
 tags: learning music self-improvement tech
 ---
 
-### Disclaimer
+## Disclaimer
 
 I'm not in any way affiliated with the following links, I just find them useful, delightful, funny...
 
-### Useful Tools
+## Useful Tools
 
 * [https://caniuse.com](https://caniuse.com)
 * [https://css-tricks.com](https://css-tricks.com)
 
-### Favorite Developer Blogs
+## Favorite Developer Blogs
 
 * [https://ayende.com](ayende.com)
 * [http://blog.ploeh.dk/](blog.ploeh.dk)
 * [https://cuttingedge.it/blogs/steven/](cuttingedge.it/blogs/steven)
 * [https://ericlippert.com](ericlippert.com)
 
-### Daily Dose
+## Daily Dose
 
 * [https://aeon.co](Aeon | ideas and culture)
 * [https://news.ycombinator.com/newest](news.ycombinator.com/newest)
@@ -31,9 +31,9 @@ I'm not in any way affiliated with the following links, I just find them useful,
 * [https://www.reddit.com/r/csharp/new](reddit.com/r/elm/csharp)
 * [https://www.reddit.com/r/java/new](reddit.com/r/java/new)
 
-### Articles
+## Articles
 
-#### Design & Layout
+### Design & Layout
 
 <ul>
     <li>
@@ -52,7 +52,7 @@ I'm not in any way affiliated with the following links, I just find them useful,
 </ul>
 
 
-#### Sleeping
+### Sleeping
 - <span class="ui-content__last-update">[2017-12-17]</span>
   <a href="https://www.stevepavlina.com/blog/2005/10/polyphasic-sleep/" target="_blank">Polyphasic Sleep</a>
 - <span class="ui-content__last-update">[2017-12-17]</span>
@@ -63,27 +63,27 @@ I'm not in any way affiliated with the following links, I just find them useful,
   <a href="https://aeon.co/essays/why-broken-sleep-is-a-golden-time-for-creativity" target="_blank">Why broken sleep is a golden time for creativity</a>
 
 
-#### Music
+### Music
 - <span class="ui-content__last-update">[2017-03-20]</span>
   <a href="https://pudding.cool/2017/03/music-history/index.html" target="_blank">How Music Evolved: Billboard's Hot 100, 1958 - 2016</a>
 
 
-#### Imagination
+### Imagination
 - <span class="ui-content__last-update">[2017-12-03]</span>
   <a href="https://theconversation.com/blind-in-the-mind-why-some-people-cant-see-pictures-in-their-imagination-86849" target="_blank">Blind in the Mind - Why Some People can't see pictures in their imagination</a>
 
 
-#### Reading
+### Reading
 - <span class="ui-content__last-update">[2017-03-20]</span>
   <a href="http://www.asimovonline.com/oldsite/asimov_titles.html" target="_blank">A List of Isaac Asimov's Books</a>
 - <span class="ui-content__last-update">[2017-03-20]</span>
   <a href="http://www.depauw.edu/sfs/backissues/5/lem5art.htm" target="_blank">Stanislaw Lem: Philip K. Dick: A Visionary Among the Charlatans</a>
 
-#### Science
+### Science
 - <span class="ui-content__last-update">[2017-03-20]</span>
   <a href="https://aeon.co/essays/why-pregnancy-is-a-biological-war-between-mother-and-baby" target="_blank">Why Pregnancy is a Biological War Between Mother and Baby</a>
 
-#### Software Architecture
+### Software Architecture
 
 <ul>
     <li>
@@ -100,7 +100,7 @@ I'm not in any way affiliated with the following links, I just find them useful,
     </li>
 </ul>
 
-#### Tech/Programming
+### Tech/Programming
 
 <ul>
     <li>
@@ -114,14 +114,14 @@ I'm not in any way affiliated with the following links, I just find them useful,
 </ul>
 
 
-### Talks
+## Talks
 
-#### Learning
+### Learning
 
 - <span class="ui-content__last-update">[2017-03-20]</span>
   <a href="https://www.youtube.com/watch?v=5MgBikgcWnY" target="_blank">The first 20 hours -- how to learn anything | Josh Kaufman</a>
 
-#### Tech
+### Tech
 
 <ul>
     <li>
