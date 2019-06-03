@@ -17,11 +17,14 @@ module Elmstatic exposing
 import Browser
 import Html exposing (..)
 import Html.Attributes exposing (..)
+import Intro
 import Json.Decode
+import Styles
 
 
 type alias Post =
     { date : String
+    , includeIntro : Bool
     , link : String
     , markdown : String
     , section : String
@@ -32,14 +35,16 @@ type alias Post =
 
 
 type alias Page =
-    { markdown : String
+    { includeIntro : Bool
+    , markdown : String
     , siteTitle : String
     , title : String
     }
 
 
 type alias PostList =
-    { posts : List Post
+    { includeIntro : Bool
+    , posts : List Post
     , section : String
     , siteTitle : String
     , title : String
@@ -47,7 +52,7 @@ type alias PostList =
 
 
 type alias Content a =
-    { a | siteTitle : String, title : String }
+    { a | includeIntro : Bool, siteTitle : String, title : String }
 
 
 type alias Layout =
@@ -56,7 +61,8 @@ type alias Layout =
 
 decodePage : Json.Decode.Decoder Page
 decodePage =
-    Json.Decode.map3 Page
+    Json.Decode.map4 Page
+        (decodeBoolMeta "includeIntro")
         (Json.Decode.field "markdown" Json.Decode.string)
         (Json.Decode.field "siteTitle" Json.Decode.string)
         (Json.Decode.field "title" Json.Decode.string)
@@ -64,8 +70,9 @@ decodePage =
 
 decodePost : Json.Decode.Decoder Post
 decodePost =
-    Json.Decode.map7 Post
+    Json.Decode.map8 Post
         (Json.Decode.field "date" Json.Decode.string)
+        (decodeBoolMeta "includeIntro")
         (Json.Decode.field "link" Json.Decode.string)
         (Json.Decode.field "markdown" Json.Decode.string)
         (Json.Decode.field "section" Json.Decode.string)
@@ -76,16 +83,44 @@ decodePost =
 
 decodePostList : Json.Decode.Decoder PostList
 decodePostList =
-    Json.Decode.map4 PostList
+    Json.Decode.map5 PostList
+        (decodeBoolMeta "includeIntro")
         (Json.Decode.field "posts" <| Json.Decode.list decodePost)
         (Json.Decode.field "section" Json.Decode.string)
         (Json.Decode.field "siteTitle" Json.Decode.string)
         (Json.Decode.field "title" Json.Decode.string)
 
 
+decodeBoolMeta : String -> Json.Decode.Decoder Bool
+decodeBoolMeta prop =
+    Json.Decode.maybe (Json.Decode.field prop Json.Decode.string)
+        |> Json.Decode.andThen
+            (\value ->
+                case value of
+                    Nothing ->
+                        Json.Decode.succeed False
+
+                    Just "true" ->
+                        Json.Decode.succeed True
+
+                    Just _ ->
+                        Json.Decode.succeed False
+            )
+
+
 script : String -> Html Never
 script src =
     node "citatsmle-script" [ attribute "src" src ] []
+
+
+cdnScript : String -> String -> String -> Html Never
+cdnScript src integrity crossorigin =
+    node "citatsmle-script"
+        [ attribute "src" src
+        , attribute "integrity" integrity
+        , attribute "crossorigin" crossorigin
+        ]
+        []
 
 
 inlineScript : String -> Html Never
@@ -98,19 +133,61 @@ stylesheet href =
     node "link" [ attribute "href" href, attribute "rel" "stylesheet", attribute "type" "text/css" ] []
 
 
+cdnStylesheet : String -> String -> String -> Html Never
+cdnStylesheet href integrity crossorigin =
+    node "link"
+        [ attribute "href" href
+        , attribute "rel" "stylesheet"
+        , attribute "type" "text/css"
+        , attribute "integrity" integrity
+        , attribute "crossorigin" crossorigin
+        ]
+        []
+
+
 htmlTemplate : String -> List (Html Never) -> Html Never
 htmlTemplate title contentNodes =
     node "html"
-        []
+        [ attribute "lang" "en" ]
         [ node "head"
             []
-            [ node "title" [] [ text title ]
-            , node "meta" [ attribute "charset" "utf-8" ] []
-            , script "//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.1/highlight.min.js"
-            , script "//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.1/languages/elm.min.js"
+            [ node "meta" [ attribute "charset" "utf-8" ] []
+            , node "meta"
+                [ attribute "http-equiv" "X-UA-Compatible"
+                , attribute "content" "IE=edge"
+                ]
+                []
+            , node "meta"
+                [ attribute "name" "author"
+                , attribute "content" "Martin Feineis"
+                ]
+                []
+            , node "meta"
+                [ attribute "name" "creator"
+                , attribute "content" "Canena"
+                ]
+                []
+            , node "meta"
+                [ attribute "name" "description"
+                , attribute "content" "A blog about life"
+                ]
+                []
+            , node "meta"
+                [ attribute "name" "viewport"
+                , attribute "content" "width=device-width, user-scalable=yes, initial-scale=1.0, minimum-scale=1.0"
+                ]
+                []
+            , node "title" [] [ text title ]
+            , stylesheet "/normalize-8.0.1.css"
+            , stylesheet "/styles.css?v1"
+            , cdnStylesheet "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.8/styles/default.min.css" "sha256-zcunqSn1llgADaIPFyzrQ8USIjX2VpuxHzUwYisOwo8=" "anonymous"
+            , Styles.styles
+            , cdnScript "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.8/highlight.min.js" "sha256-js+I1fdbke/DJrW2qXQlrw7VUEqmdeFeOW37UC0bEiU=" "anonymous"
+            , cdnScript "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.8/languages/elm.min.js" "sha256-5ZDjmDRr7i9DNIGlJKzPImNcoVZ2KGsPch+qoZuYq5M=" "anonymous"
             , inlineScript "hljs.initHighlightingOnLoad();"
-            , stylesheet "//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.1/styles/default.min.css"
-            , stylesheet "//fonts.googleapis.com/css?family=Open+Sans|Proza+Libre|Inconsolata"
+            , inlineScript "var requirejs = { baseUrl: \"js\", paths: { greeshka: \"libs/greeshka-0.3.0\" } };"
+            , cdnScript "https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" "sha256-1fEPhSsRKlFKGfK3eO710tEweHh1fwokU5wFGDHO+vg=" "anonymous"
+            , stylesheet "https://fonts.googleapis.com/css?family=Roboto+Condensed|Inconsolata"
             ]
         , node "body" [] contentNodes
         ]
@@ -130,7 +207,16 @@ layout decoder view =
 
                     Ok content ->
                         { title = ""
-                        , body = [ htmlTemplate content.siteTitle <| view content ]
+                        , body =
+                            [ htmlTemplate content.siteTitle <|
+                                (if content.includeIntro then
+                                    Intro.banner
+
+                                 else
+                                    text ""
+                                )
+                                    :: view content
+                            ]
                         }
         , update = \msg contentJson -> ( contentJson, Cmd.none )
         , subscriptions = \_ -> Sub.none

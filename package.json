@@ -1,12 +1,11 @@
 {
   "name": "canena.github.io",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "A blog about life",
-  "main": "build.js",
+  "main": "index.js",
   "scripts": {
-    "build": "NODE_ENV=production node build.js",
-    "debug": "NODE_ENV=debug node build.js",
-    "reactor": "elm reactor",
+    "build": "elmstatic && rm -rf ./docs/blog && cp -R ./docs/posts ./docs/blog",
+    "start": "serve ./docs",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -29,13 +28,7 @@
   "devDependencies": {
     "elm": "^0.19.0-no-deps",
     "elmstatic": "^0.4.1",
-    "html-minifier": "^3.5.7",
     "serve": "^11.0.1"
-  },
-  "dependencies": {
-    "bluebird": "^3.5.1",
-    "elm-static-html-lib": "0.0.9-alpha.2",
-    "ramda": "^0.25.0"
   },
   "eslintConfig": {
     "env": {

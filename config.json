@@ -1,22 +1,22 @@
 {
-    "siteTitle": "Author's fancy blog",
-    "outputDir": "_site",
+    "siteTitle": "Canena",
+    "outputDir": "docs",
     "copy": {
-        "/posts": "/"
+        "/posts/index.html": "/index.html"
     },
     "feed": {
-        "title": "Author's fancy blog",
-        "description": "Author's blog posts",
-        "id": "https://example.com",
-        "link": "https://example.com/posts",
-        "image": "https://example.com/img/logo.png",
-        "copyright": "Copyright: Author",
+        "title": "A blog about life",
+        "description": "Life/Music/Art/Code/Stuff",
+        "id": "http://canena.de",
+        "link": "http://canena.de/posts",
+        "image": "http://canena.de/img/logo.png",
+        "copyright": "© 2019 CANENA - All rights reserved",
         "language": "en",
-        "generator": "Elmstatic", 
+        "generator": "Elmstatic",
         "author": {
-          "name": "Author",
-          "link": "https://example.com/about"
-        }        
+            "name": "Martin Feineis",
+            "link": "https://github.com/mfeineis"
+        }
     },
-    "tags": ["other", "software"]
+    "tags": ["elm", "legacy-code", "tech", "web", "learning", "music", "self-improvement", "life", "writing"]
 }

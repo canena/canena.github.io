@@ -1,7 +1,7 @@
 module Post exposing (main, metadataHtml)
 
-import Elmstatic exposing (..)
-import Html exposing (..)
+import Elmstatic
+import Html exposing (Html, a, div, span, text)
 import Html.Attributes as Attr exposing (alt, attribute, class, href, src)
 import Page
 

@@ -1,7 +1,7 @@
 module Posts exposing (main)
 
-import Elmstatic exposing (..)
-import Html exposing (..)
+import Elmstatic
+import Html exposing (a, div, h2, text)
 import Html.Attributes as Attr exposing (alt, attribute, class, href, src)
 import Page
 import Post
@@ -29,4 +29,4 @@ main =
     in
     Elmstatic.layout Elmstatic.decodePostList <|
         \content ->
-            Page.layout content.title <| postListContent <| sortPosts content.posts
+            Page.layout content.title (sortPosts content.posts |> postListContent)

@@ -1,10 +1,9 @@
 module Page exposing (footer, header, layout, main, markdown)
 
-import Elmstatic exposing (..)
-import Html exposing (..)
+import Elmstatic
+import Html exposing (Html, a, div, h1, h3, img, li, p, span, text, ul)
 import Html.Attributes as Attr exposing (alt, attribute, class, href, src)
 import Markdown
-import Styles
 
 
 githubIcon : Html Never
@@ -53,23 +52,30 @@ markdown s =
 
 header : List (Html Never)
 header =
-    [ div [ class "header-logo" ]
-        [ img [ alt "Author's blog", src "/img/logo.png", attribute "width" "100" ]
-            []
-        ]
-    , div [ class "navigation" ]
-        [ ul []
-            [ li []
-                [ a [ href "/posts" ]
-                    [ text "Posts" ]
+    [ div [ class "header" ]
+        [ div [ class "header__content" ]
+            [ div [ class "header__logo" ]
+                [ a [ href "/" ]
+                    [ img [ alt "Author's blog", src "/img/logo.png", attribute "width" "70" ]
+                        []
+                    ]
                 ]
-            , li []
-                [ a [ href "/about" ]
-                    [ text "About" ]
-                ]
-            , li []
-                [ a [ href "/contact" ]
-                    [ text "Contact" ]
+            , div [ class "header__navigation" ]
+                [ ul []
+                    [ li []
+                        [ a [ href "/posts" ]
+                            [ text "Posts" ]
+                        ]
+                    , li []
+                        [ a [ href "/about" ]
+                            [ text "About" ]
+                        ]
+
+                    --, li []
+                    --    [ a [ href "/contact" ]
+                    --        [ text "Contact" ]
+                    --    ]
+                    ]
                 ]
             ]
         ]
@@ -79,42 +85,79 @@ header =
 footer : Html Never
 footer =
     div [ class "footer" ]
-        [ img
-            [ alt "Author's blog"
-            , src "/img/logo.png"
-            , attribute "style" "float: left; padding-top: 7px"
-            , attribute "width" "75"
+        [ div [ class "footer__content" ]
+            [ h3 [] [ text "About the author" ]
+            , p []
+                [ img
+                    [ alt "Author's blog"
+                    , src "/img/logo.png"
+                    , attribute "style" "float: right"
+                    , attribute "width" "75"
+                    ]
+                    []
+                , text
+                    """
+I love listening to and making music myself, enjoy reading, get excited when watching a decent movie, flourish in creating artwork, marvel in coding and grocking other people's code and delight in learning anything new in general while living The Dream in the beautiful city of Leipzig, Germany.
+                    """
+                ]
             ]
-            []
-        , div [ class "link" ]
-            [ githubIcon
-            , a [ href "https://github.com" ]
-                [ text "Author's GitHub" ]
+        , div [ class "footer__content" ]
+            [ div [ class "footer__navigation" ]
+                [ ul []
+                    [ li []
+                        [ a [ href "/posts" ]
+                            [ text "Posts" ]
+                        ]
+                    , li []
+                        [ a [ href "/about" ]
+                            [ text "About" ]
+                        ]
+                    , li []
+                        [ a [ href "/posts/2017-03-20-epic-links" ]
+                            [ text "Links" ]
+                        ]
+                    , li []
+                        [ a [ href "/about#contact" ]
+                            [ text "Contact" ]
+                        ]
+                    , li []
+                        [ a [ href "/about#impressum" ]
+                            [ text "Impressum" ]
+                        ]
+                    ]
+                ]
             ]
-        , div [ class "link" ]
-            [ twitterIcon
-            , a [ href "https://twitter.com" ]
-                [ text "Author's Twitter" ]
+        , div [ class "footer__content" ]
+            [ div [ class "footer__copyright" ]
+                  [ text "© 2019 CANENA - All rights reserved"
+                  ]
+            , div [ class "footer__acknowledgements" ]
+                  [ a [ href "https://www.npmjs.com/package/elmstatic" ]
+                      [ text "Created with Elmstatic" ]
+                  ]
             ]
-        , div [ class "link" ]
-            [ a [ href "https://www.npmjs.com/package/elmstatic" ]
-                [ text "Created with Elmstatic" ]
-            ]
+        --, div [ class "link" ]
+        --    [ githubIcon
+        --    , a [ href "https://github.com" ]
+        --        [ text "Author's GitHub" ]
+        --    ]
+
+        --, div [ class "link" ]
+        --    [ twitterIcon
+        --    , a [ href "https://twitter.com" ]
+        --        [ text "Author's Twitter" ]
+        --    ]
         ]
 
 
 layout : String -> List (Html Never) -> List (Html Never)
 layout title contentItems =
     header
-        ++ [ div [ class "sidebar" ]
-                []
-           , div [ class "sidebar2" ]
-                []
-           , div [ class "content" ]
-                ([ h1 [] [ text title ] ] ++ contentItems)
+        ++ [ div [ class "main" ]
+                 [ div [ class "main__content" ]
+                    ([ h1 [] [ text title ] ] ++ contentItems)
+                 ]
            , footer
-           , Elmstatic.stylesheet "/styles.css"
-           , Styles.styles
            ]
 
 

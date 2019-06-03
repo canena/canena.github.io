@@ -2,7 +2,7 @@ module Styles exposing (styles)
 
 import Css exposing (..)
 import Css.Global exposing (..)
-import Css.Media as Media exposing (..)
+import Css.Media as Media exposing (only, screen, withMedia)
 import Html exposing (Html)
 import Html.Styled
 
@@ -21,9 +21,12 @@ styles =
         [ body
             [ padding <| px 0
             , margin <| px 0
-            , backgroundColor <| hex "ffffff"
             , Css.color <| hex "363636"
-            , fontFamilies [ "Open Sans", "Arial", .value sansSerif ]
+            , fontFamilies [ "Roboto Condensed", "Arial", .value sansSerif ]
+
+            --, fontFace
+            --, fontDisplay swap
+            , Css.property "font-display" "swap"
             , fontSize <| px 18
             , lineHeight <| Css.em 1.4
             ]
@@ -37,61 +40,89 @@ styles =
                 [ code [ important <| overflowX Css.scroll ] ]
             ]
         , each [ h1, h2, h3, h4, h5, h6 ]
-            [ fontFamilies [ "Proza Libre", "Helvetica", .value sansSerif ]
-            , lineHeight <| Css.em 1.1
+            [ fontFamilies [ "Roboto Condensed", "Helvetica", "Arial", .value sansSerif ]
             ]
-        , h1 [ fontSize <| Css.em 2.66667, marginBottom <| rem 2.0202 ]
-        , h2 [ fontSize <| Css.em 2.0, marginBottom <| rem 1.61616 ]
-        , h3 [ fontSize <| Css.em 1.33333, marginBottom <| rem 1.21212 ]
-        , h4 [ fontSize <| Css.em 1.2, marginBottom <| rem 0.80808 ]
-        , each [ h5, h6 ] [ fontSize <| Css.em 1.0, marginBottom <| rem 0.60606 ]
-        , p [ margin3 auto auto (rem 1.5) ]
         , Css.Global.small [ fontSize <| pct 65 ]
-        , class "header-logo"
-            [ paddingTop <| px 6
-            , textAlign center
-            , backgroundColor <| hex "f2fae8"
-            , wideScreen [ textAlign left, borderBottom3 (px 2) solid (hex "3c8765") ]
-            ]
-        , class "navigation"
-            [ textAlign center
+        , class "header"
+            [ backgroundColor <| hex "f2fae8"
             , borderBottom3 (px 2) solid (hex "3c8765")
-            , backgroundColor <| hex "f2fae8"
-            , padding <| px 10
-            , marginTop <| px -20
-            , descendants
-                [ ul
-                    [ margin <| px 0
-                    , padding <| px 0
-                    , wideScreen [ lineHeight <| px 100 ]
-                    ]
-                , li
-                    [ display inlineBlock
-                    , marginRight <| px 20
-                    ]
-                ]
-            , wideScreen [ marginTop <| px 0, padding <| px 0, textAlign right ]
+            , paddingTop <| px 6
+            , overflow hidden
             ]
-        , class "content" [ Css.maxWidth <| vw 100 ]
+        , class "header__content"
+            [ margin2 zero auto
+            , maxWidth (px 600)
+            , minWidth (px 280)
+            , paddingLeft (px 10)
+            , paddingRight (px 10)
+            ]
+        , class "header__logo"
+            [ display inlineBlock
+            , textAlign center
+            , wideScreen [ textAlign left ]
+            ]
+        , class "header__navigation"
+            [ descendants
+                [ ul [ listStyle none, margin zero, padding zero ]
+                , li [ display inlineBlock, paddingLeft (Css.em 1) ]
+                ]
+            , float right
+            , lineHeight (px 70)
+            , paddingRight (px 10)
+            , textAlign center
+            , wideScreen [ textAlign left ]
+            ]
+        , class "main" [ Css.maxWidth <| vw 100 ]
+        , class "main__content"
+            [ margin4 (px 50) auto zero auto
+            , maxWidth (px 600)
+            , minWidth (px 280)
+            , paddingLeft (px 10)
+            , paddingRight (px 10)
+            ]
         , class "footer"
-            [ textAlign center
-            , borderTop3 (px 2) solid (hex "2f4858")
-            , backgroundColor <| hex "348aa7"
-            , Css.color <| hex "ffffff"
-            , descendants
-                [ a [ Css.color <| hex "ffffff", textDecoration none ]
-                , svg [ paddingRight <| px 5, verticalAlign baseline ]
+            [ descendants
+                [ svg [ paddingRight <| px 5, verticalAlign baseline ]
                 ]
+            ]
+        , class "footer__content"
+            [ borderColor (hex "e0e0e0")
+            , borderStyle solid
+            , borderWidth4 (px 1) zero zero zero
+            , margin2 zero auto
+            , maxWidth (px 600)
+            , minWidth (px 280)
+            , paddingLeft (px 10)
+            , paddingRight (px 10)
+            ]
+        , class "footer__copyright"
+            [ display block
+            , paddingBottom (Css.em 1)
+            , paddingTop (Css.em 1)
+            , textAlign center
             , wideScreen
-                [ lineHeight <| px 80
-                , textAlign right
-                , descendants
-                    [ class "link"
-                        [ display inlineBlock
-                        , marginRight <| px 20
-                        ]
-                    ]
+                [ display inlineBlock
+                , textAlign left
                 ]
+            ]
+        , class "footer__acknowledgements"
+            [ display block
+            , paddingBottom (Css.em 1)
+            , paddingTop (Css.em 1)
+            , textAlign center
+            , wideScreen
+                [ float right
+                , overflow hidden
+                , textAlign right
+                ]
+            ]
+        , class "footer__navigation"
+            [ descendants
+                [ ul [ listStyle none, margin zero, padding zero ]
+                , li [ display inlineBlock, paddingRight (Css.em 1) ]
+                ]
+            , paddingBottom (Css.em 1)
+            , paddingTop (Css.em 1)
             ]
         , class "post-metadata"
             [ marginTop <| Css.em -0.5
