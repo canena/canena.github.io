@@ -1,4 +1,15 @@
 
+body::before {
+    background: linear-gradient(142deg, #d84b97, #ff4400);
+    content: " ";
+    display: block;
+    height: 4px;
+    left: 0;
+    position: fixed;
+    right: 0;
+    top: 0;
+}
+
 a[href^="http://"]::after,
 a[href^="https://"]::after {
     content: " (⇑)";
