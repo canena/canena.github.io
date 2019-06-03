@@ -27,8 +27,10 @@
   },
   "homepage": "https://github.com/canena/canena.github.io#readme",
   "devDependencies": {
-    "elm": "^0.18.0",
-    "html-minifier": "^3.5.7"
+    "elm": "^0.19.0-no-deps",
+    "elmstatic": "^0.4.1",
+    "html-minifier": "^3.5.7",
+    "serve": "^11.0.1"
   },
   "dependencies": {
     "bluebird": "^3.5.1",
