@@ -62,7 +62,7 @@ styles =
             [ backgroundImage <|
                 linearGradient2 (deg 142) (stop <| hex "d84b97") (stop <| hex "ff4400") []
             , borderBottom3 (px 4) solid linkColorHover
-            , paddingTop <| px 6
+            , paddingTop <| px 4
             , overflow hidden
             ]
         , class "header__content"
