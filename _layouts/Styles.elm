@@ -27,6 +27,8 @@ styles =
 
         codeStyle =
             [ fontFamilies [ "Inconsolata", .value monospace ]
+            , important <| backgroundColor (hex "fdfdfd")
+            , border3 (px 1) solid (hex "d6d6d6")
             ]
     in
     global

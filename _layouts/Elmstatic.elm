@@ -180,7 +180,9 @@ htmlTemplate title contentNodes =
             , node "title" [] [ text title ]
             , stylesheet "/normalize-8.0.1.css"
             , stylesheet "/styles.css?v1"
-            , cdnStylesheet "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.8/styles/default.min.css" "sha256-zcunqSn1llgADaIPFyzrQ8USIjX2VpuxHzUwYisOwo8=" "anonymous"
+            --, cdnStylesheet "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.8/styles/default.min.css" "sha256-zcunqSn1llgADaIPFyzrQ8USIjX2VpuxHzUwYisOwo8=" "anonymous"
+            , cdnStylesheet "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.8/styles/xcode.min.css" "sha256-fjO4CUN/XJTfsDmlIBojCwY4EV94jfOJpPzqd19TSko=" "anonymous"
+            --, cdnStylesheet "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.8/styles/github-gist.min.css" "sha256-3bRfCcmMiQbIzvnxDzgFY9bl7dc07xbdX3+Mr4QYTY8=" "anonymous"
             , Styles.styles
             , cdnScript "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.8/highlight.min.js" "sha256-js+I1fdbke/DJrW2qXQlrw7VUEqmdeFeOW37UC0bEiU=" "anonymous"
             , cdnScript "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.8/languages/elm.min.js" "sha256-5ZDjmDRr7i9DNIGlJKzPImNcoVZ2KGsPch+qoZuYq5M=" "anonymous"
