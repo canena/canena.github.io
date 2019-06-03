@@ -1,6 +1,6 @@
 ---
 includeIntro: true
 layout: Posts
-title: Hello, There!
+title: A blog about life
 ---
 
