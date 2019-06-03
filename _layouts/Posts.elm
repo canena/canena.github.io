@@ -33,7 +33,7 @@ main =
                 [ p []
                     [ text
                         """
-This is my personal blog covering various topics from music to design, programming, life itself and more.
+Hello, There! This is my personal blog covering various topics from music to design, programming, life itself and more.
                         """
                     ]
                 , ul [ class "post-list" ]
