@@ -2,7 +2,7 @@
 title: "About This Blog"
 ---
 
-### My professional self
+## My professional self
 
 I'm a software developer by trait...
 
@@ -18,16 +18,16 @@ Formerly obsessed with...
 - the <abbr title="Block Element Modifier">BEM</abbr> methodology of writing <abbr title="Cascaded Style Sheets">CSS</abbr> with a little help of <a href="https://www.lesscss.org" target="_blank">LESS</a>.
 
 
-<h3 id="contact">Contact</h3>
+<h2 id="contact">Contact</h2>
 
 If you're human, you can surely make sense of the following gibberish where you need to reverse the letters of every word *anenac (ατ) liamy • moc*.
 
 
-<h3 id="impressum">Impressum</h3>
+<h2 id="impressum">Impressum</h2>
 
 The views expressed in this blog are my own thoughts and don't necessarily match that of my professional acquaintances like my employer or co-workers, it is a fully private endeavor. I'm not responsible for linked content that lives outside of <em>canena.de</em> and it's subdomains, the respective owner's opinions are not my own and I distance myself from them and any affiliation that is not explicitly stated on my part.
 
-<h3>Data Usage Disclosure</h3>
+<h2>Data Usage Disclosure</h2>
 
 This is a static site, I don't collect any data myself although these pages are hosted somewhere and they might be keeping track of you. Enabling JavaScript is not required but might enhance the site experience by...
 
