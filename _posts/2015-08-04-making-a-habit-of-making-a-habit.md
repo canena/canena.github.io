@@ -3,7 +3,7 @@ title: "Making a habit of making a habit"
 tags: life self-improvement writing
 ---
 
-### Making a habit of making a habit
+## Making a habit of making a habit
 
 Lately I’ve been thinking a lot about writing and whether I could do it myself. “Yes, I could do it if I really wanted” is what I’d tell the spectre in the mirror. I just always had the nagging feeling that I didn’t care enough so the outcome surely wouldn’t be worth the digital ink. I’d be jealous of the interesting stuff people have to say and the sense of style that would let me almost inhale their stories at times. Why is it that I couldn’t start something? After reading tons and tons of “How I started…” I realized that to start something you - well, actually have to start. That’s a scary thing. For me and everyone else, it seems. The problem with learning new things is that the stuff you do first is likely to be not up to par with your own expectations. Can’t I skip the “early works” part and get to The Good Stuff already? I’m sure everyone has the feeling that what they do isn’t good enough once in a while. Time to get started, but where?
 

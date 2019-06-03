@@ -5069,64 +5069,9 @@ var author$project$Elmstatic$stylesheet = function (href) {
 			]),
 		_List_Nil);
 };
-var elm$core$Basics$negate = function (n) {
-	return -n;
-};
-var rtfeldman$elm_css$Css$Structure$Compatible = 0;
-var rtfeldman$elm_css$Css$auto = {bV: 0, a: 0, V: 0, aK: 0, ca: 0, _: 0, A: 0, t: 0, ac: 0, q: 0, aT: 0, aj: 0, o: 0, a7: 'auto'};
-var rtfeldman$elm_css$Css$Preprocess$AppendProperty = function (a) {
-	return {$: 0, a: a};
-};
-var rtfeldman$elm_css$Css$property = F2(
-	function (key, value) {
-		return rtfeldman$elm_css$Css$Preprocess$AppendProperty(key + (':' + value));
-	});
-var rtfeldman$elm_css$Css$backgroundColor = function (c) {
-	return A2(rtfeldman$elm_css$Css$property, 'background-color', c.a7);
-};
-var rtfeldman$elm_css$Css$prop1 = F2(
-	function (key, arg) {
-		return A2(rtfeldman$elm_css$Css$property, key, arg.a7);
-	});
-var rtfeldman$elm_css$Css$baseline = rtfeldman$elm_css$Css$prop1('baseline');
-var rtfeldman$elm_css$Css$block = {f: 0, a7: 'block'};
-var rtfeldman$elm_css$Css$prop3 = F4(
-	function (key, argA, argB, argC) {
-		return A2(
-			rtfeldman$elm_css$Css$property,
-			key,
-			A2(
-				elm$core$String$join,
-				' ',
-				_List_fromArray(
-					[argA.a7, argB.a7, argC.a7])));
-	});
-var rtfeldman$elm_css$Css$border3 = rtfeldman$elm_css$Css$prop3('border');
-var rtfeldman$elm_css$Css$borderBottom3 = rtfeldman$elm_css$Css$prop3('border-bottom');
-var rtfeldman$elm_css$Css$borderColor = function (c) {
-	return A2(rtfeldman$elm_css$Css$property, 'border-color', c.a7);
-};
-var rtfeldman$elm_css$Css$borderRadius = rtfeldman$elm_css$Css$prop1('border-radius');
-var rtfeldman$elm_css$Css$borderStyle = rtfeldman$elm_css$Css$prop1('border-style');
-var rtfeldman$elm_css$Css$prop4 = F5(
-	function (key, argA, argB, argC, argD) {
-		return A2(
-			rtfeldman$elm_css$Css$property,
-			key,
-			A2(
-				elm$core$String$join,
-				' ',
-				_List_fromArray(
-					[argA.a7, argB.a7, argC.a7, argD.a7])));
-	});
-var rtfeldman$elm_css$Css$borderWidth4 = rtfeldman$elm_css$Css$prop4('border-width');
-var rtfeldman$elm_css$Css$center = rtfeldman$elm_css$Css$prop1('center');
-var rtfeldman$elm_css$Css$color = function (c) {
-	return A2(rtfeldman$elm_css$Css$property, 'color', c.a7);
-};
-var rtfeldman$elm_css$Css$display = rtfeldman$elm_css$Css$prop1('display');
-var rtfeldman$elm_css$Css$EmUnits = 0;
+var rtfeldman$elm_css$Css$PxUnits = 0;
 var elm$core$String$fromFloat = _String_fromNumber;
+var rtfeldman$elm_css$Css$Structure$Compatible = 0;
 var rtfeldman$elm_css$Css$Internal$lengthConverter = F3(
 	function (units, unitLabel, numericValue) {
 		return {
@@ -5151,196 +5096,8 @@ var rtfeldman$elm_css$Css$Internal$lengthConverter = F3(
 				unitLabel)
 		};
 	});
-var rtfeldman$elm_css$Css$em = A2(rtfeldman$elm_css$Css$Internal$lengthConverter, 0, 'em');
-var elm$core$List$head = function (list) {
-	if (list.b) {
-		var x = list.a;
-		var xs = list.b;
-		return elm$core$Maybe$Just(x);
-	} else {
-		return elm$core$Maybe$Nothing;
-	}
-};
-var elm$core$Maybe$withDefault = F2(
-	function (_default, maybe) {
-		if (!maybe.$) {
-			var value = maybe.a;
-			return value;
-		} else {
-			return _default;
-		}
-	});
-var rtfeldman$elm_css$Css$Internal$property = F2(
-	function (key, value) {
-		return rtfeldman$elm_css$Css$Preprocess$AppendProperty(key + (':' + value));
-	});
-var rtfeldman$elm_css$Css$Preprocess$ApplyStyles = function (a) {
-	return {$: 6, a: a};
-};
-var rtfeldman$elm_css$Css$Internal$getOverloadedProperty = F3(
-	function (functionName, desiredKey, style) {
-		getOverloadedProperty:
-		while (true) {
-			switch (style.$) {
-				case 0:
-					var str = style.a;
-					var key = A2(
-						elm$core$Maybe$withDefault,
-						'',
-						elm$core$List$head(
-							A2(elm$core$String$split, ':', str)));
-					return A2(rtfeldman$elm_css$Css$Internal$property, desiredKey, key);
-				case 1:
-					var selector = style.a;
-					return A2(rtfeldman$elm_css$Css$Internal$property, desiredKey, 'elm-css-error-cannot-apply-' + (functionName + '-with-inapplicable-Style-for-selector'));
-				case 2:
-					var combinator = style.a;
-					return A2(rtfeldman$elm_css$Css$Internal$property, desiredKey, 'elm-css-error-cannot-apply-' + (functionName + '-with-inapplicable-Style-for-combinator'));
-				case 3:
-					var pseudoElement = style.a;
-					return A2(rtfeldman$elm_css$Css$Internal$property, desiredKey, 'elm-css-error-cannot-apply-' + (functionName + '-with-inapplicable-Style-for-pseudo-element setter'));
-				case 4:
-					return A2(rtfeldman$elm_css$Css$Internal$property, desiredKey, 'elm-css-error-cannot-apply-' + (functionName + '-with-inapplicable-Style-for-media-query'));
-				case 5:
-					return A2(rtfeldman$elm_css$Css$Internal$property, desiredKey, 'elm-css-error-cannot-apply-' + (functionName + '-with-inapplicable-Style-for-keyframes'));
-				default:
-					if (!style.a.b) {
-						return A2(rtfeldman$elm_css$Css$Internal$property, desiredKey, 'elm-css-error-cannot-apply-' + (functionName + '-with-empty-Style'));
-					} else {
-						if (!style.a.b.b) {
-							var _n1 = style.a;
-							var only = _n1.a;
-							var $temp$functionName = functionName,
-								$temp$desiredKey = desiredKey,
-								$temp$style = only;
-							functionName = $temp$functionName;
-							desiredKey = $temp$desiredKey;
-							style = $temp$style;
-							continue getOverloadedProperty;
-						} else {
-							var _n2 = style.a;
-							var first = _n2.a;
-							var rest = _n2.b;
-							var $temp$functionName = functionName,
-								$temp$desiredKey = desiredKey,
-								$temp$style = rtfeldman$elm_css$Css$Preprocess$ApplyStyles(rest);
-							functionName = $temp$functionName;
-							desiredKey = $temp$desiredKey;
-							style = $temp$style;
-							continue getOverloadedProperty;
-						}
-					}
-			}
-		}
-	});
-var rtfeldman$elm_css$Css$Internal$IncompatibleUnits = 0;
-var rtfeldman$elm_css$Css$Internal$lengthForOverloadedProperty = A3(rtfeldman$elm_css$Css$Internal$lengthConverter, 0, '', 0);
-var rtfeldman$elm_css$Css$float = function (fn) {
-	return A3(
-		rtfeldman$elm_css$Css$Internal$getOverloadedProperty,
-		'float',
-		'float',
-		fn(rtfeldman$elm_css$Css$Internal$lengthForOverloadedProperty));
-};
-var elm$core$Basics$composeL = F3(
-	function (g, f, x) {
-		return g(
-			f(x));
-	});
-var elm$core$List$isEmpty = function (xs) {
-	if (!xs.b) {
-		return true;
-	} else {
-		return false;
-	}
-};
-var elm$core$List$foldrHelper = F4(
-	function (fn, acc, ctr, ls) {
-		if (!ls.b) {
-			return acc;
-		} else {
-			var a = ls.a;
-			var r1 = ls.b;
-			if (!r1.b) {
-				return A2(fn, a, acc);
-			} else {
-				var b = r1.a;
-				var r2 = r1.b;
-				if (!r2.b) {
-					return A2(
-						fn,
-						a,
-						A2(fn, b, acc));
-				} else {
-					var c = r2.a;
-					var r3 = r2.b;
-					if (!r3.b) {
-						return A2(
-							fn,
-							a,
-							A2(
-								fn,
-								b,
-								A2(fn, c, acc)));
-					} else {
-						var d = r3.a;
-						var r4 = r3.b;
-						var res = (ctr > 500) ? A3(
-							elm$core$List$foldl,
-							fn,
-							acc,
-							elm$core$List$reverse(r4)) : A4(elm$core$List$foldrHelper, fn, acc, ctr + 1, r4);
-						return A2(
-							fn,
-							a,
-							A2(
-								fn,
-								b,
-								A2(
-									fn,
-									c,
-									A2(fn, d, res))));
-					}
-				}
-			}
-		}
-	});
-var elm$core$List$foldr = F3(
-	function (fn, acc, ls) {
-		return A4(elm$core$List$foldrHelper, fn, acc, 0, ls);
-	});
-var elm$core$List$map = F2(
-	function (f, xs) {
-		return A3(
-			elm$core$List$foldr,
-			F2(
-				function (x, acc) {
-					return A2(
-						elm$core$List$cons,
-						f(x),
-						acc);
-				}),
-			_List_Nil,
-			xs);
-	});
-var rtfeldman$elm_css$Css$stringsToValue = function (list) {
-	return elm$core$List$isEmpty(list) ? {a7: 'none'} : {
-		a7: A2(
-			elm$core$String$join,
-			', ',
-			A2(
-				elm$core$List$map,
-				function (s) {
-					return s;
-				},
-				list))
-	};
-};
-var rtfeldman$elm_css$Css$fontFamilies = A2(
-	elm$core$Basics$composeL,
-	rtfeldman$elm_css$Css$prop1('font-family'),
-	rtfeldman$elm_css$Css$stringsToValue);
-var rtfeldman$elm_css$Css$fontSize = rtfeldman$elm_css$Css$prop1('font-size');
+var rtfeldman$elm_css$Css$px = A2(rtfeldman$elm_css$Css$Internal$lengthConverter, 0, 'px');
+var author$project$Styles$gutterSize = rtfeldman$elm_css$Css$px(20);
 var elm$core$String$length = _String_length;
 var elm$core$String$slice = _String_slice;
 var elm$core$String$dropLeft = F2(
@@ -5377,6 +5134,9 @@ var elm$core$Basics$composeR = F3(
 	});
 var elm$core$String$fromList = _String_fromList;
 var elm$core$String$toLower = _String_toLower;
+var elm$core$Basics$negate = function (n) {
+	return -n;
+};
 var elm$core$List$tail = function (list) {
 	if (list.b) {
 		var x = list.a;
@@ -5386,6 +5146,15 @@ var elm$core$List$tail = function (list) {
 		return elm$core$Maybe$Nothing;
 	}
 };
+var elm$core$Maybe$withDefault = F2(
+	function (_default, maybe) {
+		if (!maybe.$) {
+			var value = maybe.a;
+			return value;
+		} else {
+			return _default;
+		}
+	});
 var elm$core$Result$map = F2(
 	function (func, ra) {
 		if (!ra.$) {
@@ -5741,7 +5510,274 @@ var rtfeldman$elm_css$Css$hex = function (str) {
 	}
 	return rtfeldman$elm_css$Css$erroneousHex(str);
 };
+var author$project$Styles$linkColor = rtfeldman$elm_css$Css$hex('ff6600');
+var author$project$Styles$linkColorHover = rtfeldman$elm_css$Css$hex('e32636');
+var rtfeldman$elm_css$Css$auto = {bV: 0, a: 0, V: 0, aK: 0, ca: 0, _: 0, A: 0, t: 0, ac: 0, q: 0, aT: 0, aj: 0, o: 0, a7: 'auto'};
+var rtfeldman$elm_css$Css$Preprocess$AppendProperty = function (a) {
+	return {$: 0, a: a};
+};
+var rtfeldman$elm_css$Css$property = F2(
+	function (key, value) {
+		return rtfeldman$elm_css$Css$Preprocess$AppendProperty(key + (':' + value));
+	});
+var rtfeldman$elm_css$Css$backgroundColor = function (c) {
+	return A2(rtfeldman$elm_css$Css$property, 'background-color', c.a7);
+};
+var rtfeldman$elm_css$Css$prop1 = F2(
+	function (key, arg) {
+		return A2(rtfeldman$elm_css$Css$property, key, arg.a7);
+	});
+var rtfeldman$elm_css$Css$backgroundImage = rtfeldman$elm_css$Css$prop1('background-image');
+var rtfeldman$elm_css$Css$baseline = rtfeldman$elm_css$Css$prop1('baseline');
+var rtfeldman$elm_css$Css$block = {f: 0, a7: 'block'};
+var rtfeldman$elm_css$Css$bold = {z: 0, a7: 'bold'};
+var rtfeldman$elm_css$Css$prop3 = F4(
+	function (key, argA, argB, argC) {
+		return A2(
+			rtfeldman$elm_css$Css$property,
+			key,
+			A2(
+				elm$core$String$join,
+				' ',
+				_List_fromArray(
+					[argA.a7, argB.a7, argC.a7])));
+	});
+var rtfeldman$elm_css$Css$border3 = rtfeldman$elm_css$Css$prop3('border');
+var rtfeldman$elm_css$Css$borderBottom3 = rtfeldman$elm_css$Css$prop3('border-bottom');
+var rtfeldman$elm_css$Css$borderColor = function (c) {
+	return A2(rtfeldman$elm_css$Css$property, 'border-color', c.a7);
+};
+var rtfeldman$elm_css$Css$borderRadius = rtfeldman$elm_css$Css$prop1('border-radius');
+var rtfeldman$elm_css$Css$borderStyle = rtfeldman$elm_css$Css$prop1('border-style');
+var rtfeldman$elm_css$Css$borderTopLeftRadius = rtfeldman$elm_css$Css$prop1('border-top-left-radius');
+var rtfeldman$elm_css$Css$prop4 = F5(
+	function (key, argA, argB, argC, argD) {
+		return A2(
+			rtfeldman$elm_css$Css$property,
+			key,
+			A2(
+				elm$core$String$join,
+				' ',
+				_List_fromArray(
+					[argA.a7, argB.a7, argC.a7, argD.a7])));
+	});
+var rtfeldman$elm_css$Css$borderWidth4 = rtfeldman$elm_css$Css$prop4('border-width');
+var rtfeldman$elm_css$Css$center = rtfeldman$elm_css$Css$prop1('center');
+var rtfeldman$elm_css$Css$color = function (c) {
+	return A2(rtfeldman$elm_css$Css$property, 'color', c.a7);
+};
+var rtfeldman$elm_css$Css$angleConverter = F2(
+	function (suffix, angleVal) {
+		return {
+			bW: 0,
+			r: 0,
+			a7: _Utils_ap(
+				elm$core$String$fromFloat(angleVal),
+				suffix)
+		};
+	});
+var rtfeldman$elm_css$Css$deg = rtfeldman$elm_css$Css$angleConverter('deg');
+var rtfeldman$elm_css$Css$display = rtfeldman$elm_css$Css$prop1('display');
+var rtfeldman$elm_css$Css$dotted = {m: 0, N: 0, a7: 'dotted'};
+var rtfeldman$elm_css$Css$EmUnits = 0;
+var rtfeldman$elm_css$Css$em = A2(rtfeldman$elm_css$Css$Internal$lengthConverter, 0, 'em');
+var elm$core$List$head = function (list) {
+	if (list.b) {
+		var x = list.a;
+		var xs = list.b;
+		return elm$core$Maybe$Just(x);
+	} else {
+		return elm$core$Maybe$Nothing;
+	}
+};
+var rtfeldman$elm_css$Css$Internal$property = F2(
+	function (key, value) {
+		return rtfeldman$elm_css$Css$Preprocess$AppendProperty(key + (':' + value));
+	});
+var rtfeldman$elm_css$Css$Preprocess$ApplyStyles = function (a) {
+	return {$: 6, a: a};
+};
+var rtfeldman$elm_css$Css$Internal$getOverloadedProperty = F3(
+	function (functionName, desiredKey, style) {
+		getOverloadedProperty:
+		while (true) {
+			switch (style.$) {
+				case 0:
+					var str = style.a;
+					var key = A2(
+						elm$core$Maybe$withDefault,
+						'',
+						elm$core$List$head(
+							A2(elm$core$String$split, ':', str)));
+					return A2(rtfeldman$elm_css$Css$Internal$property, desiredKey, key);
+				case 1:
+					var selector = style.a;
+					return A2(rtfeldman$elm_css$Css$Internal$property, desiredKey, 'elm-css-error-cannot-apply-' + (functionName + '-with-inapplicable-Style-for-selector'));
+				case 2:
+					var combinator = style.a;
+					return A2(rtfeldman$elm_css$Css$Internal$property, desiredKey, 'elm-css-error-cannot-apply-' + (functionName + '-with-inapplicable-Style-for-combinator'));
+				case 3:
+					var pseudoElement = style.a;
+					return A2(rtfeldman$elm_css$Css$Internal$property, desiredKey, 'elm-css-error-cannot-apply-' + (functionName + '-with-inapplicable-Style-for-pseudo-element setter'));
+				case 4:
+					return A2(rtfeldman$elm_css$Css$Internal$property, desiredKey, 'elm-css-error-cannot-apply-' + (functionName + '-with-inapplicable-Style-for-media-query'));
+				case 5:
+					return A2(rtfeldman$elm_css$Css$Internal$property, desiredKey, 'elm-css-error-cannot-apply-' + (functionName + '-with-inapplicable-Style-for-keyframes'));
+				default:
+					if (!style.a.b) {
+						return A2(rtfeldman$elm_css$Css$Internal$property, desiredKey, 'elm-css-error-cannot-apply-' + (functionName + '-with-empty-Style'));
+					} else {
+						if (!style.a.b.b) {
+							var _n1 = style.a;
+							var only = _n1.a;
+							var $temp$functionName = functionName,
+								$temp$desiredKey = desiredKey,
+								$temp$style = only;
+							functionName = $temp$functionName;
+							desiredKey = $temp$desiredKey;
+							style = $temp$style;
+							continue getOverloadedProperty;
+						} else {
+							var _n2 = style.a;
+							var first = _n2.a;
+							var rest = _n2.b;
+							var $temp$functionName = functionName,
+								$temp$desiredKey = desiredKey,
+								$temp$style = rtfeldman$elm_css$Css$Preprocess$ApplyStyles(rest);
+							functionName = $temp$functionName;
+							desiredKey = $temp$desiredKey;
+							style = $temp$style;
+							continue getOverloadedProperty;
+						}
+					}
+			}
+		}
+	});
+var rtfeldman$elm_css$Css$Internal$IncompatibleUnits = 0;
+var rtfeldman$elm_css$Css$Internal$lengthForOverloadedProperty = A3(rtfeldman$elm_css$Css$Internal$lengthConverter, 0, '', 0);
+var rtfeldman$elm_css$Css$float = function (fn) {
+	return A3(
+		rtfeldman$elm_css$Css$Internal$getOverloadedProperty,
+		'float',
+		'float',
+		fn(rtfeldman$elm_css$Css$Internal$lengthForOverloadedProperty));
+};
+var elm$core$Basics$composeL = F3(
+	function (g, f, x) {
+		return g(
+			f(x));
+	});
+var elm$core$List$isEmpty = function (xs) {
+	if (!xs.b) {
+		return true;
+	} else {
+		return false;
+	}
+};
+var elm$core$List$foldrHelper = F4(
+	function (fn, acc, ctr, ls) {
+		if (!ls.b) {
+			return acc;
+		} else {
+			var a = ls.a;
+			var r1 = ls.b;
+			if (!r1.b) {
+				return A2(fn, a, acc);
+			} else {
+				var b = r1.a;
+				var r2 = r1.b;
+				if (!r2.b) {
+					return A2(
+						fn,
+						a,
+						A2(fn, b, acc));
+				} else {
+					var c = r2.a;
+					var r3 = r2.b;
+					if (!r3.b) {
+						return A2(
+							fn,
+							a,
+							A2(
+								fn,
+								b,
+								A2(fn, c, acc)));
+					} else {
+						var d = r3.a;
+						var r4 = r3.b;
+						var res = (ctr > 500) ? A3(
+							elm$core$List$foldl,
+							fn,
+							acc,
+							elm$core$List$reverse(r4)) : A4(elm$core$List$foldrHelper, fn, acc, ctr + 1, r4);
+						return A2(
+							fn,
+							a,
+							A2(
+								fn,
+								b,
+								A2(
+									fn,
+									c,
+									A2(fn, d, res))));
+					}
+				}
+			}
+		}
+	});
+var elm$core$List$foldr = F3(
+	function (fn, acc, ls) {
+		return A4(elm$core$List$foldrHelper, fn, acc, 0, ls);
+	});
+var elm$core$List$map = F2(
+	function (f, xs) {
+		return A3(
+			elm$core$List$foldr,
+			F2(
+				function (x, acc) {
+					return A2(
+						elm$core$List$cons,
+						f(x),
+						acc);
+				}),
+			_List_Nil,
+			xs);
+	});
+var rtfeldman$elm_css$Css$stringsToValue = function (list) {
+	return elm$core$List$isEmpty(list) ? {a7: 'none'} : {
+		a7: A2(
+			elm$core$String$join,
+			', ',
+			A2(
+				elm$core$List$map,
+				function (s) {
+					return s;
+				},
+				list))
+	};
+};
+var rtfeldman$elm_css$Css$fontFamilies = A2(
+	elm$core$Basics$composeL,
+	rtfeldman$elm_css$Css$prop1('font-family'),
+	rtfeldman$elm_css$Css$stringsToValue);
+var rtfeldman$elm_css$Css$fontSize = rtfeldman$elm_css$Css$prop1('font-size');
+var rtfeldman$elm_css$Css$fontWeight = function (_n0) {
+	var value = _n0.a7;
+	return A2(rtfeldman$elm_css$Css$property, 'font-weight', value);
+};
 var rtfeldman$elm_css$Css$hidden = {m: 0, ac: 0, a7: 'hidden', aE: 0};
+var rtfeldman$elm_css$Css$Preprocess$ExtendSelector = F2(
+	function (a, b) {
+		return {$: 1, a: a, b: b};
+	});
+var rtfeldman$elm_css$Css$Structure$PseudoClassSelector = function (a) {
+	return {$: 2, a: a};
+};
+var rtfeldman$elm_css$Css$pseudoClass = function (_class) {
+	return rtfeldman$elm_css$Css$Preprocess$ExtendSelector(
+		rtfeldman$elm_css$Css$Structure$PseudoClassSelector(_class));
+};
+var rtfeldman$elm_css$Css$hover = rtfeldman$elm_css$Css$pseudoClass('hover');
 var elm$core$String$endsWith = _String_endsWith;
 var rtfeldman$elm_css$Css$makeImportant = function (str) {
 	return A2(
@@ -5749,10 +5785,6 @@ var rtfeldman$elm_css$Css$makeImportant = function (str) {
 		' !important',
 		elm$core$String$toLower(str)) ? str : (str + ' !important');
 };
-var rtfeldman$elm_css$Css$Preprocess$ExtendSelector = F2(
-	function (a, b) {
-		return {$: 1, a: a, b: b};
-	});
 var rtfeldman$elm_css$Css$Structure$mapLast = F2(
 	function (update, list) {
 		if (!list.b) {
@@ -5830,6 +5862,59 @@ var rtfeldman$elm_css$Css$important = rtfeldman$elm_css$Css$Preprocess$mapLastPr
 var rtfeldman$elm_css$Css$inlineBlock = {f: 0, a7: 'inline-block'};
 var rtfeldman$elm_css$Css$left = rtfeldman$elm_css$Css$prop1('left');
 var rtfeldman$elm_css$Css$lineHeight = rtfeldman$elm_css$Css$prop1('line-height');
+var elm$core$Maybe$map = F2(
+	function (f, maybe) {
+		if (!maybe.$) {
+			var value = maybe.a;
+			return elm$core$Maybe$Just(
+				f(value));
+		} else {
+			return elm$core$Maybe$Nothing;
+		}
+	});
+var elm$core$String$append = _String_append;
+var rtfeldman$elm_css$Css$collectStops = elm$core$List$map(
+	function (_n0) {
+		var c = _n0.a;
+		var len = _n0.b;
+		return A2(
+			elm$core$String$append,
+			c.a7,
+			A2(
+				elm$core$Maybe$withDefault,
+				'',
+				A2(
+					elm$core$Maybe$map,
+					A2(
+						elm$core$Basics$composeL,
+						elm$core$String$cons(' '),
+						function ($) {
+							return $.a7;
+						}),
+					len)));
+	});
+var rtfeldman$elm_css$Css$cssFunction = F2(
+	function (funcName, args) {
+		return funcName + ('(' + (A2(elm$core$String$join, ', ', args) + ')'));
+	});
+var rtfeldman$elm_css$Css$linearGradient2 = F4(
+	function (direction, firstStop, secondStop, otherStops) {
+		return {
+			Q: 0,
+			b: 0,
+			a7: A2(
+				rtfeldman$elm_css$Css$cssFunction,
+				'linear-gradient',
+				A2(
+					elm$core$List$cons,
+					direction.a7,
+					rtfeldman$elm_css$Css$collectStops(
+						_Utils_ap(
+							_List_fromArray(
+								[firstStop, secondStop]),
+							otherStops))))
+		};
+	});
 var rtfeldman$elm_css$Css$listStyle = rtfeldman$elm_css$Css$prop1('list-style');
 var rtfeldman$elm_css$Css$margin = rtfeldman$elm_css$Css$prop1('margin');
 var rtfeldman$elm_css$Css$prop2 = F3(
@@ -5846,6 +5931,7 @@ var rtfeldman$elm_css$Css$prop2 = F3(
 var rtfeldman$elm_css$Css$margin2 = rtfeldman$elm_css$Css$prop2('margin');
 var rtfeldman$elm_css$Css$margin4 = rtfeldman$elm_css$Css$prop4('margin');
 var rtfeldman$elm_css$Css$marginBottom = rtfeldman$elm_css$Css$prop1('margin-bottom');
+var rtfeldman$elm_css$Css$marginLeft = rtfeldman$elm_css$Css$prop1('margin-left');
 var rtfeldman$elm_css$Css$marginRight = rtfeldman$elm_css$Css$prop1('margin-right');
 var rtfeldman$elm_css$Css$marginTop = rtfeldman$elm_css$Css$prop1('margin-top');
 var rtfeldman$elm_css$Css$maxWidth = rtfeldman$elm_css$Css$prop1('max-width');
@@ -5861,12 +5947,13 @@ var rtfeldman$elm_css$Css$paddingRight = rtfeldman$elm_css$Css$prop1('padding-ri
 var rtfeldman$elm_css$Css$paddingTop = rtfeldman$elm_css$Css$prop1('padding-top');
 var rtfeldman$elm_css$Css$PercentageUnits = 0;
 var rtfeldman$elm_css$Css$pct = A2(rtfeldman$elm_css$Css$Internal$lengthConverter, 0, '%');
-var rtfeldman$elm_css$Css$PxUnits = 0;
-var rtfeldman$elm_css$Css$px = A2(rtfeldman$elm_css$Css$Internal$lengthConverter, 0, 'px');
 var rtfeldman$elm_css$Css$right = rtfeldman$elm_css$Css$prop1('right');
 var rtfeldman$elm_css$Css$sansSerif = {G: 0, a7: 'sans-serif'};
 var rtfeldman$elm_css$Css$scroll = {ap: 0, bf: 0, bu: 0, ac: 0, cm: 0, a7: 'scroll'};
 var rtfeldman$elm_css$Css$solid = {m: 0, N: 0, a7: 'solid'};
+var rtfeldman$elm_css$Css$stop = function (c) {
+	return _Utils_Tuple2(c, elm$core$Maybe$Nothing);
+};
 var rtfeldman$elm_css$Css$textAlign = function (fn) {
 	return A3(
 		rtfeldman$elm_css$Css$Internal$getOverloadedProperty,
@@ -5875,6 +5962,9 @@ var rtfeldman$elm_css$Css$textAlign = function (fn) {
 		fn(rtfeldman$elm_css$Css$Internal$lengthForOverloadedProperty));
 };
 var rtfeldman$elm_css$Css$textDecoration = rtfeldman$elm_css$Css$prop1('text-decoration');
+var rtfeldman$elm_css$Css$textTransform = rtfeldman$elm_css$Css$prop1('text-transform');
+var rtfeldman$elm_css$Css$underline = {ah: 0, a7: 'underline'};
+var rtfeldman$elm_css$Css$uppercase = {O: 0, a7: 'uppercase'};
 var rtfeldman$elm_css$Css$verticalAlign = function (fn) {
 	return A3(
 		rtfeldman$elm_css$Css$Internal$getOverloadedProperty,
@@ -6236,16 +6326,6 @@ var elm$core$List$takeFast = F3(
 var elm$core$List$take = F2(
 	function (n, list) {
 		return A3(elm$core$List$takeFast, 0, n, list);
-	});
-var elm$core$Maybe$map = F2(
-	function (f, maybe) {
-		if (!maybe.$) {
-			var value = maybe.a;
-			return elm$core$Maybe$Just(
-				f(value));
-		} else {
-			return elm$core$Maybe$Nothing;
-		}
 	});
 var rtfeldman$elm_css$Css$Preprocess$Resolve$collectSelectors = function (declarations) {
 	collectSelectors:
@@ -7581,7 +7661,6 @@ var rtfeldman$elm_css$Css$Structure$Output$emitProperties = function (properties
 			A2(elm$core$Basics$composeL, rtfeldman$elm_css$Css$Structure$Output$indent, rtfeldman$elm_css$Css$Structure$Output$emitProperty),
 			properties));
 };
-var elm$core$String$append = _String_append;
 var rtfeldman$elm_css$Css$Structure$Output$pseudoElementToString = function (_n0) {
 	var str = _n0;
 	return '::' + str;
@@ -8349,12 +8428,9 @@ var author$project$Styles$styles = function () {
 					rtfeldman$elm_css$Css$Global$body(
 					_List_fromArray(
 						[
-							rtfeldman$elm_css$Css$padding(
-							rtfeldman$elm_css$Css$px(0)),
-							rtfeldman$elm_css$Css$margin(
-							rtfeldman$elm_css$Css$px(0)),
 							rtfeldman$elm_css$Css$color(
-							rtfeldman$elm_css$Css$hex('363636')),
+							rtfeldman$elm_css$Css$hex('333333')),
+							A2(rtfeldman$elm_css$Css$property, 'font-display', 'swap'),
 							rtfeldman$elm_css$Css$fontFamilies(
 							_List_fromArray(
 								[
@@ -8364,18 +8440,26 @@ var author$project$Styles$styles = function () {
 									return $.a7;
 								}(rtfeldman$elm_css$Css$sansSerif)
 								])),
-							A2(rtfeldman$elm_css$Css$property, 'font-display', 'swap'),
 							rtfeldman$elm_css$Css$fontSize(
 							rtfeldman$elm_css$Css$px(18)),
 							rtfeldman$elm_css$Css$lineHeight(
-							rtfeldman$elm_css$Css$em(1.4))
+							rtfeldman$elm_css$Css$em(1.4)),
+							rtfeldman$elm_css$Css$margin(
+							rtfeldman$elm_css$Css$px(0)),
+							rtfeldman$elm_css$Css$padding(
+							rtfeldman$elm_css$Css$px(0))
 						])),
 					rtfeldman$elm_css$Css$Global$a(
 					_List_fromArray(
 						[
-							rtfeldman$elm_css$Css$color(
-							rtfeldman$elm_css$Css$hex('348aa7')),
-							rtfeldman$elm_css$Css$textDecoration(rtfeldman$elm_css$Css$none)
+							rtfeldman$elm_css$Css$color(author$project$Styles$linkColor),
+							rtfeldman$elm_css$Css$textDecoration(rtfeldman$elm_css$Css$underline),
+							rtfeldman$elm_css$Css$hover(
+							_List_fromArray(
+								[
+									rtfeldman$elm_css$Css$color(author$project$Styles$linkColorHover),
+									rtfeldman$elm_css$Css$textDecoration(rtfeldman$elm_css$Css$none)
+								]))
 						])),
 					rtfeldman$elm_css$Css$Global$code(codeStyle),
 					rtfeldman$elm_css$Css$Global$pre(
@@ -8420,13 +8504,20 @@ var author$project$Styles$styles = function () {
 					'header',
 					_List_fromArray(
 						[
-							rtfeldman$elm_css$Css$backgroundColor(
-							rtfeldman$elm_css$Css$hex('f2fae8')),
+							rtfeldman$elm_css$Css$backgroundImage(
+							A4(
+								rtfeldman$elm_css$Css$linearGradient2,
+								rtfeldman$elm_css$Css$deg(142),
+								rtfeldman$elm_css$Css$stop(
+									rtfeldman$elm_css$Css$hex('d84b97')),
+								rtfeldman$elm_css$Css$stop(
+									rtfeldman$elm_css$Css$hex('ff4400')),
+								_List_Nil)),
 							A3(
 							rtfeldman$elm_css$Css$borderBottom3,
-							rtfeldman$elm_css$Css$px(2),
+							rtfeldman$elm_css$Css$px(4),
 							rtfeldman$elm_css$Css$solid,
-							rtfeldman$elm_css$Css$hex('3c8765')),
+							author$project$Styles$linkColorHover),
 							rtfeldman$elm_css$Css$paddingTop(
 							rtfeldman$elm_css$Css$px(6)),
 							rtfeldman$elm_css$Css$overflow(rtfeldman$elm_css$Css$hidden)
@@ -8438,20 +8529,32 @@ var author$project$Styles$styles = function () {
 						[
 							A2(rtfeldman$elm_css$Css$margin2, rtfeldman$elm_css$Css$zero, rtfeldman$elm_css$Css$auto),
 							rtfeldman$elm_css$Css$maxWidth(
-							rtfeldman$elm_css$Css$px(600)),
+							rtfeldman$elm_css$Css$px(900)),
 							rtfeldman$elm_css$Css$minWidth(
 							rtfeldman$elm_css$Css$px(280)),
-							rtfeldman$elm_css$Css$paddingLeft(
-							rtfeldman$elm_css$Css$px(10)),
-							rtfeldman$elm_css$Css$paddingRight(
-							rtfeldman$elm_css$Css$px(10))
+							rtfeldman$elm_css$Css$paddingLeft(author$project$Styles$gutterSize),
+							rtfeldman$elm_css$Css$paddingRight(author$project$Styles$gutterSize)
 						])),
 					A2(
 					rtfeldman$elm_css$Css$Global$class,
 					'header__logo',
 					_List_fromArray(
 						[
+							rtfeldman$elm_css$Css$Global$descendants(
+							_List_fromArray(
+								[
+									rtfeldman$elm_css$Css$Global$a(
+									_List_fromArray(
+										[
+											rtfeldman$elm_css$Css$color(
+											rtfeldman$elm_css$Css$hex('ffffff')),
+											rtfeldman$elm_css$Css$fontWeight(rtfeldman$elm_css$Css$bold),
+											rtfeldman$elm_css$Css$textTransform(rtfeldman$elm_css$Css$uppercase)
+										]))
+								])),
 							rtfeldman$elm_css$Css$display(rtfeldman$elm_css$Css$inlineBlock),
+							rtfeldman$elm_css$Css$lineHeight(
+							rtfeldman$elm_css$Css$px(70)),
 							rtfeldman$elm_css$Css$textAlign(rtfeldman$elm_css$Css$center),
 							wideScreen(
 							_List_fromArray(
@@ -8480,13 +8583,19 @@ var author$project$Styles$styles = function () {
 											rtfeldman$elm_css$Css$display(rtfeldman$elm_css$Css$inlineBlock),
 											rtfeldman$elm_css$Css$paddingLeft(
 											rtfeldman$elm_css$Css$em(1))
+										])),
+									rtfeldman$elm_css$Css$Global$a(
+									_List_fromArray(
+										[
+											rtfeldman$elm_css$Css$color(
+											rtfeldman$elm_css$Css$hex('ffffff')),
+											rtfeldman$elm_css$Css$fontWeight(rtfeldman$elm_css$Css$bold),
+											rtfeldman$elm_css$Css$textTransform(rtfeldman$elm_css$Css$uppercase)
 										]))
 								])),
 							rtfeldman$elm_css$Css$float(rtfeldman$elm_css$Css$right),
 							rtfeldman$elm_css$Css$lineHeight(
 							rtfeldman$elm_css$Css$px(70)),
-							rtfeldman$elm_css$Css$paddingRight(
-							rtfeldman$elm_css$Css$px(10)),
 							rtfeldman$elm_css$Css$textAlign(rtfeldman$elm_css$Css$center),
 							wideScreen(
 							_List_fromArray(
@@ -8514,13 +8623,11 @@ var author$project$Styles$styles = function () {
 							rtfeldman$elm_css$Css$zero,
 							rtfeldman$elm_css$Css$auto),
 							rtfeldman$elm_css$Css$maxWidth(
-							rtfeldman$elm_css$Css$px(600)),
+							rtfeldman$elm_css$Css$px(900)),
 							rtfeldman$elm_css$Css$minWidth(
 							rtfeldman$elm_css$Css$px(280)),
-							rtfeldman$elm_css$Css$paddingLeft(
-							rtfeldman$elm_css$Css$px(10)),
-							rtfeldman$elm_css$Css$paddingRight(
-							rtfeldman$elm_css$Css$px(10))
+							rtfeldman$elm_css$Css$paddingLeft(author$project$Styles$gutterSize),
+							rtfeldman$elm_css$Css$paddingRight(author$project$Styles$gutterSize)
 						])),
 					A2(
 					rtfeldman$elm_css$Css$Global$class,
@@ -8555,13 +8662,19 @@ var author$project$Styles$styles = function () {
 							rtfeldman$elm_css$Css$zero),
 							A2(rtfeldman$elm_css$Css$margin2, rtfeldman$elm_css$Css$zero, rtfeldman$elm_css$Css$auto),
 							rtfeldman$elm_css$Css$maxWidth(
-							rtfeldman$elm_css$Css$px(600)),
+							rtfeldman$elm_css$Css$px(900)),
 							rtfeldman$elm_css$Css$minWidth(
 							rtfeldman$elm_css$Css$px(280)),
-							rtfeldman$elm_css$Css$paddingLeft(
-							rtfeldman$elm_css$Css$px(10)),
-							rtfeldman$elm_css$Css$paddingRight(
-							rtfeldman$elm_css$Css$px(10))
+							rtfeldman$elm_css$Css$paddingLeft(author$project$Styles$gutterSize),
+							rtfeldman$elm_css$Css$paddingRight(author$project$Styles$gutterSize)
+						])),
+					A2(
+					rtfeldman$elm_css$Css$Global$class,
+					'footer__content--highlighted',
+					_List_fromArray(
+						[
+							rtfeldman$elm_css$Css$borderColor(author$project$Styles$linkColor),
+							rtfeldman$elm_css$Css$borderStyle(rtfeldman$elm_css$Css$dotted)
 						])),
 					A2(
 					rtfeldman$elm_css$Css$Global$class,
@@ -8619,14 +8732,51 @@ var author$project$Styles$styles = function () {
 									_List_fromArray(
 										[
 											rtfeldman$elm_css$Css$display(rtfeldman$elm_css$Css$inlineBlock),
+											rtfeldman$elm_css$Css$lineHeight(
+											rtfeldman$elm_css$Css$px(70)),
 											rtfeldman$elm_css$Css$paddingRight(
 											rtfeldman$elm_css$Css$em(1))
 										]))
 								])),
-							rtfeldman$elm_css$Css$paddingBottom(
-							rtfeldman$elm_css$Css$em(1)),
-							rtfeldman$elm_css$Css$paddingTop(
-							rtfeldman$elm_css$Css$em(1))
+							rtfeldman$elm_css$Css$textAlign(rtfeldman$elm_css$Css$center),
+							wideScreen(
+							_List_fromArray(
+								[
+									rtfeldman$elm_css$Css$textAlign(rtfeldman$elm_css$Css$left)
+								]))
+						])),
+					A2(
+					rtfeldman$elm_css$Css$Global$class,
+					'footer__avatar',
+					_List_fromArray(
+						[
+							rtfeldman$elm_css$Css$borderRadius(
+							rtfeldman$elm_css$Css$px(60)),
+							rtfeldman$elm_css$Css$float(rtfeldman$elm_css$Css$right),
+							rtfeldman$elm_css$Css$marginBottom(
+							rtfeldman$elm_css$Css$px(10)),
+							rtfeldman$elm_css$Css$marginLeft(
+							rtfeldman$elm_css$Css$px(10))
+						])),
+					A2(
+					rtfeldman$elm_css$Css$Global$class,
+					'post-list',
+					_List_fromArray(
+						[
+							rtfeldman$elm_css$Css$listStyle(rtfeldman$elm_css$Css$none),
+							rtfeldman$elm_css$Css$marginTop(
+							rtfeldman$elm_css$Css$px(45)),
+							rtfeldman$elm_css$Css$paddingLeft(rtfeldman$elm_css$Css$zero)
+						])),
+					A2(
+					rtfeldman$elm_css$Css$Global$class,
+					'post-list__item',
+					_List_fromArray(
+						[
+							rtfeldman$elm_css$Css$display(rtfeldman$elm_css$Css$block),
+							rtfeldman$elm_css$Css$paddingLeft(rtfeldman$elm_css$Css$zero),
+							rtfeldman$elm_css$Css$marginBottom(
+							rtfeldman$elm_css$Css$px(45))
 						])),
 					A2(
 					rtfeldman$elm_css$Css$Global$class,
@@ -8659,9 +8809,12 @@ var author$project$Styles$styles = function () {
 											rtfeldman$elm_css$Css$solid,
 											rtfeldman$elm_css$Css$hex('e0e0e0')),
 											rtfeldman$elm_css$Css$borderRadius(
-											rtfeldman$elm_css$Css$px(3)),
+											rtfeldman$elm_css$Css$px(5)),
+											rtfeldman$elm_css$Css$borderTopLeftRadius(rtfeldman$elm_css$Css$zero),
 											rtfeldman$elm_css$Css$backgroundColor(
-											rtfeldman$elm_css$Css$hex('f2fae8')),
+											rtfeldman$elm_css$Css$hex('d84b97')),
+											rtfeldman$elm_css$Css$color(
+											rtfeldman$elm_css$Css$hex('ffffff')),
 											rtfeldman$elm_css$Css$paddingLeft(
 											rtfeldman$elm_css$Css$px(5)),
 											rtfeldman$elm_css$Css$paddingRight(
@@ -9046,7 +9199,7 @@ var author$project$Elmstatic$layout = F2(
 			});
 	});
 var elm$html$Html$a = _VirtualDom_node('a');
-var elm$html$Html$h3 = _VirtualDom_node('h3');
+var elm$html$Html$h2 = _VirtualDom_node('h2');
 var elm$html$Html$img = _VirtualDom_node('img');
 var elm$html$Html$li = _VirtualDom_node('li');
 var elm$html$Html$p = _VirtualDom_node('p');
@@ -9085,12 +9238,12 @@ var author$project$Page$footer = A2(
 			elm$html$Html$div,
 			_List_fromArray(
 				[
-					elm$html$Html$Attributes$class('footer__content')
+					elm$html$Html$Attributes$class('footer__content footer__content--highlighted')
 				]),
 			_List_fromArray(
 				[
 					A2(
-					elm$html$Html$h3,
+					elm$html$Html$h2,
 					_List_Nil,
 					_List_fromArray(
 						[
@@ -9098,7 +9251,10 @@ var author$project$Page$footer = A2(
 						])),
 					A2(
 					elm$html$Html$p,
-					_List_Nil,
+					_List_fromArray(
+						[
+							A2(elm$html$Html$Attributes$attribute, 'style', 'overflow: hidden')
+						]),
 					_List_fromArray(
 						[
 							A2(
@@ -9106,9 +9262,9 @@ var author$project$Page$footer = A2(
 							_List_fromArray(
 								[
 									elm$html$Html$Attributes$alt('Author\'s blog'),
-									elm$html$Html$Attributes$src('/img/logo.png'),
-									A2(elm$html$Html$Attributes$attribute, 'style', 'float: right'),
-									A2(elm$html$Html$Attributes$attribute, 'width', '75')
+									elm$html$Html$Attributes$class('footer__avatar'),
+									elm$html$Html$Attributes$src('/img/ich3.jpg'),
+									A2(elm$html$Html$Attributes$attribute, 'width', '120')
 								]),
 							_List_Nil),
 							elm$html$Html$text('\nI love listening to and making music myself, enjoy reading, get excited when watching a decent movie, flourish in creating artwork, marvel in coding and grocking other people\'s code and delight in learning anything new in general while living The Dream in the beautiful city of Leipzig, Germany.\n                    ')
@@ -9257,6 +9413,7 @@ var author$project$Page$footer = A2(
 						]))
 				]))
 		]));
+var elm$html$Html$Attributes$title = elm$html$Html$Attributes$stringProperty('title');
 var author$project$Page$header = _List_fromArray(
 	[
 		A2(
@@ -9287,19 +9444,12 @@ var author$project$Page$header = _List_fromArray(
 								elm$html$Html$a,
 								_List_fromArray(
 									[
-										elm$html$Html$Attributes$href('/')
+										elm$html$Html$Attributes$href('/'),
+										elm$html$Html$Attributes$title('Canena blog')
 									]),
 								_List_fromArray(
 									[
-										A2(
-										elm$html$Html$img,
-										_List_fromArray(
-											[
-												elm$html$Html$Attributes$alt('Author\'s blog'),
-												elm$html$Html$Attributes$src('/img/logo.png'),
-												A2(elm$html$Html$Attributes$attribute, 'width', '70')
-											]),
-										_List_Nil)
+										elm$html$Html$text('Canena')
 									]))
 							])),
 						A2(
@@ -9437,7 +9587,6 @@ var author$project$Post$metadataHtml = function (post) {
 			author$project$Post$tagsToHtml(post.cq)));
 };
 var elm$core$List$sortBy = _List_sortBy;
-var elm$html$Html$h2 = _VirtualDom_node('h2');
 var elm$json$Json$Decode$value = _Json_decodeValue;
 var author$project$Posts$main = function () {
 	var sortPosts = function (posts) {
@@ -9451,8 +9600,11 @@ var author$project$Posts$main = function () {
 	};
 	var postItem = function (post) {
 		return A2(
-			elm$html$Html$div,
-			_List_Nil,
+			elm$html$Html$li,
+			_List_fromArray(
+				[
+					elm$html$Html$Attributes$class('post-list__item')
+				]),
 			_List_fromArray(
 				[
 					A2(
@@ -9487,8 +9639,24 @@ var author$project$Posts$main = function () {
 			return A2(
 				author$project$Page$layout,
 				content.aA,
-				postListContent(
-					sortPosts(content.ci)));
+				_List_fromArray(
+					[
+						A2(
+						elm$html$Html$p,
+						_List_Nil,
+						_List_fromArray(
+							[
+								elm$html$Html$text('\nThis is my personal blog covering various topics from music to design, programming, life itself and more.\n                        ')
+							])),
+						A2(
+						elm$html$Html$ul,
+						_List_fromArray(
+							[
+								elm$html$Html$Attributes$class('post-list')
+							]),
+						postListContent(
+							sortPosts(content.ci)))
+					]));
 		});
 }();
 var author$project$Tag$main = author$project$Posts$main;

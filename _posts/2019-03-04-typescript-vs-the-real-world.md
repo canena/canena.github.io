@@ -7,7 +7,7 @@ This started out as a YouTube comment on a talk about [TypeScript](https://www.t
 
 Go watch [Why I Was Wrong About TypeScript](https://youtu.be/AQOEZVG2WY0).
 
-### Questions You Should Be Asking Yourself
+## Questions You Should Be Asking Yourself
 
 The speaker largely highlights positive aspects of TypeScript. How many technologies do you know that have no flaws? TS obviously has a lot of benefits but here are some questions I would put up for discussion that nobody seems to talk about:
 
@@ -20,13 +20,13 @@ The speaker largely highlights positive aspects of TypeScript. How many technolo
 * 7) Not restricted to TS the amount of dependencies, setup and configuration handling a real world project in "normal" JS based SPA frontends is rather complex. There are two popular ways to tackle this where you get a working setup - that is so complex that hardly anyone understands them. Angular goes the cli route, maintaining huge compatibility maps for dependencies and auto generating code. In the React world templates like "create-react-app" dominate. This can work well enough up to some point. Both approaches leave you with thousands of at best development dependencies and at worst ones that run as part of your production code. These all have to be maintained, are you in for constant dependency upgrades of modules you don't have a choice to use? How confident are you that nobody slipped in some malicious code via [NPM](https://npmjs.com)?
 * 8) Regarding build pipelines: while I think that JSX/TSX is neat from a tech perspective I don't think the benefits outweigh the cons. Sure you couple your view code with HTML templates with a custom dsl the same as you do in JSX and the angle brackets help the view code to stand out visually. How do you make sure you don't conflate business logic with view logic when everything has to be and will be a hammer, ehm, component? Did you know that it's perfectly possible to use React/Inferno/whatever without JSX removing the need for a compile step? I wouldn't be surprised and wouldn't blaim you if you didn't. For some reason that eludes me I have never seen a React project using plain functions. I get that people like JSX since it can be used with many libraries/frameworks with Babel or the like. So did you actually make the informed choice to use a build pipeline weighing the pros and cons or did your library make that choice for you?
 
-### Alternatives
+## Alternatives
 Alternatives to consider if you can't answer the posed questions confidently:
 
-#### The Ancient Route
+### The Ancient Route
 Single Page Applications are all the rage and have become the de-facto standard for any webpage. I suggest that once in a while you stop and think about whether a simple server side solution might be the better option for some use cases.
 
-#### The Boring Route
+### The Boring Route
 Move the build pipeline in your mental list from "necessary" to "do I really need this?". Pick a handful of small, boring libraries where you can actually evaluate and judge the dependency and security implications. Supposedly "dead" JS projects might just be feature complete and don't need constant dependency upgrades if they don't have any. Default to using syntax/features your baseline environment supports natively. No sourcemaps necessary, no elaborate dev server setup that needs to be maintained. There are eslint plugins that help you to stay in your language subset. You could even skip the build step for production by using CommonJS with [require.js](https://requirejs.org), with http2 on the horizon this will probably perform better than your average bundled Frankenstein's Monster Script app, but you'll need to be the judge of that for your case.
 
 There is also a middle ground solution: use a well known subset of TS/whatever that you compile to CommonJS. For me this isn't necessary since Visual Studio Code with the right settings will gladly check your JS with its TS language server with astonishing results. You should try that, too.
@@ -36,8 +36,8 @@ Boring example setups:
 * [Mithril.js](https://mithril.js.org) + require.js/browserify/rollup
 * React (-JSX -class) + require.js/browserify/rollup
 
-#### Fancier
+### Fancier
 Use a compile-to-js language that has fewer of these problems, personally I'd give [Elm](https://elm-lang.org) a try. Since version 0.19 Elm packages can only contain constants and pure functions actually written in Elm. The usual test setup and much of the tooling outside of the compiler still relies on JS via NPM for now but the code that Elm produces for production is the small runtime it brings and the rest is JS that the compiler has build from constants an pure functions. If you need to interact with JS - and you most likely will - it's via typed ports to and from Elm. This is probably as close to "if it compiles it works" as you can get inside a browser environment. Bonus: Elm's unique design choices accomplish way higher confidence levels with a simpler type system than TS. Note that as a comparatively young language it is still in flux to some extent, again you have to be the judge of what tools to use. I definitely recommend to give it a try.
 
-### Conclusion
+## Conclusion
 For me the key is to make active choices in technology - just because Facebook or Google does something doesn't necessarily mean it's the right thing for your project. Don't forget to re-evaluate your baseline assumptions and make new decisions based on that regularly, the web moves kind of fast.

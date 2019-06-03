@@ -1,8 +1,8 @@
 module Posts exposing (main)
 
 import Elmstatic
-import Html exposing (a, div, h2, text)
-import Html.Attributes as Attr exposing (alt, attribute, class, href, src)
+import Html exposing (a, h2, li, p, text, ul)
+import Html.Attributes as Attr exposing (class, href)
 import Page
 import Post
 
@@ -11,7 +11,7 @@ main : Elmstatic.Layout
 main =
     let
         postItem post =
-            div []
+            li [ class "post-list__item" ]
                 [ a [ href ("/" ++ post.link) ] [ h2 [] [ text post.title ] ]
                 , Post.metadataHtml post
                 ]
@@ -29,4 +29,13 @@ main =
     in
     Elmstatic.layout Elmstatic.decodePostList <|
         \content ->
-            Page.layout content.title (sortPosts content.posts |> postListContent)
+            Page.layout content.title
+                [ p []
+                    [ text
+                        """
+This is my personal blog covering various topics from music to design, programming, life itself and more.
+                        """
+                    ]
+                , ul [ class "post-list" ]
+                    (sortPosts content.posts |> postListContent)
+                ]

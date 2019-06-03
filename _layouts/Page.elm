@@ -1,8 +1,8 @@
 module Page exposing (footer, header, layout, main, markdown)
 
 import Elmstatic
-import Html exposing (Html, a, div, h1, h3, img, li, p, span, text, ul)
-import Html.Attributes as Attr exposing (alt, attribute, class, href, src)
+import Html exposing (Html, a, div, h1, h2, img, li, p, span, text, ul)
+import Html.Attributes as Attr exposing (alt, attribute, class, href, src, title)
 import Markdown
 
 
@@ -55,9 +55,12 @@ header =
     [ div [ class "header" ]
         [ div [ class "header__content" ]
             [ div [ class "header__logo" ]
-                [ a [ href "/" ]
-                    [ img [ alt "Author's blog", src "/img/logo.png", attribute "width" "70" ]
-                        []
+                -- [ a [ href "/" ]
+                --     [ img [ alt "Author's blog", src "/img/logo.png", attribute "width" "70" ]
+                --         []
+                --     ]
+                [ a [ href "/", title "Canena blog" ]
+                    [ text "Canena"
                     ]
                 ]
             , div [ class "header__navigation" ]
@@ -85,14 +88,14 @@ header =
 footer : Html Never
 footer =
     div [ class "footer" ]
-        [ div [ class "footer__content" ]
-            [ h3 [] [ text "About the author" ]
-            , p []
+        [ div [ class "footer__content footer__content--highlighted" ]
+            [ h2 [] [ text "About the author" ]
+            , p [ attribute "style" "overflow: hidden" ]
                 [ img
                     [ alt "Author's blog"
-                    , src "/img/logo.png"
-                    , attribute "style" "float: right"
-                    , attribute "width" "75"
+                    , class "footer__avatar"
+                    , src "/img/ich3.jpg"
+                    , attribute "width" "120"
                     ]
                     []
                 , text

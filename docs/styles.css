@@ -1,0 +1,11 @@
+
+a[href^="http://"]::after,
+a[href^="https://"]::after {
+    content: " (⇑)";
+}
+
+.post-metadata a::before {
+    content: "●";
+    display: inline-block;
+    margin-right: 5px;
+}
