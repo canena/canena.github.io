@@ -6,7 +6,7 @@ import Html.Attributes as Attr exposing (class)
 
 banner : Html Never
 banner =
-    div []
+    div [ class "intro" ]
         [ text "Hello, Intro!"
         , inlineScript "require([\"intro\"]);"
         ]

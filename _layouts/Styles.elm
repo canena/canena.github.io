@@ -56,6 +56,9 @@ styles =
             [ fontFamilies [ "Roboto Condensed", "Helvetica", "Arial", .value sansSerif ]
             ]
         , Css.Global.small [ fontSize <| pct 65 ]
+        , class "intro"
+            [ marginTop (px 4)
+            ]
         , class "header"
             --[ backgroundColor <| hex "f2fae8"
             --[ background <| linearGradient3 (deg 142) (hex "d84b97") (hex "ff4400")
