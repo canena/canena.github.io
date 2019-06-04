@@ -1,48 +1,24 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
-        "http://www.w3.org/TR/html4/strict.dtd">
+<!DOCTYPE html>
 <html>
 <head>
 	<title>Water</title>
 	<meta http-equiv='Content-Type' content='text/html; charset=utf-8' />
-	<link rel='stylesheet' type='text/css' href='style/reset.css' />
+	<link rel='stylesheet' type='text/css' href='./style/reset.css' />
 </head>
 <body style='background-color: #888888;'>
 
 <canvas id='pool' width='216' height='150' style='background-color: #000000; cursor: pointer;'>
 <!--canvas id='pool' width='432' height='293' style='position: absolute; background-color: #000000; cursor: pointer;'-->
-	<img id='waterImg' src='img/ruth.jpg'>
+	<img id='waterImg' src='./img/ruth.jpg'>
 </canvas>
 
-<div id='roundBorder' style='
-	background-color: #fff; 
-	width: 196px; 
-	
-	-moz-border-radius: 5px; 
-	-webkit-border-radius: 5px;
-	border-radius: 5px; 
-	
-	border: #000000 1px solid; 
-	padding: 10px;
-	
-	-moz-box-shadow: 10px 10px 5px #888;
-	-webkit-box-shadow: 10px 10px 5px #888;
-	box-shadow: 10px 10px 5px #888;
-'>
-	Hier gibts eine css3 box
-</div>
+<canvas id='buffer' width='216' height='150' style='background-color: #000000; cursor: pointer;'></canvas>
 
 <!-- Inserting js at the bottom -->
-<script src="Scripting.js"></script>
+<script src="./singletonWater.js"></script>
 <script>
-	//Scripting.use("http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js", function(){
-	//	alert(jQuery('#pool2').width());
-	//});
-	//Scripting.use("singletonWater.js", function(){
-	//	Water.init('pool', 'waterImg');
-	//});
-	Scripting.use("Water.js", function(){
-		Water.init('pool', 'waterImg');
-	});
+
+    Water.init('pool', 'waterImg', 'buffer');
 
 </script>
 

@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "build": "elmstatic && cp -R ./build/posts ./build/blog && cp -R ./build/* ..",
+    "dev:water": "serve dev/water",
     "start": "serve ..",
     "test": "echo \"Error: no test specified\" && exit 1"
   },

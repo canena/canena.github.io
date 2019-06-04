@@ -7,22 +7,22 @@ var Scripting = window.Scripting = {
 	use: function (url, callback) {
 		var script = document.createElement("script");
 		//script.type = "text/javascript";
-		
+
 		if (typeof callback !== 'function') {
 			callback = function(){ /*alert('No callback given');*/ };
 		}
 
 		//IE
-		if (script.readyState) {  
+		if (script.readyState) {
 			script.onreadystatechange = function() {
 				if (script.readyState == "loaded" || script.readyState == "complete") {
 					script.onreadystatechange = null;
 					callback();
 				}
-			};	
-		} 
+			};
+		}
 		//Others
-		else {  
+		else {
 			script.onload = function() {
 				callback();
 			};
@@ -31,7 +31,7 @@ var Scripting = window.Scripting = {
 		script.src = url;
 		document.getElementsByTagName("head")[0].appendChild(script);
 	},
-	
+
 	queue: function (functions, context) {
 		setTimeout(function() {
 			var process = functions.shift();
