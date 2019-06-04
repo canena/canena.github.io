@@ -4,7 +4,7 @@
         <title>A blog about life</title>
         <link>http://canena.de/posts</link>
         <description>Life/Music/Art/Code/Stuff</description>
-        <lastBuildDate>Mon, 03 Jun 2019 21:59:55 GMT</lastBuildDate>
+        <lastBuildDate>Tue, 04 Jun 2019 12:54:45 GMT</lastBuildDate>
         <docs>http://blogs.law.harvard.edu/tech/rss</docs>
         <generator>Elmstatic</generator>
         <language>en</language>
@@ -25,11 +25,22 @@ Making a habit of making a habit
 Lately I’ve been thinking a lot about writing and whether I could do it myself. “Yes, I could do it if I really wanted” is what I’d tell the spectre in the mirror. I just always had the nagging feeling that I didn’t care enough so the outcome surely wouldn’t be worth the digital ink. I’d be jealous of the interesting stuff people have to say and the sense of style that would let me almost inhale their stories at times. Why is it that I couldn’t start something?...]]></description>
         </item>
         <item>
+            <title><![CDATA[Hello Living Styleguide]]></title>
+            <link>http://canena.de/posts/2017-01-18-hello-living-style-guide</link>
+            <guid>http://canena.de/posts/2017-01-18-hello-living-style-guide</guid>
+            <pubDate>Wed, 18 Jan 2017 00:00:00 GMT</pubDate>
+            <description><![CDATA[Note that this styleguide has been moved over from an older version of the blog so this approach does not necessarily represent the way the markup is structured anymore. It shows, however, that embedding alternative styles into an existing page is a breeze when employing BEM blocks. The old styles literally live side-by-side with the new ones and the mild namespacing via ui-theme allows for selective theming on a per-subtree-basis.
+
+This is the living documentation for my own little set of respo...]]></description>
+        </item>
+        <item>
             <title><![CDATA[Epic Links]]></title>
             <link>http://canena.de/posts/2017-03-20-epic-links</link>
             <guid>http://canena.de/posts/2017-03-20-epic-links</guid>
             <pubDate>Mon, 20 Mar 2017 00:00:00 GMT</pubDate>
             <description><![CDATA[
+A collection of links that I found useful, inspired me and may bring you enjoyment and/or enlightenment as well.
+
 Disclaimer
 
 I'm not in any way affiliated with the following links, I just find them useful, delightful, funny...
@@ -50,10 +61,7 @@ Daily Dose
 
 https://aeon.co
 https://news.ycombinator.com/newest
-https://www.reddit.com/r/elm/new
-https://discourse.elm-lang.org
-https://groups.google.com/forum/#!forum/elm-dev
-https://groups.google...]]></description>
+https://www.reddit....]]></description>
         </item>
         <item>
             <title><![CDATA[An Elm to the Past]]></title>

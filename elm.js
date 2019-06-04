@@ -8840,6 +8840,15 @@ var author$project$Styles$styles = function () {
 						]))
 				])));
 }();
+var elm$json$Json$Encode$string = _Json_wrap;
+var elm$html$Html$Attributes$stringProperty = F2(
+	function (key, string) {
+		return A2(
+			_VirtualDom_property,
+			key,
+			elm$json$Json$Encode$string(string));
+	});
+var elm$html$Html$Attributes$class = elm$html$Html$Attributes$stringProperty('className');
 var author$project$Elmstatic$htmlTemplate = F2(
 	function (title, contentNodes) {
 		return A3(
@@ -8847,7 +8856,8 @@ var author$project$Elmstatic$htmlTemplate = F2(
 			'html',
 			_List_fromArray(
 				[
-					A2(elm$html$Html$Attributes$attribute, 'lang', 'en')
+					A2(elm$html$Html$Attributes$attribute, 'lang', 'en'),
+					elm$html$Html$Attributes$class('ui-layout')
 				]),
 			_List_fromArray(
 				[
@@ -8924,6 +8934,7 @@ var author$project$Elmstatic$htmlTemplate = F2(
 							author$project$Styles$styles,
 							A3(author$project$Elmstatic$cdnScript, 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.8/highlight.min.js', 'sha256-js+I1fdbke/DJrW2qXQlrw7VUEqmdeFeOW37UC0bEiU=', 'anonymous'),
 							A3(author$project$Elmstatic$cdnScript, 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.8/languages/elm.min.js', 'sha256-5ZDjmDRr7i9DNIGlJKzPImNcoVZ2KGsPch+qoZuYq5M=', 'anonymous'),
+							A3(author$project$Elmstatic$cdnScript, 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.8/languages/javascript.min.js', 'sha256-x3ducqWgfzH2JLxwkA7vfwbJC7nZgvdypVl0Gy0L/z0=', 'anonymous'),
 							author$project$Elmstatic$inlineScript('hljs.initHighlightingOnLoad();'),
 							author$project$Elmstatic$inlineScript('var requirejs = { baseUrl: \"js\", paths: { greeshka: \"libs/greeshka-0.3.0\" } };'),
 							A3(author$project$Elmstatic$cdnScript, 'https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js', 'sha256-1fEPhSsRKlFKGfK3eO710tEweHh1fwokU5wFGDHO+vg=', 'anonymous'),
@@ -8932,37 +8943,7 @@ var author$project$Elmstatic$htmlTemplate = F2(
 					A3(elm$html$Html$node, 'body', _List_Nil, contentNodes)
 				]));
 	});
-var author$project$Intro$inlineScript = function (js) {
-	return A3(
-		elm$html$Html$node,
-		'citatsmle-script',
-		_List_Nil,
-		_List_fromArray(
-			[
-				elm$html$Html$text(js)
-			]));
-};
-var elm$html$Html$div = _VirtualDom_node('div');
-var elm$json$Json$Encode$string = _Json_wrap;
-var elm$html$Html$Attributes$stringProperty = F2(
-	function (key, string) {
-		return A2(
-			_VirtualDom_property,
-			key,
-			elm$json$Json$Encode$string(string));
-	});
-var elm$html$Html$Attributes$class = elm$html$Html$Attributes$stringProperty('className');
-var author$project$Intro$banner = A2(
-	elm$html$Html$div,
-	_List_fromArray(
-		[
-			elm$html$Html$Attributes$class('intro')
-		]),
-	_List_fromArray(
-		[
-			elm$html$Html$text('Hello, Intro!'),
-			author$project$Intro$inlineScript('require([\"intro\"]);')
-		]));
+var author$project$Intro$banner = elm$html$Html$text('');
 var elm$browser$Browser$External = function (a) {
 	return {$: 1, a: a};
 };
@@ -9226,7 +9207,30 @@ var author$project$Elmstatic$layout = F2(
 				}
 			});
 	});
+var author$project$Page$githubIcon = function () {
+	var pathNode = A3(
+		elm$html$Html$node,
+		'path',
+		_List_fromArray(
+			[
+				A2(elm$html$Html$Attributes$attribute, 'fill', '#333'),
+				A2(elm$html$Html$Attributes$attribute, 'd', '\nM7.999,0.431c-4.285,0-7.76,3.474-7.76,7.761 c0,3.428,2.223,6.337,5.307,7.363c0.388,0.071,0.53-0.168,0.53-0.374c0-0.184-0.007-0.672-0.01-1.32 c-2.159,0.469-2.614-1.04-2.614-1.04c-0.353-0.896-0.862-1.135-0.862-1.135c-0.705-0.481,0.053-0.472,0.053-0.472 c0.779,0.055,1.189,0.8,1.189,0.8c0.692,1.186,1.816,0.843,2.258,0.645c0.071-0.502,0.271-0.843,0.493-1.037 C4.86,11.425,3.049,10.76,3.049,7.786c0-0.847,0.302-1.54,0.799-2.082C3.768,5.507,3.501,4.718,3.924,3.65 c0,0,0.652-0.209,2.134,0.796C6.677,4.273,7.34,4.187,8,4.184c0.659,0.003,1.323,0.089,1.943,0.261 c1.482-1.004,2.132-0.796,2.132-0.796c0.423,1.068,0.157,1.857,0.077,2.054c0.497,0.542,0.798,1.235,0.798,2.082 c0,2.981-1.814,3.637-3.543,3.829c0.279,0.24,0.527,0.713,0.527,1.437c0,1.037-0.01,1.874-0.01,2.129 c0,0.208,0.14,0.449,0.534,0.373c3.081-1.028,5.302-3.935,5.302-7.362C15.76,3.906,12.285,0.431,7.999,0.431z\n            ')
+			]),
+		_List_Nil);
+	return A3(
+		elm$html$Html$node,
+		'svg',
+		_List_fromArray(
+			[
+				A2(elm$html$Html$Attributes$attribute, 'width', '24'),
+				A2(elm$html$Html$Attributes$attribute, 'height', '24'),
+				A2(elm$html$Html$Attributes$attribute, 'viewBox', '0 0 16 16')
+			]),
+		_List_fromArray(
+			[pathNode]));
+}();
 var elm$html$Html$a = _VirtualDom_node('a');
+var elm$html$Html$div = _VirtualDom_node('div');
 var elm$html$Html$h2 = _VirtualDom_node('h2');
 var elm$html$Html$img = _VirtualDom_node('img');
 var elm$html$Html$li = _VirtualDom_node('li');
@@ -9245,6 +9249,7 @@ var elm$html$Html$Attributes$src = function (url) {
 		'src',
 		_VirtualDom_noJavaScriptOrHtmlUri(url));
 };
+var elm$html$Html$Attributes$title = elm$html$Html$Attributes$stringProperty('title');
 var author$project$Page$footer = A2(
 	elm$html$Html$div,
 	_List_fromArray(
@@ -9266,7 +9271,18 @@ var author$project$Page$footer = A2(
 					_List_Nil,
 					_List_fromArray(
 						[
-							elm$html$Html$text('About the author')
+							elm$html$Html$text('About the author'),
+							A2(
+							elm$html$Html$a,
+							_List_fromArray(
+								[
+									elm$html$Html$Attributes$class('--plain'),
+									elm$html$Html$Attributes$href('https://github.com/mfeineis'),
+									elm$html$Html$Attributes$title('github.com/mfeineis'),
+									A2(elm$html$Html$Attributes$attribute, 'style', 'margin-left: 20px')
+								]),
+							_List_fromArray(
+								[author$project$Page$githubIcon]))
 						])),
 					A2(
 					elm$html$Html$p,
@@ -9432,7 +9448,6 @@ var author$project$Page$footer = A2(
 						]))
 				]))
 		]));
-var elm$html$Html$Attributes$title = elm$html$Html$Attributes$stringProperty('title');
 var author$project$Page$header = _List_fromArray(
 	[
 		A2(
@@ -9468,7 +9483,15 @@ var author$project$Page$header = _List_fromArray(
 									]),
 								_List_fromArray(
 									[
-										elm$html$Html$text('Canena')
+										A2(
+										elm$html$Html$img,
+										_List_fromArray(
+											[
+												elm$html$Html$Attributes$alt('Canena'),
+												elm$html$Html$Attributes$src('/img/canena_sm.png'),
+												A2(elm$html$Html$Attributes$attribute, 'style', 'margin-bottom: -8px; margin-left: -4px')
+											]),
+										_List_Nil)
 									]))
 							])),
 						A2(
@@ -9741,4 +9764,1731 @@ var author$project$Page$main = A2(
 					author$project$Page$markdown(content.bx)
 				]));
 	});
-_Platform_export({'Page':{'init':author$project$Page$main(elm$json$Json$Decode$value)(0)},'Tag':{'init':author$project$Tag$main(elm$json$Json$Decode$value)(0)},'Posts':{'init':author$project$Posts$main(elm$json$Json$Decode$value)(0)},'Post':{'init':author$project$Post$main(elm$json$Json$Decode$value)(0)}});}(this));
+var elm$html$Html$article = _VirtualDom_node('article');
+var elm$html$Html$button = _VirtualDom_node('button');
+var elm$html$Html$form = _VirtualDom_node('form');
+var elm$html$Html$h3 = _VirtualDom_node('h3');
+var elm$html$Html$input = _VirtualDom_node('input');
+var elm$html$Html$label = _VirtualDom_node('label');
+var elm$html$Html$optgroup = _VirtualDom_node('optgroup');
+var elm$html$Html$option = _VirtualDom_node('option');
+var elm$html$Html$section = _VirtualDom_node('section');
+var elm$html$Html$select = _VirtualDom_node('select');
+var elm$html$Html$textarea = _VirtualDom_node('textarea');
+var elm$html$Html$Attributes$name = elm$html$Html$Attributes$stringProperty('name');
+var elm$html$Html$Attributes$placeholder = elm$html$Html$Attributes$stringProperty('placeholder');
+var elm$html$Html$Attributes$type_ = elm$html$Html$Attributes$stringProperty('type');
+var elm$html$Html$Attributes$value = elm$html$Html$Attributes$stringProperty('value');
+var author$project$LegacyStyleguide$legacyContent = _List_fromArray(
+	[
+		A2(
+		elm$html$Html$div,
+		_List_fromArray(
+			[
+				elm$html$Html$Attributes$class('ui-theme ui-theme--canena'),
+				A2(elm$html$Html$Attributes$attribute, 'style', 'margin-bottom: 20px; margin-top: 40px')
+			]),
+		_List_fromArray(
+			[
+				A2(
+				elm$html$Html$div,
+				_List_fromArray(
+					[
+						elm$html$Html$Attributes$class('ui-grid__row')
+					]),
+				_List_fromArray(
+					[
+						A2(
+						elm$html$Html$section,
+						_List_fromArray(
+							[
+								elm$html$Html$Attributes$class('ui-grid__col-8 ui-article-list')
+							]),
+						_List_fromArray(
+							[
+								A2(
+								elm$html$Html$h2,
+								_List_Nil,
+								_List_fromArray(
+									[
+										elm$html$Html$text('Recent posts')
+									])),
+								A2(
+								elm$html$Html$ul,
+								_List_Nil,
+								_List_fromArray(
+									[
+										A2(
+										elm$html$Html$li,
+										_List_fromArray(
+											[
+												elm$html$Html$Attributes$class('ui-article-list__item')
+											]),
+										_List_fromArray(
+											[
+												A2(
+												elm$html$Html$article,
+												_List_fromArray(
+													[
+														elm$html$Html$Attributes$class('ui-article-preview')
+													]),
+												_List_fromArray(
+													[
+														A2(
+														elm$html$Html$h3,
+														_List_fromArray(
+															[
+																elm$html$Html$Attributes$class('ui-article-preview__title')
+															]),
+														_List_fromArray(
+															[
+																A2(
+																elm$html$Html$a,
+																_List_fromArray(
+																	[
+																		elm$html$Html$Attributes$href('#')
+																	]),
+																_List_fromArray(
+																	[
+																		elm$html$Html$text('Second post')
+																	]))
+															])),
+														A2(
+														elm$html$Html$p,
+														_List_fromArray(
+															[
+																elm$html$Html$Attributes$class('ui-article-preview__abstract')
+															]),
+														_List_fromArray(
+															[
+																elm$html$Html$text('The first lines of this post that gives the reader an idea what to expect from this post.                    ')
+															])),
+														A2(
+														elm$html$Html$ul,
+														_List_fromArray(
+															[
+																elm$html$Html$Attributes$class('ui-article-preview__tags')
+															]),
+														_List_fromArray(
+															[
+																A2(
+																elm$html$Html$li,
+																_List_Nil,
+																_List_fromArray(
+																	[
+																		A2(
+																		elm$html$Html$div,
+																		_List_fromArray(
+																			[
+																				elm$html$Html$Attributes$class('ui-tag')
+																			]),
+																		_List_fromArray(
+																			[
+																				A2(
+																				elm$html$Html$a,
+																				_List_fromArray(
+																					[
+																						elm$html$Html$Attributes$class('ui-tag__label'),
+																						elm$html$Html$Attributes$href('#')
+																					]),
+																				_List_fromArray(
+																					[
+																						elm$html$Html$text('Some tag')
+																					]))
+																			]))
+																	])),
+																A2(
+																elm$html$Html$li,
+																_List_Nil,
+																_List_fromArray(
+																	[
+																		A2(
+																		elm$html$Html$div,
+																		_List_fromArray(
+																			[
+																				elm$html$Html$Attributes$class('ui-tag')
+																			]),
+																		_List_fromArray(
+																			[
+																				A2(
+																				elm$html$Html$a,
+																				_List_fromArray(
+																					[
+																						elm$html$Html$Attributes$class('ui-tag__label'),
+																						elm$html$Html$Attributes$href('#')
+																					]),
+																				_List_fromArray(
+																					[
+																						elm$html$Html$text('Another tag')
+																					]))
+																			]))
+																	]))
+															])),
+														A2(
+														elm$html$Html$div,
+														_List_fromArray(
+															[
+																elm$html$Html$Attributes$class('ui-article-preview__date')
+															]),
+														_List_fromArray(
+															[
+																elm$html$Html$text('Wednesday 2017-02-01')
+															])),
+														A2(
+														elm$html$Html$a,
+														_List_fromArray(
+															[
+																elm$html$Html$Attributes$class('ui-button'),
+																elm$html$Html$Attributes$href('#')
+															]),
+														_List_fromArray(
+															[
+																A2(
+																elm$html$Html$span,
+																_List_fromArray(
+																	[
+																		elm$html$Html$Attributes$class('ui-button__label')
+																	]),
+																_List_fromArray(
+																	[
+																		elm$html$Html$text('Read More...                        ')
+																	]))
+															]))
+													]))
+											])),
+										A2(
+										elm$html$Html$li,
+										_List_fromArray(
+											[
+												elm$html$Html$Attributes$class('ui-article-list__item')
+											]),
+										_List_fromArray(
+											[
+												A2(
+												elm$html$Html$article,
+												_List_fromArray(
+													[
+														elm$html$Html$Attributes$class('ui-article-preview')
+													]),
+												_List_fromArray(
+													[
+														A2(
+														elm$html$Html$h3,
+														_List_fromArray(
+															[
+																elm$html$Html$Attributes$class('ui-article-preview__title')
+															]),
+														_List_fromArray(
+															[
+																A2(
+																elm$html$Html$a,
+																_List_fromArray(
+																	[
+																		elm$html$Html$Attributes$href('#')
+																	]),
+																_List_fromArray(
+																	[
+																		elm$html$Html$text('First post')
+																	]))
+															])),
+														A2(
+														elm$html$Html$p,
+														_List_fromArray(
+															[
+																elm$html$Html$Attributes$class('ui-article-preview__abstract')
+															]),
+														_List_fromArray(
+															[
+																elm$html$Html$text('The first lines of this post that gives the reader an idea what to expect from this post.                    ')
+															])),
+														A2(
+														elm$html$Html$ul,
+														_List_fromArray(
+															[
+																elm$html$Html$Attributes$class('ui-article-preview__tags')
+															]),
+														_List_fromArray(
+															[
+																A2(
+																elm$html$Html$li,
+																_List_Nil,
+																_List_fromArray(
+																	[
+																		A2(
+																		elm$html$Html$div,
+																		_List_fromArray(
+																			[
+																				elm$html$Html$Attributes$class('ui-tag')
+																			]),
+																		_List_fromArray(
+																			[
+																				A2(
+																				elm$html$Html$a,
+																				_List_fromArray(
+																					[
+																						elm$html$Html$Attributes$class('ui-tag__label'),
+																						elm$html$Html$Attributes$href('#')
+																					]),
+																				_List_fromArray(
+																					[
+																						elm$html$Html$text('Some tag')
+																					]))
+																			]))
+																	])),
+																A2(
+																elm$html$Html$li,
+																_List_Nil,
+																_List_fromArray(
+																	[
+																		A2(
+																		elm$html$Html$div,
+																		_List_fromArray(
+																			[
+																				elm$html$Html$Attributes$class('ui-tag')
+																			]),
+																		_List_fromArray(
+																			[
+																				A2(
+																				elm$html$Html$a,
+																				_List_fromArray(
+																					[
+																						elm$html$Html$Attributes$class('ui-tag__label'),
+																						elm$html$Html$Attributes$href('#')
+																					]),
+																				_List_fromArray(
+																					[
+																						elm$html$Html$text('Another tag')
+																					]))
+																			]))
+																	]))
+															])),
+														A2(
+														elm$html$Html$div,
+														_List_fromArray(
+															[
+																elm$html$Html$Attributes$class('ui-article-preview__date')
+															]),
+														_List_fromArray(
+															[
+																elm$html$Html$text('Wednesday 2017-02-01')
+															])),
+														A2(
+														elm$html$Html$a,
+														_List_fromArray(
+															[
+																elm$html$Html$Attributes$class('ui-button'),
+																elm$html$Html$Attributes$href('#')
+															]),
+														_List_fromArray(
+															[
+																A2(
+																elm$html$Html$span,
+																_List_fromArray(
+																	[
+																		elm$html$Html$Attributes$class('ui-button__label')
+																	]),
+																_List_fromArray(
+																	[
+																		elm$html$Html$text('Read More...                        ')
+																	]))
+															]))
+													]))
+											])),
+										A2(
+										elm$html$Html$li,
+										_List_fromArray(
+											[
+												elm$html$Html$Attributes$class('ui-article-list__item')
+											]),
+										_List_fromArray(
+											[
+												A2(
+												elm$html$Html$article,
+												_List_fromArray(
+													[
+														elm$html$Html$Attributes$class('ui-article-preview x-ui-article-preview--size-compact')
+													]),
+												_List_fromArray(
+													[
+														A2(
+														elm$html$Html$h3,
+														_List_fromArray(
+															[
+																elm$html$Html$Attributes$class('ui-article-preview__title')
+															]),
+														_List_fromArray(
+															[
+																A2(
+																elm$html$Html$a,
+																_List_fromArray(
+																	[
+																		elm$html$Html$Attributes$href('#')
+																	]),
+																_List_fromArray(
+																	[
+																		elm$html$Html$text('An older post with a really long title that just might wrap around')
+																	]))
+															])),
+														A2(
+														elm$html$Html$p,
+														_List_fromArray(
+															[
+																elm$html$Html$Attributes$class('ui-article-preview__abstract')
+															]),
+														_List_fromArray(
+															[
+																elm$html$Html$text('The first lines of this post that gives the reader an idea what to expect from this post.                    ')
+															])),
+														A2(
+														elm$html$Html$ul,
+														_List_fromArray(
+															[
+																elm$html$Html$Attributes$class('ui-article-preview__tags')
+															]),
+														_List_fromArray(
+															[
+																A2(
+																elm$html$Html$li,
+																_List_Nil,
+																_List_fromArray(
+																	[
+																		A2(
+																		elm$html$Html$div,
+																		_List_fromArray(
+																			[
+																				elm$html$Html$Attributes$class('ui-tag')
+																			]),
+																		_List_fromArray(
+																			[
+																				A2(
+																				elm$html$Html$a,
+																				_List_fromArray(
+																					[
+																						elm$html$Html$Attributes$class('ui-tag__label'),
+																						elm$html$Html$Attributes$href('#')
+																					]),
+																				_List_fromArray(
+																					[
+																						elm$html$Html$text('Some tag')
+																					]))
+																			]))
+																	])),
+																A2(
+																elm$html$Html$li,
+																_List_Nil,
+																_List_fromArray(
+																	[
+																		A2(
+																		elm$html$Html$div,
+																		_List_fromArray(
+																			[
+																				elm$html$Html$Attributes$class('ui-tag')
+																			]),
+																		_List_fromArray(
+																			[
+																				A2(
+																				elm$html$Html$a,
+																				_List_fromArray(
+																					[
+																						elm$html$Html$Attributes$class('ui-tag__label'),
+																						elm$html$Html$Attributes$href('#')
+																					]),
+																				_List_fromArray(
+																					[
+																						elm$html$Html$text('Another tag')
+																					]))
+																			]))
+																	]))
+															])),
+														A2(
+														elm$html$Html$div,
+														_List_fromArray(
+															[
+																elm$html$Html$Attributes$class('ui-article-preview__date')
+															]),
+														_List_fromArray(
+															[
+																elm$html$Html$text('Wednesday 2017-02-01')
+															])),
+														A2(
+														elm$html$Html$a,
+														_List_fromArray(
+															[
+																elm$html$Html$Attributes$class('ui-button'),
+																elm$html$Html$Attributes$href('#')
+															]),
+														_List_fromArray(
+															[
+																A2(
+																elm$html$Html$span,
+																_List_fromArray(
+																	[
+																		elm$html$Html$Attributes$class('ui-button__label')
+																	]),
+																_List_fromArray(
+																	[
+																		elm$html$Html$text('Read More...                        ')
+																	]))
+															]))
+													]))
+											])),
+										A2(
+										elm$html$Html$li,
+										_List_fromArray(
+											[
+												elm$html$Html$Attributes$class('ui-article-list__item')
+											]),
+										_List_fromArray(
+											[
+												A2(
+												elm$html$Html$article,
+												_List_fromArray(
+													[
+														elm$html$Html$Attributes$class('ui-article-preview x-ui-article-preview--size-compact')
+													]),
+												_List_fromArray(
+													[
+														A2(
+														elm$html$Html$h3,
+														_List_fromArray(
+															[
+																elm$html$Html$Attributes$class('ui-article-preview__title')
+															]),
+														_List_fromArray(
+															[
+																A2(
+																elm$html$Html$a,
+																_List_fromArray(
+																	[
+																		elm$html$Html$Attributes$href('#')
+																	]),
+																_List_fromArray(
+																	[
+																		elm$html$Html$text('An even older post')
+																	]))
+															])),
+														A2(
+														elm$html$Html$p,
+														_List_fromArray(
+															[
+																elm$html$Html$Attributes$class('ui-article-preview__abstract')
+															]),
+														_List_fromArray(
+															[
+																elm$html$Html$text('The first lines of this post that gives the reader an idea what to expect from this post.                    ')
+															])),
+														A2(
+														elm$html$Html$ul,
+														_List_fromArray(
+															[
+																elm$html$Html$Attributes$class('ui-article-preview__tags')
+															]),
+														_List_fromArray(
+															[
+																A2(
+																elm$html$Html$li,
+																_List_Nil,
+																_List_fromArray(
+																	[
+																		A2(
+																		elm$html$Html$div,
+																		_List_fromArray(
+																			[
+																				elm$html$Html$Attributes$class('ui-tag')
+																			]),
+																		_List_fromArray(
+																			[
+																				A2(
+																				elm$html$Html$a,
+																				_List_fromArray(
+																					[
+																						elm$html$Html$Attributes$class('ui-tag__label'),
+																						elm$html$Html$Attributes$href('#')
+																					]),
+																				_List_fromArray(
+																					[
+																						elm$html$Html$text('Some tag')
+																					]))
+																			]))
+																	])),
+																A2(
+																elm$html$Html$li,
+																_List_Nil,
+																_List_fromArray(
+																	[
+																		A2(
+																		elm$html$Html$div,
+																		_List_fromArray(
+																			[
+																				elm$html$Html$Attributes$class('ui-tag')
+																			]),
+																		_List_fromArray(
+																			[
+																				A2(
+																				elm$html$Html$a,
+																				_List_fromArray(
+																					[
+																						elm$html$Html$Attributes$class('ui-tag__label'),
+																						elm$html$Html$Attributes$href('#')
+																					]),
+																				_List_fromArray(
+																					[
+																						elm$html$Html$text('Another tag')
+																					]))
+																			]))
+																	]))
+															])),
+														A2(
+														elm$html$Html$div,
+														_List_fromArray(
+															[
+																elm$html$Html$Attributes$class('ui-article-preview__date')
+															]),
+														_List_fromArray(
+															[
+																elm$html$Html$text('Wednesday 2017-02-01')
+															])),
+														A2(
+														elm$html$Html$a,
+														_List_fromArray(
+															[
+																elm$html$Html$Attributes$class('ui-button'),
+																elm$html$Html$Attributes$href('#')
+															]),
+														_List_fromArray(
+															[
+																A2(
+																elm$html$Html$span,
+																_List_fromArray(
+																	[
+																		elm$html$Html$Attributes$class('ui-button__label')
+																	]),
+																_List_fromArray(
+																	[
+																		elm$html$Html$text('Read More...                        ')
+																	]))
+															]))
+													]))
+											])),
+										A2(
+										elm$html$Html$li,
+										_List_fromArray(
+											[
+												elm$html$Html$Attributes$class('ui-article-list__item')
+											]),
+										_List_fromArray(
+											[
+												A2(
+												elm$html$Html$article,
+												_List_fromArray(
+													[
+														elm$html$Html$Attributes$class('ui-article-preview x-ui-article-preview--size-compact')
+													]),
+												_List_fromArray(
+													[
+														A2(
+														elm$html$Html$h3,
+														_List_fromArray(
+															[
+																elm$html$Html$Attributes$class('ui-article-preview__title')
+															]),
+														_List_fromArray(
+															[
+																A2(
+																elm$html$Html$a,
+																_List_fromArray(
+																	[
+																		elm$html$Html$Attributes$href('#')
+																	]),
+																_List_fromArray(
+																	[
+																		elm$html$Html$text('The oldest post')
+																	]))
+															])),
+														A2(
+														elm$html$Html$ul,
+														_List_fromArray(
+															[
+																elm$html$Html$Attributes$class('ui-article-preview__tags')
+															]),
+														_List_fromArray(
+															[
+																A2(
+																elm$html$Html$li,
+																_List_Nil,
+																_List_fromArray(
+																	[
+																		A2(
+																		elm$html$Html$div,
+																		_List_fromArray(
+																			[
+																				elm$html$Html$Attributes$class('ui-tag')
+																			]),
+																		_List_fromArray(
+																			[
+																				A2(
+																				elm$html$Html$a,
+																				_List_fromArray(
+																					[
+																						elm$html$Html$Attributes$class('ui-tag__label'),
+																						elm$html$Html$Attributes$href('#')
+																					]),
+																				_List_fromArray(
+																					[
+																						elm$html$Html$text('Some tag')
+																					]))
+																			]))
+																	])),
+																A2(
+																elm$html$Html$li,
+																_List_Nil,
+																_List_fromArray(
+																	[
+																		A2(
+																		elm$html$Html$div,
+																		_List_fromArray(
+																			[
+																				elm$html$Html$Attributes$class('ui-tag')
+																			]),
+																		_List_fromArray(
+																			[
+																				A2(
+																				elm$html$Html$a,
+																				_List_fromArray(
+																					[
+																						elm$html$Html$Attributes$class('ui-tag__label'),
+																						elm$html$Html$Attributes$href('#')
+																					]),
+																				_List_fromArray(
+																					[
+																						elm$html$Html$text('Another tag')
+																					]))
+																			]))
+																	]))
+															])),
+														A2(
+														elm$html$Html$a,
+														_List_fromArray(
+															[
+																elm$html$Html$Attributes$class('ui-button'),
+																elm$html$Html$Attributes$href('#')
+															]),
+														_List_fromArray(
+															[
+																A2(
+																elm$html$Html$span,
+																_List_fromArray(
+																	[
+																		elm$html$Html$Attributes$class('ui-button__label')
+																	]),
+																_List_fromArray(
+																	[
+																		elm$html$Html$text('Read More...                        ')
+																	]))
+															]))
+													]))
+											]))
+									]))
+							])),
+						A2(
+						elm$html$Html$div,
+						_List_fromArray(
+							[
+								elm$html$Html$Attributes$class('ui-grid__col-4')
+							]),
+						_List_fromArray(
+							[
+								A2(
+								elm$html$Html$section,
+								_List_fromArray(
+									[
+										elm$html$Html$Attributes$class('ui-tag-cloud')
+									]),
+								_List_fromArray(
+									[
+										A2(
+										elm$html$Html$h3,
+										_List_Nil,
+										_List_fromArray(
+											[
+												elm$html$Html$text('Sidebar with Tags')
+											])),
+										A2(
+										elm$html$Html$p,
+										_List_Nil,
+										_List_fromArray(
+											[
+												elm$html$Html$text('Some info.            ')
+											])),
+										A2(
+										elm$html$Html$ul,
+										_List_Nil,
+										_List_fromArray(
+											[
+												A2(
+												elm$html$Html$li,
+												_List_Nil,
+												_List_fromArray(
+													[
+														A2(
+														elm$html$Html$div,
+														_List_fromArray(
+															[
+																elm$html$Html$Attributes$class('ui-tag')
+															]),
+														_List_fromArray(
+															[
+																A2(
+																elm$html$Html$a,
+																_List_fromArray(
+																	[
+																		elm$html$Html$Attributes$class('ui-tag__label'),
+																		elm$html$Html$Attributes$href('#')
+																	]),
+																_List_fromArray(
+																	[
+																		elm$html$Html$text('Some tag')
+																	]))
+															]))
+													])),
+												A2(
+												elm$html$Html$li,
+												_List_Nil,
+												_List_fromArray(
+													[
+														A2(
+														elm$html$Html$div,
+														_List_fromArray(
+															[
+																elm$html$Html$Attributes$class('ui-tag')
+															]),
+														_List_fromArray(
+															[
+																A2(
+																elm$html$Html$a,
+																_List_fromArray(
+																	[
+																		elm$html$Html$Attributes$class('ui-tag__label'),
+																		elm$html$Html$Attributes$href('#')
+																	]),
+																_List_fromArray(
+																	[
+																		elm$html$Html$text('Another tag')
+																	]))
+															]))
+													]))
+											]))
+									]))
+							]))
+					])),
+				A2(
+				elm$html$Html$section,
+				_List_Nil,
+				_List_fromArray(
+					[
+						A2(
+						elm$html$Html$div,
+						_List_fromArray(
+							[
+								elm$html$Html$Attributes$class('ui-grid__row')
+							]),
+						_List_fromArray(
+							[
+								A2(
+								elm$html$Html$div,
+								_List_fromArray(
+									[
+										elm$html$Html$Attributes$class('ui-grid__col-12')
+									]),
+								_List_fromArray(
+									[
+										A2(
+										elm$html$Html$h3,
+										_List_Nil,
+										_List_fromArray(
+											[
+												elm$html$Html$text('Grid')
+											])),
+										A2(
+										elm$html$Html$p,
+										_List_Nil,
+										_List_fromArray(
+											[
+												elm$html$Html$text('The default grid is using up to 12 flexbox columns.            ')
+											]))
+									]))
+							])),
+						A2(
+						elm$html$Html$div,
+						_List_fromArray(
+							[
+								elm$html$Html$Attributes$class('ui-grid__row')
+							]),
+						_List_fromArray(
+							[
+								A2(
+								elm$html$Html$div,
+								_List_fromArray(
+									[
+										elm$html$Html$Attributes$class('ui-grid__col-1')
+									]),
+								_List_fromArray(
+									[
+										elm$html$Html$text('Col-1        ')
+									])),
+								A2(
+								elm$html$Html$div,
+								_List_fromArray(
+									[
+										elm$html$Html$Attributes$class('ui-grid__col-11')
+									]),
+								_List_fromArray(
+									[
+										elm$html$Html$text('Col-11        ')
+									]))
+							])),
+						A2(
+						elm$html$Html$div,
+						_List_fromArray(
+							[
+								elm$html$Html$Attributes$class('ui-grid__row')
+							]),
+						_List_fromArray(
+							[
+								A2(
+								elm$html$Html$div,
+								_List_fromArray(
+									[
+										elm$html$Html$Attributes$class('ui-grid__col-2')
+									]),
+								_List_fromArray(
+									[
+										elm$html$Html$text('Col-2        ')
+									])),
+								A2(
+								elm$html$Html$div,
+								_List_fromArray(
+									[
+										elm$html$Html$Attributes$class('ui-grid__col-10')
+									]),
+								_List_fromArray(
+									[
+										elm$html$Html$text('Col-10        ')
+									]))
+							])),
+						A2(
+						elm$html$Html$div,
+						_List_fromArray(
+							[
+								elm$html$Html$Attributes$class('ui-grid__row')
+							]),
+						_List_fromArray(
+							[
+								A2(
+								elm$html$Html$div,
+								_List_fromArray(
+									[
+										elm$html$Html$Attributes$class('ui-grid__col-3')
+									]),
+								_List_fromArray(
+									[
+										elm$html$Html$text('Col-3        ')
+									])),
+								A2(
+								elm$html$Html$div,
+								_List_fromArray(
+									[
+										elm$html$Html$Attributes$class('ui-grid__col-9')
+									]),
+								_List_fromArray(
+									[
+										elm$html$Html$text('Col-9        ')
+									]))
+							])),
+						A2(
+						elm$html$Html$div,
+						_List_fromArray(
+							[
+								elm$html$Html$Attributes$class('ui-grid__row')
+							]),
+						_List_fromArray(
+							[
+								A2(
+								elm$html$Html$div,
+								_List_fromArray(
+									[
+										elm$html$Html$Attributes$class('ui-grid__col-4')
+									]),
+								_List_fromArray(
+									[
+										elm$html$Html$text('Col-4        ')
+									])),
+								A2(
+								elm$html$Html$div,
+								_List_fromArray(
+									[
+										elm$html$Html$Attributes$class('ui-grid__col-8')
+									]),
+								_List_fromArray(
+									[
+										elm$html$Html$text('Col-8        ')
+									]))
+							])),
+						A2(
+						elm$html$Html$div,
+						_List_fromArray(
+							[
+								elm$html$Html$Attributes$class('ui-grid__row')
+							]),
+						_List_fromArray(
+							[
+								A2(
+								elm$html$Html$div,
+								_List_fromArray(
+									[
+										elm$html$Html$Attributes$class('ui-grid__col-5')
+									]),
+								_List_fromArray(
+									[
+										elm$html$Html$text('Col-5        ')
+									])),
+								A2(
+								elm$html$Html$div,
+								_List_fromArray(
+									[
+										elm$html$Html$Attributes$class('ui-grid__col-7')
+									]),
+								_List_fromArray(
+									[
+										elm$html$Html$text('Col-7        ')
+									]))
+							])),
+						A2(
+						elm$html$Html$div,
+						_List_fromArray(
+							[
+								elm$html$Html$Attributes$class('ui-grid__row')
+							]),
+						_List_fromArray(
+							[
+								A2(
+								elm$html$Html$div,
+								_List_fromArray(
+									[
+										elm$html$Html$Attributes$class('ui-grid__col-6')
+									]),
+								_List_fromArray(
+									[
+										elm$html$Html$text('Col-6        ')
+									])),
+								A2(
+								elm$html$Html$div,
+								_List_fromArray(
+									[
+										elm$html$Html$Attributes$class('ui-grid__col-6')
+									]),
+								_List_fromArray(
+									[
+										elm$html$Html$text('Col-6        ')
+									]))
+							])),
+						A2(
+						elm$html$Html$div,
+						_List_fromArray(
+							[
+								elm$html$Html$Attributes$class('ui-grid__row')
+							]),
+						_List_fromArray(
+							[
+								A2(
+								elm$html$Html$div,
+								_List_fromArray(
+									[
+										elm$html$Html$Attributes$class('ui-grid__col-7')
+									]),
+								_List_fromArray(
+									[
+										elm$html$Html$text('Col-7        ')
+									])),
+								A2(
+								elm$html$Html$div,
+								_List_fromArray(
+									[
+										elm$html$Html$Attributes$class('ui-grid__col-5')
+									]),
+								_List_fromArray(
+									[
+										elm$html$Html$text('Col-5        ')
+									]))
+							])),
+						A2(
+						elm$html$Html$div,
+						_List_fromArray(
+							[
+								elm$html$Html$Attributes$class('ui-grid__row')
+							]),
+						_List_fromArray(
+							[
+								A2(
+								elm$html$Html$div,
+								_List_fromArray(
+									[
+										elm$html$Html$Attributes$class('ui-grid__col-8')
+									]),
+								_List_fromArray(
+									[
+										elm$html$Html$text('Col-8        ')
+									])),
+								A2(
+								elm$html$Html$div,
+								_List_fromArray(
+									[
+										elm$html$Html$Attributes$class('ui-grid__col-4')
+									]),
+								_List_fromArray(
+									[
+										elm$html$Html$text('Col-4        ')
+									]))
+							])),
+						A2(
+						elm$html$Html$div,
+						_List_fromArray(
+							[
+								elm$html$Html$Attributes$class('ui-grid__row')
+							]),
+						_List_fromArray(
+							[
+								A2(
+								elm$html$Html$div,
+								_List_fromArray(
+									[
+										elm$html$Html$Attributes$class('ui-grid__col-9')
+									]),
+								_List_fromArray(
+									[
+										elm$html$Html$text('Col-9        ')
+									])),
+								A2(
+								elm$html$Html$div,
+								_List_fromArray(
+									[
+										elm$html$Html$Attributes$class('ui-grid__col-3')
+									]),
+								_List_fromArray(
+									[
+										elm$html$Html$text('Col-3        ')
+									]))
+							])),
+						A2(
+						elm$html$Html$div,
+						_List_fromArray(
+							[
+								elm$html$Html$Attributes$class('ui-grid__row')
+							]),
+						_List_fromArray(
+							[
+								A2(
+								elm$html$Html$div,
+								_List_fromArray(
+									[
+										elm$html$Html$Attributes$class('ui-grid__col-10')
+									]),
+								_List_fromArray(
+									[
+										elm$html$Html$text('Col-10        ')
+									])),
+								A2(
+								elm$html$Html$div,
+								_List_fromArray(
+									[
+										elm$html$Html$Attributes$class('ui-grid__col-2')
+									]),
+								_List_fromArray(
+									[
+										elm$html$Html$text('Col-2        ')
+									]))
+							])),
+						A2(
+						elm$html$Html$div,
+						_List_fromArray(
+							[
+								elm$html$Html$Attributes$class('ui-grid__row')
+							]),
+						_List_fromArray(
+							[
+								A2(
+								elm$html$Html$div,
+								_List_fromArray(
+									[
+										elm$html$Html$Attributes$class('ui-grid__col-11')
+									]),
+								_List_fromArray(
+									[
+										elm$html$Html$text('Col-11        ')
+									])),
+								A2(
+								elm$html$Html$div,
+								_List_fromArray(
+									[
+										elm$html$Html$Attributes$class('ui-grid__col-1')
+									]),
+								_List_fromArray(
+									[
+										elm$html$Html$text('Col-1        ')
+									]))
+							])),
+						A2(
+						elm$html$Html$div,
+						_List_fromArray(
+							[
+								elm$html$Html$Attributes$class('ui-grid__row')
+							]),
+						_List_fromArray(
+							[
+								A2(
+								elm$html$Html$div,
+								_List_fromArray(
+									[
+										elm$html$Html$Attributes$class('ui-grid__col-12')
+									]),
+								_List_fromArray(
+									[
+										elm$html$Html$text('Fullsize (col-12)        ')
+									]))
+							]))
+					])),
+				A2(
+				elm$html$Html$div,
+				_List_fromArray(
+					[
+						elm$html$Html$Attributes$class('ui-grid__row')
+					]),
+				_List_fromArray(
+					[
+						A2(
+						elm$html$Html$section,
+						_List_fromArray(
+							[
+								elm$html$Html$Attributes$class('ui-grid__col-6')
+							]),
+						_List_fromArray(
+							[
+								A2(
+								elm$html$Html$h3,
+								_List_Nil,
+								_List_fromArray(
+									[
+										elm$html$Html$text('Buttons')
+									])),
+								A2(
+								elm$html$Html$p,
+								_List_Nil,
+								_List_fromArray(
+									[
+										elm$html$Html$text('Inline tex with            '),
+										A2(
+										elm$html$Html$button,
+										_List_fromArray(
+											[
+												elm$html$Html$Attributes$class('ui-button')
+											]),
+										_List_fromArray(
+											[
+												A2(
+												elm$html$Html$span,
+												_List_fromArray(
+													[
+														elm$html$Html$Attributes$class('ui-button__label')
+													]),
+												_List_fromArray(
+													[
+														elm$html$Html$text('Real Button Button')
+													]))
+											])),
+										A2(
+										elm$html$Html$button,
+										_List_fromArray(
+											[
+												elm$html$Html$Attributes$class('ui-button ui-button--primary')
+											]),
+										_List_fromArray(
+											[
+												A2(
+												elm$html$Html$span,
+												_List_fromArray(
+													[
+														elm$html$Html$Attributes$class('ui-button__label')
+													]),
+												_List_fromArray(
+													[
+														elm$html$Html$text('Primary Button')
+													]))
+											])),
+										A2(
+										elm$html$Html$button,
+										_List_fromArray(
+											[
+												elm$html$Html$Attributes$class('ui-button ui-button--secondary')
+											]),
+										_List_fromArray(
+											[
+												A2(
+												elm$html$Html$span,
+												_List_fromArray(
+													[
+														elm$html$Html$Attributes$class('ui-button__label')
+													]),
+												_List_fromArray(
+													[
+														elm$html$Html$text('Secondary Button')
+													]))
+											])),
+										A2(
+										elm$html$Html$a,
+										_List_fromArray(
+											[
+												elm$html$Html$Attributes$class('ui-button'),
+												elm$html$Html$Attributes$href('#')
+											]),
+										_List_fromArray(
+											[
+												A2(
+												elm$html$Html$span,
+												_List_fromArray(
+													[
+														elm$html$Html$Attributes$class('ui-button__label')
+													]),
+												_List_fromArray(
+													[
+														elm$html$Html$text('Link Button')
+													]))
+											])),
+										A2(
+										elm$html$Html$button,
+										_List_fromArray(
+											[
+												elm$html$Html$Attributes$class('ui-button ui-button--disabled'),
+												A2(elm$html$Html$Attributes$attribute, 'disabled', 'disabled')
+											]),
+										_List_fromArray(
+											[
+												A2(
+												elm$html$Html$span,
+												_List_fromArray(
+													[
+														elm$html$Html$Attributes$class('ui-button__label')
+													]),
+												_List_fromArray(
+													[
+														elm$html$Html$text('Inactive Button')
+													]))
+											]))
+									]))
+							])),
+						A2(
+						elm$html$Html$section,
+						_List_fromArray(
+							[
+								elm$html$Html$Attributes$class('ui-grid__col-6')
+							]),
+						_List_fromArray(
+							[
+								A2(
+								elm$html$Html$form,
+								_List_fromArray(
+									[
+										elm$html$Html$Attributes$class('ui-form')
+									]),
+								_List_fromArray(
+									[
+										A2(
+										elm$html$Html$h3,
+										_List_Nil,
+										_List_fromArray(
+											[
+												elm$html$Html$text('Forms')
+											])),
+										A2(
+										elm$html$Html$label,
+										_List_fromArray(
+											[
+												elm$html$Html$Attributes$class('ui-form__group')
+											]),
+										_List_fromArray(
+											[
+												A2(
+												elm$html$Html$span,
+												_List_fromArray(
+													[
+														elm$html$Html$Attributes$class('ui-form__group-label')
+													]),
+												_List_fromArray(
+													[
+														elm$html$Html$text('Simple Textinput')
+													])),
+												A2(
+												elm$html$Html$input,
+												_List_fromArray(
+													[
+														elm$html$Html$Attributes$class('ui-form__text'),
+														elm$html$Html$Attributes$name('simple-text'),
+														elm$html$Html$Attributes$placeholder('Simple text...'),
+														elm$html$Html$Attributes$type_('text'),
+														elm$html$Html$Attributes$value('')
+													]),
+												_List_Nil),
+												A2(
+												elm$html$Html$button,
+												_List_fromArray(
+													[
+														elm$html$Html$Attributes$class('ui-button'),
+														elm$html$Html$Attributes$type_('submit')
+													]),
+												_List_fromArray(
+													[
+														A2(
+														elm$html$Html$span,
+														_List_fromArray(
+															[
+																elm$html$Html$Attributes$class('ui-button__label')
+															]),
+														_List_fromArray(
+															[
+																elm$html$Html$text('OK')
+															]))
+													]))
+											])),
+										A2(
+										elm$html$Html$label,
+										_List_fromArray(
+											[
+												elm$html$Html$Attributes$class('ui-form__group')
+											]),
+										_List_fromArray(
+											[
+												A2(
+												elm$html$Html$input,
+												_List_fromArray(
+													[
+														elm$html$Html$Attributes$class('ui-form__checkbox'),
+														elm$html$Html$Attributes$name('check1'),
+														elm$html$Html$Attributes$type_('checkbox')
+													]),
+												_List_Nil),
+												A2(
+												elm$html$Html$span,
+												_List_fromArray(
+													[
+														elm$html$Html$Attributes$class('ui-form__group-label')
+													]),
+												_List_fromArray(
+													[
+														elm$html$Html$text('Simple Checkbox')
+													]))
+											])),
+										A2(
+										elm$html$Html$label,
+										_List_fromArray(
+											[
+												elm$html$Html$Attributes$class('ui-form__group')
+											]),
+										_List_fromArray(
+											[
+												A2(
+												elm$html$Html$input,
+												_List_fromArray(
+													[
+														elm$html$Html$Attributes$class('ui-form__checkbox ui-form__checkbox--disabled'),
+														A2(elm$html$Html$Attributes$attribute, 'disabled', 'disabled'),
+														elm$html$Html$Attributes$name('check2'),
+														elm$html$Html$Attributes$type_('checkbox')
+													]),
+												_List_Nil),
+												A2(
+												elm$html$Html$span,
+												_List_fromArray(
+													[
+														elm$html$Html$Attributes$class('ui-form__group-label')
+													]),
+												_List_fromArray(
+													[
+														elm$html$Html$text('Simple Checkbox')
+													]))
+											])),
+										A2(
+										elm$html$Html$label,
+										_List_fromArray(
+											[
+												elm$html$Html$Attributes$class('ui-form__group')
+											]),
+										_List_fromArray(
+											[
+												A2(
+												elm$html$Html$input,
+												_List_fromArray(
+													[
+														elm$html$Html$Attributes$class('ui-form__radio'),
+														elm$html$Html$Attributes$name('radio1'),
+														elm$html$Html$Attributes$type_('radio'),
+														elm$html$Html$Attributes$value('value1')
+													]),
+												_List_Nil),
+												A2(
+												elm$html$Html$span,
+												_List_fromArray(
+													[
+														elm$html$Html$Attributes$class('ui-form__group-label')
+													]),
+												_List_fromArray(
+													[
+														elm$html$Html$text('Option 1')
+													]))
+											])),
+										A2(
+										elm$html$Html$label,
+										_List_fromArray(
+											[
+												elm$html$Html$Attributes$class('ui-form__group')
+											]),
+										_List_fromArray(
+											[
+												A2(
+												elm$html$Html$input,
+												_List_fromArray(
+													[
+														elm$html$Html$Attributes$class('ui-form__radio'),
+														elm$html$Html$Attributes$name('radio1'),
+														elm$html$Html$Attributes$type_('radio'),
+														elm$html$Html$Attributes$value('value2')
+													]),
+												_List_Nil),
+												A2(
+												elm$html$Html$span,
+												_List_fromArray(
+													[
+														elm$html$Html$Attributes$class('ui-form__group-label')
+													]),
+												_List_fromArray(
+													[
+														elm$html$Html$text('Option 2')
+													]))
+											])),
+										A2(
+										elm$html$Html$label,
+										_List_fromArray(
+											[
+												elm$html$Html$Attributes$class('ui-form__group')
+											]),
+										_List_fromArray(
+											[
+												A2(
+												elm$html$Html$input,
+												_List_fromArray(
+													[
+														elm$html$Html$Attributes$class('ui-form__radio ui-form__radio--disabled'),
+														A2(elm$html$Html$Attributes$attribute, 'disabled', 'disabled'),
+														elm$html$Html$Attributes$name('radio1'),
+														elm$html$Html$Attributes$type_('radio'),
+														elm$html$Html$Attributes$value('value3')
+													]),
+												_List_Nil),
+												A2(
+												elm$html$Html$span,
+												_List_fromArray(
+													[
+														elm$html$Html$Attributes$class('ui-form__group-label')
+													]),
+												_List_fromArray(
+													[
+														elm$html$Html$text('Option 2')
+													]))
+											])),
+										A2(
+										elm$html$Html$label,
+										_List_fromArray(
+											[
+												elm$html$Html$Attributes$class('ui-form__group')
+											]),
+										_List_fromArray(
+											[
+												A2(
+												elm$html$Html$span,
+												_List_fromArray(
+													[
+														elm$html$Html$Attributes$class('ui-form__group-label')
+													]),
+												_List_fromArray(
+													[
+														elm$html$Html$text('Some text')
+													])),
+												A2(
+												elm$html$Html$textarea,
+												_List_fromArray(
+													[
+														elm$html$Html$Attributes$class('ui-form__textarea'),
+														elm$html$Html$Attributes$name('textarea'),
+														elm$html$Html$Attributes$value('value2')
+													]),
+												_List_Nil)
+											])),
+										A2(
+										elm$html$Html$label,
+										_List_fromArray(
+											[
+												elm$html$Html$Attributes$class('ui-form__group')
+											]),
+										_List_fromArray(
+											[
+												A2(
+												elm$html$Html$span,
+												_List_fromArray(
+													[
+														elm$html$Html$Attributes$class('ui-form__group-label')
+													]),
+												_List_fromArray(
+													[
+														elm$html$Html$text('Some text')
+													])),
+												A2(
+												elm$html$Html$select,
+												_List_fromArray(
+													[
+														elm$html$Html$Attributes$class('ui-form__select'),
+														elm$html$Html$Attributes$name('select1')
+													]),
+												_List_fromArray(
+													[
+														A2(
+														elm$html$Html$option,
+														_List_fromArray(
+															[
+																elm$html$Html$Attributes$value('1')
+															]),
+														_List_fromArray(
+															[
+																elm$html$Html$text('1')
+															])),
+														A2(
+														elm$html$Html$optgroup,
+														_List_fromArray(
+															[
+																A2(elm$html$Html$Attributes$attribute, 'label', 'Section 2')
+															]),
+														_List_fromArray(
+															[
+																A2(
+																elm$html$Html$option,
+																_List_fromArray(
+																	[
+																		elm$html$Html$Attributes$value('2.1')
+																	]),
+																_List_fromArray(
+																	[
+																		elm$html$Html$text('2.1')
+																	])),
+																A2(
+																elm$html$Html$option,
+																_List_fromArray(
+																	[
+																		elm$html$Html$Attributes$value('2.2')
+																	]),
+																_List_fromArray(
+																	[
+																		elm$html$Html$text('2.2')
+																	]))
+															])),
+														A2(
+														elm$html$Html$optgroup,
+														_List_fromArray(
+															[
+																A2(elm$html$Html$Attributes$attribute, 'label', 'Section 3')
+															]),
+														_List_fromArray(
+															[
+																A2(
+																elm$html$Html$option,
+																_List_fromArray(
+																	[
+																		elm$html$Html$Attributes$value('3.1')
+																	]),
+																_List_fromArray(
+																	[
+																		elm$html$Html$text('3.1')
+																	])),
+																A2(
+																elm$html$Html$option,
+																_List_fromArray(
+																	[
+																		elm$html$Html$Attributes$value('3.2')
+																	]),
+																_List_fromArray(
+																	[
+																		elm$html$Html$text('3.2')
+																	])),
+																A2(
+																elm$html$Html$option,
+																_List_fromArray(
+																	[
+																		elm$html$Html$Attributes$value('3.3')
+																	]),
+																_List_fromArray(
+																	[
+																		elm$html$Html$text('3.3')
+																	]))
+															]))
+													]))
+											])),
+										A2(
+										elm$html$Html$button,
+										_List_fromArray(
+											[
+												elm$html$Html$Attributes$class('ui-button'),
+												elm$html$Html$Attributes$type_('submit')
+											]),
+										_List_fromArray(
+											[
+												A2(
+												elm$html$Html$span,
+												_List_fromArray(
+													[
+														elm$html$Html$Attributes$class('ui-button__label')
+													]),
+												_List_fromArray(
+													[
+														elm$html$Html$text('Submit')
+													]))
+											]))
+									]))
+							]))
+					]))
+			]))
+	]);
+var author$project$LegacyStyleguide$main = A2(
+	author$project$Elmstatic$layout,
+	author$project$Elmstatic$decodePost,
+	function (content) {
+		return A2(
+			author$project$Page$layout,
+			content.aA,
+			elm$core$List$concat(
+				_List_fromArray(
+					[
+						_List_fromArray(
+						[
+							A3(
+							elm$html$Html$node,
+							'link',
+							_List_fromArray(
+								[
+									A2(elm$html$Html$Attributes$attribute, 'rel', 'stylesheet'),
+									elm$html$Html$Attributes$href('/style/main.css'),
+									elm$html$Html$Attributes$type_('text/css')
+								]),
+							_List_Nil),
+							author$project$Post$metadataHtml(content),
+							author$project$Page$markdown(content.bx)
+						]),
+						author$project$LegacyStyleguide$legacyContent
+					])));
+	});
+_Platform_export({'LegacyStyleguide':{'init':author$project$LegacyStyleguide$main(elm$json$Json$Decode$value)(0)},'Tag':{'init':author$project$Tag$main(elm$json$Json$Decode$value)(0)},'Posts':{'init':author$project$Posts$main(elm$json$Json$Decode$value)(0)},'Post':{'init':author$project$Post$main(elm$json$Json$Decode$value)(0)},'Page':{'init':author$project$Page$main(elm$json$Json$Decode$value)(0)}});}(this));
