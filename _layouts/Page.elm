@@ -60,7 +60,9 @@ header =
                 --         []
                 --     ]
                 [ a [ href "/", title "Canena blog" ]
-                    [ text "Canena"
+                    [ img [ alt "Canena", src "/img/canena_sm.png"
+                          , attribute "style" "margin-bottom: -8px; margin-left: -4px"
+                          ] []
                     ]
                 ]
             , div [ class "header__navigation" ]
