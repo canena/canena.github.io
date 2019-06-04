@@ -148,7 +148,9 @@ cdnStylesheet href integrity crossorigin =
 htmlTemplate : String -> List (Html Never) -> Html Never
 htmlTemplate title contentNodes =
     node "html"
-        [ attribute "lang" "en" ]
+        [ attribute "lang" "en"
+        , class "ui-layout"
+        ]
         [ node "head"
             []
             [ node "meta" [ attribute "charset" "utf-8" ] []
