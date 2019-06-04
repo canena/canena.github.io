@@ -3,6 +3,8 @@ title: "Epic Links"
 tags: learning music self-improvement tech
 ---
 
+A collection of links that I found useful, inspired me and may bring you enjoyment and/or enlightenment as well.
+
 ## Disclaimer
 
 I'm not in any way affiliated with the following links, I just find them useful, delightful, funny...
