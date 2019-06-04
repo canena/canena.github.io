@@ -10,8 +10,8 @@ body::before {
     top: 0;
 }
 
-a[href^="http://"]::after,
-a[href^="https://"]::after {
+a[href^="http://"]:not(.--plain)::after,
+a[href^="https://"]:not(.--plain)::after {
     content: " (⇑)";
 }
 
