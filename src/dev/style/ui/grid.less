@@ -1,0 +1,53 @@
+@import 'vars.less';
+
+.ui-grid-responsive-mixin(@size: @grid-size, @order: 1) when (@order =< @size) {
+
+    &__col-@{order} {
+        width: (@order / @size) * 100%;
+    }
+
+    .ui-grid-responsive-mixin(@size, (@order + 1));
+}
+
+.ui-grid-mixin(@size: @grid-size, @order: 1) when (@order =< @size) {
+
+    &__col-@{order} {
+        font-size: @font-size;
+        padding-left: @grid-spacing;
+        padding-right: @grid-spacing;
+    }
+
+    .ui-grid-mixin(@size, (@order + 1));
+}
+
+.ui-grid {
+    .ui-grid-mixin();
+
+    &__row {
+        display: block;
+        font-size: 0;
+        justify-content: space-between;
+        position: relative;
+        margin-left: -@grid-spacing;
+        margin-right: -@grid-spacing;
+        /*margin: 5px;*/
+
+        &--static {
+            display: flex;
+        }
+    }
+
+}
+
+@media (min-width: @breakpoint-sm) {
+
+    .ui-grid {
+        .ui-grid-responsive-mixin();
+
+        &__row {
+            display: flex;
+        }
+
+    }
+
+}

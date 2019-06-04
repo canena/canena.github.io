@@ -1,0 +1,32 @@
+@import 'vars.less';
+
+.ui-intro {
+    min-height: 100%;
+    margin-top: -@header-size;
+    position: relative;
+
+    &__label {
+        display: block;
+        padding-top: @intro-padding-top;
+        text-align: center;
+    }
+
+    &__sub-label {
+        display: block;
+        font-size: 0.8em;
+        font-style: italic;
+        font-weight: normal;
+        padding-bottom: @intro-padding-top - @header-size;
+        text-align: center;
+
+        &:before {
+            content: "«";
+        }
+
+        &:after {
+            content: "»";
+        }
+
+    }
+
+}
