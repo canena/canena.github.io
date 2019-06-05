@@ -28,7 +28,7 @@ var Water = window.Water = (function () {
     var width = -1;
 
     // Animation settings
-    var damping = 0.95;
+    var damping = 0.97;
     var depth = 1;
     var targetFramerate = 60;
     var isRunning = false;
@@ -190,13 +190,17 @@ var Water = window.Water = (function () {
                 outputData[i+3] = inputData[j+3] + shading;
 
                 //tmp = Math.floor(255 * buffers[selectedBuffer][y][x] / maxIntensity);
-                tmp = Math.max(0, Math.min(255, buffers[selectedBuffer][y][x]));
-                bufferData[i] = tmp;
-                bufferData[i+1] = tmp;
-                //bufferData[i+1] = Math.max(0, Math.min(255, Math.sqrt(xOffset*xOffset + yOffset*yOffset)));
-                bufferData[i+2] = tmp;
+                bufferData[i] = xOffset;
+                bufferData[i+1] = yOffset;
+                bufferData[i+2] = 255;
                 bufferData[i+3] = 255;
-                //bufferData[i+3] = Math.sqrt(xOffset*xOffset + yOffset*yOffset);//buffers[selectedBuffer][y][x];
+
+                //bufferData[i] = tmp;
+                //bufferData[i+1] = tmp;
+                ////bufferData[i+1] = Math.max(0, Math.min(255, Math.sqrt(xOffset*xOffset + yOffset*yOffset)));
+                //bufferData[i+2] = tmp;
+                //bufferData[i+3] = 255;
+                ////bufferData[i+3] = Math.sqrt(xOffset*xOffset + yOffset*yOffset);//buffers[selectedBuffer][y][x];
             }
 				}
 
