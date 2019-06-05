@@ -4,7 +4,7 @@
         <title>A blog about life</title>
         <link>http://canena.de/posts</link>
         <description>Life/Music/Art/Code/Stuff</description>
-        <lastBuildDate>Wed, 05 Jun 2019 10:17:24 GMT</lastBuildDate>
+        <lastBuildDate>Wed, 05 Jun 2019 11:15:17 GMT</lastBuildDate>
         <docs>http://blogs.law.harvard.edu/tech/rss</docs>
         <generator>Elmstatic</generator>
         <language>en</language>
@@ -80,6 +80,66 @@ if you want to see some code right away. I even managed to bring support for IE8
 Original Post Gist
 
 "Is there an official list of supported browsers for Elm? If not, wha...]]></description>
+        </item>
+        <item>
+            <title><![CDATA[Stack to Elm Them All]]></title>
+            <link>http://canena.de/posts/2018-09-07-stack-to-elm-them-all</link>
+            <guid>http://canena.de/posts/2018-09-07-stack-to-elm-them-all</guid>
+            <pubDate>Fri, 07 Sep 2018 00:00:00 GMT</pubDate>
+            <description><![CDATA[
+Ever wondered - or forgot - how to build the Elm Compiler with tracing using Haskell Stack? Here's how you do it
+
+Init with stack
+
+stack init --resolver lts-11.20
+
+Add options in elm.cabal:
+
+    Executable elm
+        if flag(dev)
+            ghc-options: -O0 -Wall -Werror -rtsopts -eventlog
+
+Build with stack:
+
+stack build --flag elm:dev --profile
+
+Run with RTS options:
+
+elm make ./src/Main.elm \
+    --output=./dist/app.js +RTS -xc -lu -RTC \
+    2>eventlog_readable.log
+
+This is essentially jus...]]></description>
+        </item>
+        <item>
+            <title><![CDATA[Alpine Elm Docker]]></title>
+            <link>http://canena.de/posts/2018-09-09-alpine-elm-docker</link>
+            <guid>http://canena.de/posts/2018-09-09-alpine-elm-docker</guid>
+            <pubDate>Sun, 09 Sep 2018 00:00:00 GMT</pubDate>
+            <description><![CDATA[
+A Dockerfile for creating a minimal alpine docker image for your CI builds I salvaged from a Slack conversation.
+
+    FROM alpine
+    RUN apk add binutils \
+      && wget -qO - "https://github.com/elm/compiler/releases/download/0.19.0/binaries-for-linux.tar.gz" \
+      | tar -zxC /usr/local/bin/ && strip /usr/local/bin/elm && apk del binutils
+
+This will result in a docker image that is roughly the size of the Elm binaries we're packaging - about 40MB(!) as of the time of writing this.
+
+    { mi...]]></description>
+        </item>
+        <item>
+            <title><![CDATA[Elm 0.19 TL;DR]]></title>
+            <link>http://canena.de/posts/2018-09-25-elm-0-19-tldr</link>
+            <guid>http://canena.de/posts/2018-09-25-elm-0-19-tldr</guid>
+            <pubDate>Tue, 25 Sep 2018 00:00:00 GMT</pubDate>
+            <description><![CDATA[
+As the Elm 0.19 upgrade docs are lacking some vital information you only know about by consistently hanging out on the Elm Slack I thought I'd list them here for all the word to see.
+
+Massive compile time improvements
+Huge internal rework of the compiler that is prepared for the coming use-cases
+Many bugfixes regarding performance - i.e. pattern matching on tuples, many case branches, unnecessary recompiles, too much IO, memory leaks
+Removed many XSS attack vectors - i.e. disallowing innerHTML ...]]></description>
         </item>
         <item>
             <title><![CDATA[TypeScript vs the Real World]]></title>

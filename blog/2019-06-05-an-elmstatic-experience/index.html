@@ -229,11 +229,11 @@ small {
 <h2 id="enter-elmstatic">Enter Elmstatic</h2>
 <p>However, as it became clear that official support for server-side-rendering would be put on hold when 0.19 was released and <a href="https://github.com/eeue56/elm-static-html-lib">elm-static-html-lib</a> didn’t receive an upgrade to the new language version I started to look for alternatives. Since users were now barred from (ab-)using <a href="https://discourse.elm-lang.org/t/native-code-in-0-19/826">never published-as-an-API <code>Native</code> modules</a> many workable approaches in Elm 0.18 seized to be an option, short of forking the <a href="https://github.com/elm/compiler">Elm compiler</a> - probably for the better. So I ultimately opted for <a href="https://github.com/alexkorban/elmstatic">Elmstatic</a> instead of rolling my own because the setup is essentially the same I had thought of earlier:</p>
 <ul>
-<li>no dynamic content creation needed so use a static site generator</li>
-<li>keep on relying on <a href="https://daringfireball.net/projects/markdown/syntax">Markdown</a> for content</li>
-<li>continue to use <a href="https://www.elm-lang.org">Elm</a> for most of the layout structure and styling</li>
-<li>use <a href="https://github.com/jsdom/jsdom">JSDOM</a> to run the Elm app to produce the final markup</li>
-<li>reduce <a href="https://npmjs.com">NPM</a> dependencies as much as possible</li>
+<li>No dynamic content creation needed so use a static site generator</li>
+<li>Keep on relying on <a href="https://daringfireball.net/projects/markdown/syntax">Markdown</a> for content</li>
+<li>Continue to use <a href="https://www.elm-lang.org">Elm</a> for most of the layout structure and styling</li>
+<li>Use <a href="https://github.com/jsdom/jsdom">JSDOM</a> to run the Elm app to produce the final markup</li>
+<li>Reduce <a href="https://npmjs.com">NPM</a> dependencies as much as possible</li>
 </ul>
 <p>On top of that the usage is so straight forward, it is a delight</p>
 <pre><code class="lang-bash">npm install --save-dev elm@elm0.19.0 elmstatic &amp;&amp; npx elmstatic init
@@ -272,12 +272,14 @@ tags: elm tech web
 &lt;/body&gt;
 </code></pre>
 <p>As I had no intention of continuing to use my hopelessly over-engineered <a href="http://getbem.com/introduction/">BEM CSS</a> styles I just adapted the <a href="https://github.com/rtfeldman/elm-css">elm-css</a> global styles that came with the scaffold. I might come back to that and do some cleanup in the future now that that it’s backed by Elm instead of <a href="http://lesscss.org/">less</a>.</p>
-<h2 id="bumps-along-the-road">Bumps Along the Road</h2>
+<h2 id="lessons-learned-along-the-road">Lessons Learned Along the Road</h2>
 <p>The migration turned out to be very straight forward but as always there were some minor annoyances.</p>
-<h3 id="no-typed-routes">No typed routes</h3>
+<h3 id="no-typed-routes">No Typed Routes</h3>
 <p>I did lose one feature along the way in that my custom script supported extracting routes and tags from <a href="https://guide.elm-lang.org/types/custom_types.html">Elm Custom Types</a> with the help of some dark regex magic so Elm would complain when I got a route wrong, no big deal.</p>
 <h3 id="static-deployment-strike-is-strike-can-be-easy">Static Deployment <strike>is</strike> can be easy</h3>
 <p>Not a problem with Elmstatic but after realizing that <a href="https://help.github.com/en/articles/user-organization-and-project-pages#user-and-organization-pages-sites">user/org pages on Github need to be served from / in <code>master</code></a> I scrapped my deploy-to-docs-directory strategy and moved all the source files into the <code>src</code> directory and had the build-step copy the built artifacts into the repository root. Et vóila, it works!</p>
+<h3 id="yarn-is-fast">Yarn Is Fast</h3>
+<p>Lately I’ve been using a lot of <a href="https://yarnpkg.com">yarn</a> over <a href="https://npmjs.com">npm</a>, just feels snappier.</p>
 <h2 id="conclusion">Conclusion</h2>
 <p>I’m rather happy how the site turned out due to the well-thought-out design of Elmstatic that leaves plenty of room for customization and having Elm as an ally when creating layouts and styles is always a breeze.</p>
 <p>It’s been a great experience, thanks <a href="https://korban.net">Alex Korban</a> for <a href="https://github.com/alexkorban/elmstatic">Elmstatic</a>!</p>
