@@ -11,11 +11,11 @@ Originally the blog started out using plain HTML/CSS employing a rather strict [
 ## Enter Elmstatic
 However, as it became clear that official support for server-side-rendering would be put on hold when 0.19 was released and [elm-static-html-lib][] didn't receive an upgrade to the new language version I started to look for alternatives. Since users were now barred from (ab-)using [never published-as-an-API `Native` modules][elm-native-modules] many workable approaches in Elm 0.18 seized to be an option, short of forking the [Elm compiler][elm-compiler] - probably for the better. So I ultimately opted for [Elmstatic][elmstatic] instead of rolling my own because the setup is essentially the same I had thought of earlier:
 
-* no dynamic content creation needed so use a static site generator
-* keep on relying on [Markdown][markdown] for content
-* continue to use [Elm][elm] for most of the layout structure and styling
-* use [JSDOM][jsdom] to run the Elm app to produce the final markup
-* reduce [NPM][npm] dependencies as much as possible
+* No dynamic content creation needed so use a static site generator
+* Keep on relying on [Markdown][markdown] for content
+* Continue to use [Elm][elm] for most of the layout structure and styling
+* Use [JSDOM][jsdom] to run the Elm app to produce the final markup
+* Reduce [NPM][npm] dependencies as much as possible
 
 On top of that the usage is so straight forward, it is a delight
 
@@ -69,14 +69,17 @@ To my surprise I didn't even hit a bump when I migrated my [Hello Living Stylegu
 
 As I had no intention of continuing to use my hopelessly over-engineered [BEM CSS][bem] styles I just adapted the [elm-css][] global styles that came with the scaffold. I might come back to that and do some cleanup in the future now that that it's backed by Elm instead of [less][lesscss].
 
-## Bumps Along the Road
+## Lessons Learned Along the Road
 The migration turned out to be very straight forward but as always there were some minor annoyances.
 
-### No typed routes
+### No Typed Routes
 I did lose one feature along the way in that my custom script supported extracting routes and tags from [Elm Custom Types][elm-custom-types] with the help of some dark regex magic so Elm would complain when I got a route wrong, no big deal.
 
 ### Static Deployment <strike>is</strike> can be easy
 Not a problem with Elmstatic but after realizing that [user/org pages on Github need to be served from / in `master`][ghpages-from-master] I scrapped my deploy-to-docs-directory strategy and moved all the source files into the `src` directory and had the build-step copy the built artifacts into the repository root. Et vóila, it works!
+
+### Yarn Is Fast
+Lately I've been using a lot of [yarn](https://yarnpkg.com) over [npm](https://npmjs.com), just feels snappier.
 
 ## Conclusion
 I'm rather happy how the site turned out due to the well-thought-out design of Elmstatic that leaves plenty of room for customization and having Elm as an ally when creating layouts and styles is always a breeze.
