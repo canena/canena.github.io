@@ -187,6 +187,7 @@ htmlTemplate title contentNodes =
             --, cdnStylesheet "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.8/styles/github-gist.min.css" "sha256-3bRfCcmMiQbIzvnxDzgFY9bl7dc07xbdX3+Mr4QYTY8=" "anonymous"
             , Styles.styles
             , cdnScript "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.8/highlight.min.js" "sha256-js+I1fdbke/DJrW2qXQlrw7VUEqmdeFeOW37UC0bEiU=" "anonymous"
+            , cdnScript "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.8/languages/bash.min.js" "sha256-zXrlim8wsIvcEFjsD3THiAfTvtPZifqx8q0rxegiWQc=" "anonymous"
             , cdnScript "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.8/languages/elm.min.js" "sha256-5ZDjmDRr7i9DNIGlJKzPImNcoVZ2KGsPch+qoZuYq5M=" "anonymous"
             , cdnScript "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.8/languages/javascript.min.js" "sha256-x3ducqWgfzH2JLxwkA7vfwbJC7nZgvdypVl0Gy0L/z0=" "anonymous"
             , inlineScript "hljs.initHighlightingOnLoad();"
