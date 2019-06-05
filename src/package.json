@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "build": "elmstatic && cp -R ./build/posts ./build/blog && cp -R ./build/* ..",
+    "clean": "rm -rf ./build && rm elm.js",
     "dev:intro": "serve dev",
     "dev:water": "serve dev/water",
     "start": "serve ..",

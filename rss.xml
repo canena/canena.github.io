@@ -4,7 +4,7 @@
         <title>A blog about life</title>
         <link>http://canena.de/posts</link>
         <description>Life/Music/Art/Code/Stuff</description>
-        <lastBuildDate>Tue, 04 Jun 2019 14:14:24 GMT</lastBuildDate>
+        <lastBuildDate>Wed, 05 Jun 2019 10:17:24 GMT</lastBuildDate>
         <docs>http://blogs.law.harvard.edu/tech/rss</docs>
         <generator>Elmstatic</generator>
         <language>en</language>
@@ -96,6 +96,17 @@ Questions You Should Be Asking Yourself
 The speaker largely highlights positive aspects of TypeScript. How many technologies do you know that have no flaws? TS obviously has a lot of benefits but here are some questions I would put up for discussion that nobody seems to talk about:
 
 1) How accurate do you think bolted o...]]></description>
+        </item>
+        <item>
+            <title><![CDATA[An Elmstatic Experience]]></title>
+            <link>http://canena.de/posts/2019-06-05-an-elmstatic-experience</link>
+            <guid>http://canena.de/posts/2019-06-05-an-elmstatic-experience</guid>
+            <pubDate>Wed, 05 Jun 2019 00:00:00 GMT</pubDate>
+            <description><![CDATA[
+A quick walkthrough of how I migrated this site to use Elmstatic instead of my buggy, hand-made Elm-to-static-HTML script.
+
+Iterate, Adapt, Repeat
+Originally the blog started out using plain HTML/CSS employing a rather strict BEM approach. As I got more into Elm at the time I decided it would be a fun exercise to use it to create the markup and elm-static-html-lib seemed like a good choice. And so I hacked away at a Node script that produced the desired artifacts out of an Elm/Markdown mixture;...]]></description>
         </item>
         <item>
             <title><![CDATA[A blog about life]]></title>
