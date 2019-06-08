@@ -17,14 +17,13 @@ module Elmstatic exposing
 import Browser
 import Html exposing (..)
 import Html.Attributes exposing (..)
-import Intro
 import Json.Decode
 import Styles
 
 
 type alias Post =
     { date : String
-    , includeIntro : Bool
+    , imports : List String
     , link : String
     , markdown : String
     , section : String
@@ -35,7 +34,7 @@ type alias Post =
 
 
 type alias Page =
-    { includeIntro : Bool
+    { imports : List String
     , markdown : String
     , siteTitle : String
     , title : String
@@ -43,7 +42,7 @@ type alias Page =
 
 
 type alias PostList =
-    { includeIntro : Bool
+    { imports : List String
     , posts : List Post
     , section : String
     , siteTitle : String
@@ -52,7 +51,7 @@ type alias PostList =
 
 
 type alias Content a =
-    { a | includeIntro : Bool, siteTitle : String, title : String }
+    { a | imports : List String, siteTitle : String, title : String }
 
 
 type alias Layout =
@@ -62,7 +61,7 @@ type alias Layout =
 decodePage : Json.Decode.Decoder Page
 decodePage =
     Json.Decode.map4 Page
-        (decodeBoolMeta "includeIntro")
+        decodeImports
         (Json.Decode.field "markdown" Json.Decode.string)
         (Json.Decode.field "siteTitle" Json.Decode.string)
         (Json.Decode.field "title" Json.Decode.string)
@@ -72,7 +71,7 @@ decodePost : Json.Decode.Decoder Post
 decodePost =
     Json.Decode.map8 Post
         (Json.Decode.field "date" Json.Decode.string)
-        (decodeBoolMeta "includeIntro")
+        decodeImports
         (Json.Decode.field "link" Json.Decode.string)
         (Json.Decode.field "markdown" Json.Decode.string)
         (Json.Decode.field "section" Json.Decode.string)
@@ -84,12 +83,30 @@ decodePost =
 decodePostList : Json.Decode.Decoder PostList
 decodePostList =
     Json.Decode.map5 PostList
-        (decodeBoolMeta "includeIntro")
+        decodeImports
         (Json.Decode.field "posts" <| Json.Decode.list decodePost)
         (Json.Decode.field "section" Json.Decode.string)
         (Json.Decode.field "siteTitle" Json.Decode.string)
         (Json.Decode.field "title" Json.Decode.string)
 
+
+decodeImports : Json.Decode.Decoder (List String)
+decodeImports =
+    Json.Decode.maybe (Json.Decode.field "imports" Json.Decode.string)
+        |> Json.Decode.andThen
+           (\maybeEntry ->
+                case maybeEntry of
+                    Nothing ->
+                        Json.Decode.succeed []
+
+                    Just "" ->
+                        Json.Decode.succeed []
+
+                    Just value ->
+                        String.split " " value
+                            |> List.map String.trim
+                            |> Json.Decode.succeed
+           )
 
 decodeBoolMeta : String -> Json.Decode.Decoder Bool
 decodeBoolMeta prop =
@@ -191,7 +208,7 @@ htmlTemplate title contentNodes =
             , cdnScript "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.8/languages/elm.min.js" "sha256-5ZDjmDRr7i9DNIGlJKzPImNcoVZ2KGsPch+qoZuYq5M=" "anonymous"
             , cdnScript "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.8/languages/javascript.min.js" "sha256-x3ducqWgfzH2JLxwkA7vfwbJC7nZgvdypVl0Gy0L/z0=" "anonymous"
             , inlineScript "hljs.initHighlightingOnLoad();"
-            , inlineScript "var requirejs = { baseUrl: \"js\", paths: { greeshka: \"libs/greeshka-0.3.0\" } };"
+            , inlineScript "var requirejs = { baseUrl: \"/js\", paths: { greeshka: \"libs/greeshka-0.3.0\" } };"
             , cdnScript "https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" "sha256-1fEPhSsRKlFKGfK3eO710tEweHh1fwokU5wFGDHO+vg=" "anonymous"
             , stylesheet "https://fonts.googleapis.com/css?family=Roboto+Condensed|Inconsolata"
             ]
@@ -212,16 +229,24 @@ layout decoder view =
                         }
 
                     Ok content ->
+                        let
+                            amdImports =
+                                content.imports
+                                    |> List.map (\it -> "\"" ++ it ++ "\"")
+                                    |> String.join ", "
+                        in
                         { title = ""
                         , body =
                             [ htmlTemplate content.siteTitle <|
-                                (if content.includeIntro then
-                                    Intro.banner
-
-                                 else
-                                    text ""
-                                )
-                                    :: view content
+                                List.concat
+                                    [ view content
+                                    , if List.isEmpty content.imports then
+                                        [ text "" ]
+                                      else
+                                        [ inlineScript <|
+                                            "require([" ++ amdImports ++ "]);"
+                                        ]
+                                    ]
                             ]
                         }
         , update = \msg contentJson -> ( contentJson, Cmd.none )
