@@ -1,5 +1,5 @@
 ---
-title: Tales From the Code Crypt: Book 1 - Water
+title: Tales From the Code Crypt - Book 1, Water
 tags: code-crypt javascript tech web
 imports: demos/water/boot mathjax
 ---
