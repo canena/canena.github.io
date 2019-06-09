@@ -199,5 +199,25 @@ styles =
                     ]
                 ]
             ]
+        , class "btn"
+            [ backgroundImage <|
+                linearGradient2 (deg 142) (stop <| hex "d84b97") (stop <| hex "ff4400") []
+            , border (px 0)
+            , borderBottom3 (px 4) solid (hex "e32636")
+            , color (hex "fff")
+            , cursor pointer
+            , lineHeight (px 30)
+            , padding4 (px 3) (px 14) zero (px 14)
+            , textTransform uppercase
+            , hover
+                [ backgroundColor (hex "f90")
+                , backgroundImage none
+                , borderColor (hex "f60")
+                ]
+            , withAttribute "disabled"
+                [ cursor notAllowed
+                , opacity (num 0.6)
+                ]
+            ]
         ]
         |> Html.Styled.toUnstyled
