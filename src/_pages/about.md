@@ -32,7 +32,8 @@ The views expressed in this blog are my own thoughts and don't necessarily match
 This is a static site, I don't collect any data myself although these pages are hosted somewhere and they might be keeping track of you. Enabling JavaScript is not required but might enhance the site experience by...
 
 * providing code syntax highlighting powered by [highlight.js](https://highlightjs.org/)
-* occasionally providing asynchronous code loading for demonstration purposes with [require.js](https://requirejs.org) - only sample code from <em>canena.de</em> is being loaded at any point in time
+* occasionally providing asynchronous code loading for demonstration purposes with [require.js](https://requirejs.org), loaded from a CDN
+* formula rendering is done using [MathJax](https://www.mathjax.org/) which is also loaded from a CDN
 * nothing else as of now :-)
 
 Shiny!

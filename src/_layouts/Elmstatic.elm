@@ -208,7 +208,15 @@ htmlTemplate title contentNodes =
             , cdnScript "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.8/languages/elm.min.js" "sha256-5ZDjmDRr7i9DNIGlJKzPImNcoVZ2KGsPch+qoZuYq5M=" "anonymous"
             , cdnScript "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.8/languages/javascript.min.js" "sha256-x3ducqWgfzH2JLxwkA7vfwbJC7nZgvdypVl0Gy0L/z0=" "anonymous"
             , inlineScript "hljs.initHighlightingOnLoad();"
-            , inlineScript "var requirejs = { baseUrl: \"/js\", paths: { greeshka: \"libs/greeshka-0.3.0\" } };"
+            , inlineScript """
+var requirejs = {
+    baseUrl: \"/js\",
+    paths: {
+       greeshka: \"libs/greeshka-0.3.0\",
+       mathjax: \"https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML\"
+    }
+};
+                 """
             , cdnScript "https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" "sha256-1fEPhSsRKlFKGfK3eO710tEweHh1fwokU5wFGDHO+vg=" "anonymous"
             , stylesheet "https://fonts.googleapis.com/css?family=Roboto+Condensed|Inconsolata"
             , inlineScript "document.querySelector('html').classList.remove('no-js');"
