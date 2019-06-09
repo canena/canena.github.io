@@ -4,7 +4,7 @@
         <title>A blog about life</title>
         <link>http://canena.de/posts</link>
         <description>Life/Music/Art/Code/Stuff</description>
-        <lastBuildDate>Wed, 05 Jun 2019 11:15:17 GMT</lastBuildDate>
+        <lastBuildDate>Sun, 09 Jun 2019 14:25:22 GMT</lastBuildDate>
         <docs>http://blogs.law.harvard.edu/tech/rss</docs>
         <generator>Elmstatic</generator>
         <language>en</language>
@@ -167,6 +167,18 @@ A quick walkthrough of how I migrated this site to use Elmstatic instead of my b
 
 Iterate, Adapt, Repeat
 Originally the blog started out using plain HTML/CSS employing a rather strict BEM approach. As I got more into Elm at the time I decided it would be a fun exercise to use it to create the markup and elm-static-html-lib seemed like a good choice. And so I hacked away at a Node script that produced the desired artifacts out of an Elm/Markdown mixture;...]]></description>
+        </item>
+        <item>
+            <title><![CDATA[Tales From the Code Crypt: Book 1 - Water]]></title>
+            <link>http://canena.de/posts/2019-06-08-tales-from-the-code-crypt-book1-water</link>
+            <guid>http://canena.de/posts/2019-06-08-tales-from-the-code-crypt-book1-water</guid>
+            <pubDate>Sat, 08 Jun 2019 00:00:00 GMT</pubDate>
+            <description><![CDATA[
+I recently waded through my own code archives and rediscovered some interesting and/or formative gems I think are worth discussing. This post is the first installment of this series to showcase and evaluate what past-me-code was all about.
+
+Efficient Water Imitation
+
+This post presents a water imitation algorithm that employs a front-/back-buffer smoothing approach I fiddled around with probably around 2008. Full disclosure: I'm not the originator of this neat trick. Unfortunately, I'm not sure...]]></description>
         </item>
         <item>
             <title><![CDATA[A blog about life]]></title>
