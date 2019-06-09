@@ -219,5 +219,29 @@ styles =
                 , opacity (num 0.6)
                 ]
             ]
+        , class "code-demo"
+            [ backgroundColor (hex "fafafa")
+            , border3 (px 1) solid (hex "d6d6d6")
+            ]
+        , class "code-demo__content"
+            [ borderBottom3 (px 1) solid (hex "d6d6d6")
+            ]
+        , class "code-demo__content--hidden"
+            [ display none
+            ]
+        , class "code-demo__toolbar"
+            [ backgroundColor (hex "fdfdfd")
+            , padding (px 10)
+            ]
+        , class "no-js"
+            [ descendants
+                [ class ".code-demo__toolbar"
+                    [ display none
+                    ]
+                ]
+            ]
+        , class "water__pool"
+            [ display inlineBlock
+            ]
         ]
         |> Html.Styled.toUnstyled
