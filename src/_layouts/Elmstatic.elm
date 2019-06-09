@@ -166,7 +166,7 @@ htmlTemplate : String -> List (Html Never) -> Html Never
 htmlTemplate title contentNodes =
     node "html"
         [ attribute "lang" "en"
-        , class "ui-layout"
+        , class "ui-layout no-js"
         ]
         [ node "head"
             []
@@ -211,6 +211,7 @@ htmlTemplate title contentNodes =
             , inlineScript "var requirejs = { baseUrl: \"/js\", paths: { greeshka: \"libs/greeshka-0.3.0\" } };"
             , cdnScript "https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" "sha256-1fEPhSsRKlFKGfK3eO710tEweHh1fwokU5wFGDHO+vg=" "anonymous"
             , stylesheet "https://fonts.googleapis.com/css?family=Roboto+Condensed|Inconsolata"
+            , inlineScript "document.querySelector('html').classList.remove('no-js');"
             ]
         , node "body" [] contentNodes
         ]
