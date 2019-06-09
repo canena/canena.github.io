@@ -86,3 +86,4 @@ This was a nice nostalgic trip for the first entry in this series, I for one cer
 [gc]: https://en.wikipedia.org/wiki/Garbage_collection_(computer_science)
 [kernel]: https://en.wikipedia.org/wiki/Kernel_(image_processing)
 [requestAnimationFrame]: https://developer.mozilla.org/en-US/docs/Web/API/window/requestAnimationFrame
+
