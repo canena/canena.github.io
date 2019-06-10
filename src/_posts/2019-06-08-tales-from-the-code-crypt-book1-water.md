@@ -49,7 +49,7 @@ function step() {
 
 On every iteration the selected buffer is alternated between the two input buffers. `computeNext()` is a straight forward [convolution smoothing filter][kernel] folding over the immediate neighboring values of the current buffer and the damped former value of the second buffer at that location
 
-$$b_2'(x,y) = {{b_1(x-1,y) + b_1(x+1,y) + b_1(x,y+1) + b_1(x,y-1) \over 2} - b_2(x,y) * damping}.$$
+$$b_2'(x,y) = { {b_1(x-1,y) + b_1(x+1,y) + b_1(x,y+1) + b_1(x,y-1) \over 2} - b_2(x,y) * damping }.$$
 
 As you probably guessed: the second box of the demo visualizes the components being used to calculate the refraction of the waves. If you stop the demo when waves are traveling you can see the actual color coding, more specifically
 
