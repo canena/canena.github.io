@@ -16,22 +16,22 @@ I'm not in any way affiliated with the following links, I just find them useful,
 
 ## Favorite Developer Blogs
 
-* [https://ayende.com](ayende.com)
-* [http://blog.ploeh.dk/](blog.ploeh.dk)
-* [https://cuttingedge.it/blogs/steven/](cuttingedge.it/blogs/steven)
-* [https://ericlippert.com](ericlippert.com)
+* [ayende.com](https://ayende.com)
+* [blog.ploeh.dk/](http://blog.ploeh.dk)
+* [cuttingedge.it/blogs/steven/](https://cuttingedge.it/blogs/steven)
+* [ericlippert.com](https://ericlippert.com)
 
 ## Daily Dose
 
-* [https://aeon.co](Aeon | ideas and culture)
-* [https://news.ycombinator.com/newest](news.ycombinator.com/newest)
-* [https://www.reddit.com/r/elm/new](reddit.com/r/elm/new)
-* [https://discourse.elm-lang.org](discourse.elm-lang.org)
-* [https://groups.google.com/forum/#!forum/elm-dev](elm-dev)
-* [https://groups.google.com/forum/#!forum/elm-discuss](elm-discuss)
-* [https://www.reddit.com/r/javascript/new](reddit.com/r/javascript/new)
-* [https://www.reddit.com/r/csharp/new](reddit.com/r/elm/csharp)
-* [https://www.reddit.com/r/java/new](reddit.com/r/java/new)
+* [aeon.co](https://aeon.co)
+* [news.ycombinator.com/newest](https://news.ycombinator.com/newest)
+* [reddit.com/r/elm/new](https://www.reddit.com/r/elm/new)
+* [discourse.elm-lang.org](https://discourse.elm-lang.org)
+* [elm-dev](https://groups.google.com/forum/#!forum/elm-dev)
+* [elm-discuss](https://groups.google.com/forum/#!forum/elm-discuss)
+* [reddit.com/r/javascript/new](https://www.reddit.com/r/javascript/new)
+* [reddit.com/r/elm/csharp](https://www.reddit.com/r/csharp/new)
+* [reddit.com/r/java/new](https://www.reddit.com/r/java/new)
 
 ## Articles
 
