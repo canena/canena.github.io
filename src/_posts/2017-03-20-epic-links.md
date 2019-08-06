@@ -63,6 +63,10 @@ I'm not in any way affiliated with the following links, I just find them useful,
   <a href="https://aeon.co/essays/the-terror-and-the-bliss-of-sleep-paralysis" target="_blank">The Terror and the Bliss of Sleep Paralysis</a>
 - <span class="ui-content__last-update">[2017-03-20]</span>
   <a href="https://aeon.co/essays/why-broken-sleep-is-a-golden-time-for-creativity" target="_blank">Why broken sleep is a golden time for creativity</a>
+- <span class="ui-content__last-update">[2019-08-06]</span>
+  <a href="http://www.bbc.com/future/story/20190516-why-cant-some-people-remember-their-dreams" target="_blank">Why can't people remember their dreams?</a>
+- <span class="ui-content__last-update">[2019-08-06]</span>
+  <a href="http://www.bbc.com/future/story/20190503-how-to-become-a-lucid-dreamer" target="_blank">How to become a lucid dreamer</a>
 
 
 ### Music
