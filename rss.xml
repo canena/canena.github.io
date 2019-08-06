@@ -4,7 +4,7 @@
         <title>A blog about life</title>
         <link>http://canena.de/posts</link>
         <description>Life/Music/Art/Code/Stuff</description>
-        <lastBuildDate>Mon, 10 Jun 2019 13:35:20 GMT</lastBuildDate>
+        <lastBuildDate>Tue, 06 Aug 2019 05:22:21 GMT</lastBuildDate>
         <docs>http://blogs.law.harvard.edu/tech/rss</docs>
         <generator>Elmstatic</generator>
         <language>en</language>
@@ -52,16 +52,20 @@ https://css-tricks.com
 
 Favorite Developer Blogs
 
-https://ayende.com
-http://blog.ploeh.dk/
-https://cuttingedge.it/blogs/steven/
-https://ericlippert.com
+ayende.com
+blog.ploeh.dk/
+cuttingedge.it/blogs/steven/
+ericlippert.com
 
 Daily Dose
 
-https://aeon.co
-https://news.ycombinator.com/newest
-https://www.reddit....]]></description>
+aeon.co
+news.ycombinator.com/newest
+reddit.com/r/elm/new
+discourse.elm-lang.org
+elm-dev
+elm-discuss
+re...]]></description>
         </item>
         <item>
             <title><![CDATA[An Elm to the Past]]></title>
