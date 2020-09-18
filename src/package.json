@@ -1,6 +1,6 @@
 {
   "name": "canena.github.io",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "description": "A blog about life",
   "main": "index.js",
   "scripts": {
