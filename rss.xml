@@ -4,7 +4,7 @@
         <title>A blog about life</title>
         <link>http://canena.de/posts</link>
         <description>Life/Music/Art/Code/Stuff</description>
-        <lastBuildDate>Tue, 06 Aug 2019 05:22:21 GMT</lastBuildDate>
+        <lastBuildDate>Fri, 18 Sep 2020 21:16:23 GMT</lastBuildDate>
         <docs>http://blogs.law.harvard.edu/tech/rss</docs>
         <generator>Elmstatic</generator>
         <language>en</language>
@@ -183,6 +183,20 @@ I recently waded through my own code archives and rediscovered some interesting 
 Efficient Water Imitation
 
 This post presents a water imitation algorithm that employs a front-/back-buffer smoothing approach I fiddled around with probably around 2008. Full disclosure: I'm not the originator of this neat trick. Unfortunately, I'm not sure...]]></description>
+        </item>
+        <item>
+            <title><![CDATA[The Last of Us Part II]]></title>
+            <link>http://canena.de/posts/2020-09-18-the-last-of-us-part-ii</link>
+            <guid>http://canena.de/posts/2020-09-18-the-last-of-us-part-ii</guid>
+            <pubDate>Fri, 18 Sep 2020 00:00:00 GMT</pubDate>
+            <description><![CDATA[
+TL;DR: Great but flawed game
+
+SPOILERS for the whole of The Last of Us Part II!
+
+Some thoughts I need to get off my chest after roughly 37 hours of playing the game:
+
+1) I wonder if they considered tuning down the constant slaughter in the gameplay, the dissonance to the cutscenes took me out of the moment in many scenes where the writers wanted me to feel for Ellie. Especially jarring in the Nora torture scene, I mean I must have butchered a hundred people at that point in the game - 90% steal...]]></description>
         </item>
         <item>
             <title><![CDATA[A blog about life]]></title>
