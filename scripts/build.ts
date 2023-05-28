@@ -144,6 +144,8 @@ const nojekyll = await Deno.open(join(config.target, ".nojekyll"), {
 });
 Deno.close(nojekyll.rid);
 
+await copy("CNAME", join(config.target, "CNAME"));
+
 for await (const entry of walk(".", { skip: derived.skip, exts: derived.exts })) {
     if (entry.name.indexOf(config.ignorePrefix) === 0) {
         continue;
