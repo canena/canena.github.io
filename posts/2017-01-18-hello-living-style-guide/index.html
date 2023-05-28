@@ -1,286 +1,314 @@
-<!doctype html><html lang="en" class="ui-layout no-js"><head><meta charset="utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="author" content="Martin Feineis"><meta name="creator" content="Canena"><meta name="description" content="A blog about life"><meta name="viewport" content="width=device-width, user-scalable=yes, initial-scale=1.0, minimum-scale=1.0"><title>Hello Living Styleguide | Canena</title><link href="/style/normalize-8.0.1.css" rel="stylesheet" type="text/css"><link href="/style/styles.css?v1" rel="stylesheet" type="text/css"><link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.8/styles/xcode.min.css" rel="stylesheet" type="text/css" integrity="sha256-fjO4CUN/XJTfsDmlIBojCwY4EV94jfOJpPzqd19TSko=" crossorigin="anonymous"><style>body {
-    color:#333333;
-    font-display:swap;
-    font-family:Roboto Condensed, Arial, sans-serif;
-    font-size:18px;
-    line-height:1.4em;
-    margin:0px;
-    padding:0px;
-}
+<!DOCTYPE html>
+<html lang="en" class="no-js ui-layout">
+<head>
+    <!-- [docs]
+        Welcome to our not-so-fancy inline tutorial. If you read this it's probably
+        safe to assume you are interested in such things so have fun following our
+        thoughts. This is *just* a content page, for more information on the overall
+        approach of the site visit /home.
+    -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="author" content="Martin Feineis">
+    <meta name="creator" content="Canena">
+    <meta name="description" content="A blog about life">
+    <meta name="viewport" content="width=device-width, user-scalable=yes, initial-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-YzxQZnYzEzF+cXKWurXLJQfpy1c+ScGqPeldlHJNbDk=' 'sha256-vvt4KWwuNr51XfE5m+hzeNEGhiOfZzG97ccfqGsPwvE='; style-src 'self' 'sha256-2ceQv24n5TIOxzGAVxlZBKWkwixVgNWDa0H4Hs8Q2fQ=' 'sha256-y6KDiePaqz/u/ydPEBcsXfDQ2SvArUVWYbqSZmVhdXg='; connect-src 'self' https://api.github.com/repos/canena/canena.github.io/issues/22/comments ">
+    <title>Hello Living Style Guide &bullet; CANENA</title>
+    <script>
+/*! hubjs stub */
+(function(w,t){"use strict";function a(o,x){(o._||(o._=[])).push(x)}
+function s(){return function f(){a(f,t.call(arguments))}}
+w.Hub=w.Hub||{config:s(),log:s(),use:s()};}(self,[].slice))
+    </script>
+    <link href="/cdn/common.dev.css" rel="stylesheet" type="text/css">
+    <script async type="module" src="/_includes/include.js"></script>
+    <!-- Originally conceived on top of <link href="/cdn/normalize-8.0.1.css" rel="stylesheet" type="text/css"> -->
+    <!-- See /cdn/less/living-styleguide.less for source files -->
+    <style>/*@import url('https://fonts.googleapis.com/css?family=Roboto+Condensed');*/.ui-abstract__title{font-size:16px}.ui-article-list ul{list-style:none;margin:0;padding:0}.ui-article-preview a{display:block}.ui-article-preview__tags{font-size:0;list-style:none;margin:0 0 10px 0;padding:0}.ui-article-preview__tags li{display:inline-block;font-size:16px;margin-right:4px}.ui-article-preview .ui-button{float:right;margin-top:4px}.ui-button{background:#fff;border:none;border-color:transparent;box-shadow:none;cursor:pointer;display:inline-block;font-size:0;line-height:16px;outline:none;outline-style:none;position:relative;text-decoration:none}.ui-button--disabled{cursor:not-allowed;opacity:.6}.ui-button:active,.ui-button:focus{box-shadow:#000 0 0 3px}.ui-button__label{color:#333;display:block;font-size:16px}.ui-content a[href^="ftp://"]:after,.ui-content a[href^="ftps://"]:after,.ui-content a[href^="http://"]:after,.ui-content a[href^="https://"]:after{content:" (⇑)";font-size:14px;line-height:16px}.ui-content__last-update{display:inline-block;margin-right:5px}.ui-form__group{display:block;position:relative}.ui-form__group .ui-button{vertical-align:top}.ui-form__group-label{display:block;font-size:14px;font-weight:bold}.ui-form__text{display:inline-block}.ui-form__textarea{display:block;width:100%;resize:vertical}.ui-form__checkbox{margin-top:1px;position:absolute;width:20px}.ui-form__checkbox--disabled{cursor:not-allowed}.ui-form__checkbox--disabled+.ui-form__group-label{cursor:not-allowed}.ui-form__checkbox+.ui-form__group-label{display:inline-block;font-weight:normal;margin-left:24px;vertical-align:top}.ui-form__radio{margin-top:1px;position:absolute;width:20px}.ui-form__radio--disabled{cursor:not-allowed}.ui-form__radio--disabled+.ui-form__group-label{cursor:not-allowed}.ui-form__radio+.ui-form__group-label{display:inline-block;font-weight:normal;margin-left:24px;vertical-align:top}.ui-grid__col-1{font-size:16px;padding-left:20px;padding-right:20px}.ui-grid__col-2{font-size:16px;padding-left:20px;padding-right:20px}.ui-grid__col-3{font-size:16px;padding-left:20px;padding-right:20px}.ui-grid__col-4{font-size:16px;padding-left:20px;padding-right:20px}.ui-grid__col-5{font-size:16px;padding-left:20px;padding-right:20px}.ui-grid__col-6{font-size:16px;padding-left:20px;padding-right:20px}.ui-grid__col-7{font-size:16px;padding-left:20px;padding-right:20px}.ui-grid__col-8{font-size:16px;padding-left:20px;padding-right:20px}.ui-grid__col-9{font-size:16px;padding-left:20px;padding-right:20px}.ui-grid__col-10{font-size:16px;padding-left:20px;padding-right:20px}.ui-grid__col-11{font-size:16px;padding-left:20px;padding-right:20px}.ui-grid__col-12{font-size:16px;padding-left:20px;padding-right:20px}.ui-grid__row{display:block;font-size:0;justify-content:space-between;position:relative;margin-left:-20px;margin-right:-20px}.ui-grid__row--static{display:flex}@media (min-width:768px){.ui-grid__col-1{width:8.33333333%}.ui-grid__col-2{width:16.66666667%}.ui-grid__col-3{width:25%}.ui-grid__col-4{width:33.33333333%}.ui-grid__col-5{width:41.66666667%}.ui-grid__col-6{width:50%}.ui-grid__col-7{width:58.33333333%}.ui-grid__col-8{width:66.66666667%}.ui-grid__col-9{width:75%}.ui-grid__col-10{width:83.33333333%}.ui-grid__col-11{width:91.66666667%}.ui-grid__col-12{width:100%}.ui-grid__row{display:flex}}.ui-header{font-size:0;font-weight:bold;list-style:none;margin:0;padding:0}.ui-header__logo{display:inline-block;font-size:20px;position:relative;vertical-align:top}.ui-header__menu-item{display:inline-block;font-size:20px;position:relative;vertical-align:top}.ui-header__menu-category{color:#ddd;display:block;font-size:12px;left:16px;line-height:17px;position:absolute;top:8px;white-space:nowrap;z-index:-1}.ui-intro{min-height:100%;margin-top:-50px;position:relative}.ui-intro__label{display:block;padding-top:300px;text-align:center}.ui-intro__sub-label{display:block;font-size:.8em;font-style:italic;font-weight:normal;padding-bottom:250px;text-align:center}.ui-intro__sub-label:before{content:"«"}.ui-intro__sub-label:after{content:"»"}html.ui-layout{height:100%}html.ui-layout>body{height:100%;margin:0;min-height:100%;overflow-y:scroll;padding:0;position:relative}.ui-layout__content{margin:0 auto;max-width:970px;position:relative}.ui-layout__header{position:fixed;width:100%;z-index:100}.ui-layout__main{min-height:100%;overflow:auto;padding-bottom:0;padding-top:50px;position:relative;z-index:50}.ui-layout__footer{bottom:0;position:fixed;width:100%;z-index:90}.ui-tag{display:inline-block}.ui-tag__label{display:block;font-size:16px}.ui-tag-cloud ul{font-size:0;list-style:none;margin:0 0 20px 0;padding:0}.ui-tag-cloud li{display:inline-block;font-size:16px;margin-right:4px}body.ui-theme{margin:0;padding:0}.ui-theme{color:#333;font-size:16px}.ui-theme h1{font-size:32px;margin:0}.ui-theme h2{font-size:28px;margin:0}.ui-theme h3{font-size:24px;margin:0}.ui-theme h4{font-size:20px;margin:0}.ui-theme h5{font-size:16px;margin:0}.ui-theme h6{font-size:12px;margin:0}.ui-theme *,.ui-theme *:after,.ui-theme *:before{-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box}.ui-theme p{margin:16px 0}.ui-theme abbr{cursor:help;position:relative;text-decoration:none}.ui-theme abbr:before{border-bottom:#333 1px dotted;bottom:0;content:" ";display:block;left:0;position:absolute;right:0;width:100%}.ui-user__avatar{border-radius:60px}.ui-theme--canena{font-family:'Roboto Condensed',Verdana,Geneva,Tahoma,sans-serif}.ui-theme--canena h1{margin-bottom:10px}.ui-theme--canena h2{margin-bottom:8px}.ui-theme--canena h3{margin-bottom:6px}.ui-theme--canena h4{margin-bottom:4px}.ui-theme--canena .ui-frontmatter{margin-top:-38px;min-height:48px}.ui-theme--canena .ui-frontmatter__properties{color:#d9d9d9;font-style:italic;line-height:34px;margin-right:130px;text-shadow:#333 0 0 3px;white-space:nowrap}.ui-theme--canena .ui-frontmatter__properties em{font-weight:bold}.ui-theme--canena .ui-frontmatter__tags{line-height:44px;margin-right:130px;margin-top:4px;white-space:nowrap}.ui-theme--canena .ui-frontmatter .ui-tag{margin-right:6px}.ui-theme--canena .ui-frontmatter .ui-user{position:absolute;right:16px;top:-36px}.ui-theme--canena .ui-tag{background:#d84b97;border:none;border-radius:5px;border-top-left-radius:0;cursor:pointer;padding:0}.ui-theme--canena .ui-tag:not(.ui-tag--plain):hover{background:#e175af}.ui-theme--canena .ui-tag--plain{cursor:default;opacity:.8}.ui-theme--canena .ui-tag__label{color:#fff;font-size:16px;line-height:16px;padding:4px 8px;text-decoration:none}.ui-theme--canena .ui-tag__label:before{content:"●";display:inline-block;margin-right:5px;margin-top:-1px}.ui-theme--canena .ui-button{background:linear-gradient(142deg, #d84b97, #f40);border-bottom:#e32636 4px solid;font-family:'Roboto Condensed',Verdana,Geneva,Tahoma,sans-serif;line-height:30px;padding:3px 14px 0 14px}.ui-theme--canena .ui-button:active,.ui-theme--canena .ui-button:focus{box-shadow:#888 0 0 3px}.ui-theme--canena .ui-button:not(.ui-button--disabled):hover{background:#f90;border-color:#f60}.ui-theme--canena .ui-button__label{color:#fff;text-transform:uppercase}.ui-theme--canena .ui-layout__header{background:linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.4));border-top:#f60 4px solid}.ui-theme--canena .ui-layout__main{padding-bottom:0}.ui-theme--canena .ui-layout__main .ui-layout__content>.ui-grid__row{margin-bottom:20px;margin-top:20px}.ui-theme--canena .ui-layout__main .ui-grid__col{padding:10px}.ui-theme--canena .ui-layout__content{padding-left:20px;padding-right:20px}.ui-theme--canena .ui-content a:link,.ui-theme--canena .ui-content a:visited{color:#f60;text-decoration:underline}.ui-theme--canena .ui-content a:hover{color:#e32636;text-decoration:none}.ui-theme--canena .ui-content ul{padding-left:30px}.ui-theme--canena .ui-content li{margin-bottom:2.5px}.ui-theme--canena .ui-header a{border-top:transparent 4px solid;color:#f60;display:block;margin-top:-24px;padding-top:20px;padding-left:16px;padding-right:16px;text-decoration:none}.ui-theme--canena .ui-header a:hover{border-color:#ffb380;color:#ffb380}.ui-theme--canena .ui-header__menu-item{padding-bottom:6px;padding-top:20px}.ui-theme--canena .ui-header__menu-item--active a{border-color:#ffb380;color:#ffb380;cursor:default}.ui-theme--canena .ui-header__menu-item:first-child{margin-left:-16px}.ui-theme--canena .ui-header__menu-item:last-child{margin-right:-16px}.ui-theme--canena .ui-header__logo{padding-top:20px}.ui-theme--canena .ui-intro{background:url('../img/intro3.jpg') bottom right;border-bottom:#f60 4px solid}.ui-theme--canena .ui-intro__label{color:#fff;text-shadow:#333 0 0 3px}.ui-theme--canena .ui-intro__sub-label{color:#fff;text-shadow:#333 0 0 3px}.ui-theme--canena .ui-article-list__item{border-bottom:#ccc 1px solid}.ui-theme--canena .ui-article-list__item:last-of-type{border-bottom:none}.ui-theme--canena .ui-article-preview{overflow:hidden;padding-bottom:20px;padding-top:20px;position:relative}.ui-theme--canena .ui-article-preview__title a{color:#f60;text-decoration:underline}.ui-theme--canena .ui-article-preview__title a:hover{color:#e32636;text-decoration:none}.ui-theme--canena .ui-article-preview__date{color:#b3b3b3;display:block;float:left;font-size:16px;font-weight:normal;margin-top:24px;position:absolute}.ui-theme--canena .ui-article-preview--size-compact .ui-article-preview__title{margin-right:140px}.ui-theme--canena .ui-article-preview--size-compact .ui-article-preview__tags{margin-right:140px;margin-top:10px}.ui-theme--canena .ui-article-preview--size-compact .ui-article-preview__abstract{display:none;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.ui-theme--canena .ui-article-preview--size-compact .ui-article-preview__date{display:none;float:none;margin-top:10px;position:relative}.ui-theme--canena .ui-article-preview--size-compact:hover .ui-article-preview__abstract{display:block}.ui-theme--canena .ui-article-preview--size-compact:hover .ui-article-preview__date{display:block}.ui-theme--canena .ui-article-preview--size-compact .ui-button{bottom:20px;position:absolute;right:0}.ui-theme--canena .ui-outro{background:linear-gradient(#444, #555 15px, #888);border-top:#888 2px solid;color:#fff;margin-top:10px;padding-bottom:1px;padding-top:20px;text-shadow:#333 0 0 3px}.ui-theme--canena .ui-outro ul{list-style:none;margin:16px 0;padding:0}.ui-theme--canena .ui-outro li{margin-bottom:5px}.ui-theme--canena .ui-outro a{color:#fff;display:inline-block;text-decoration:underline}.ui-theme--canena .ui-outro a:hover{color:#f60;text-decoration:none}.ui-theme--canena .ui-outro .ui-grid__row:last-of-type{margin-bottom:0}.ui-theme--canena .ui-outro__section{border-top:#888 1px solid;margin-top:10px;position:relative}.ui-theme--canena .ui-outro__section:before{border-top:#777 1px solid;content:" ";display:block;position:absolute;top:0;width:100%}.ui-theme--canena .ui-outro__copyright{text-align:right}.ui-theme--canena .ui-form__text{border:#ccc 1px solid;border-radius:3px;border-width:1px;padding:10px;margin-bottom:10px}.ui-theme--canena .ui-form__textarea{border:#ccc 1px solid;border-radius:3px;border-width:1px;padding:10px;margin-bottom:10px}.ui-theme--canena .ui-form__group{padding-bottom:2px;padding-top:2px}.ui-theme--canena .ui-form__group-label{margin-bottom:4px}.ui-theme--canena .ui-form__select{border:#ccc 1px solid;border-radius:3px;border-width:1px;padding:10px;margin-bottom:10px}@media (max-width:768px){.ui-theme--canena .ui-outro__copyright{text-align:left}}</style>
+</head>
+<body>
+    <script defer src="/cdn/config.js"></script>
+    <script defer type="module" src="/cdn/ca/requires.js"></script>
+    <script defer type="module" src="/cdn/site.js"></script>
 
-a {
-    color:#ff6600;
-    text-decoration:underline;
-}
+    <ca-requires elements="fx-toggle gh-comments logo-switcher reading-meta reading-progress scroll-behavior"></ca-requires>
+    <ca-scroll-behavior></ca-scroll-behavior>
 
-a:hover {
-    color:#e32636;
-    text-decoration:none;
-}
+    <header {cover} class="h-golden" {billboard}="diagonal">
+        <nav>
+            <a {box} href="/" title="Return to home page">
+                <img logo src="/cdn/canena.svg" width="95" height="30" alt="CANENA">
+            </a>
+        </nav>
+        <div {center} {cover.art}>
+            <div {box}>
+                <h1 class="capitalize">Hello Living Style Guide</h1>
+                <h2 class="capitalize italic"></h2>
+                <div class="flex gap-2">
+                    <p class="whitespace-nowrap">2017-01-18</p>
+                    <ca-reading-meta class="italic"></ca-reading-meta>
+                </div>
+                <ul class="list-none flex gap-2">
+                    <li><a class="tag" href="/tags#bem">bem</a></li>
+                    <li><a class="tag" href="/tags#html">html</a></li>
+                </ul>
+            </div>
+        </div>
+    </header>
 
-code {
-    font-family:Inconsolata, monospace;
-    background-color:#fdfdfd !important;
-    border:1px solid #d6d6d6;
-}
+    <main>
+        <div class="bg-gradient-subtle">
+            <div {center} class="bg-default">
+                <article {box}>
 
-pre  code {
-    overflow-x:scroll !important;
-}
+                    <blockquote>
+                        <b>Update 2023-02-23</b>
+                        <p>Note that this styleguide has been moved <i>again</i> over from an older version of the blog so this approach has been proven to work over tech generations.</p>
+                        <p>We don't include the original font "Roboto" in this legacy article because we don't want Google to track more of your movements.</p>
+                    </blockquote>
 
-h1, h2, h3, h4, h5, h6 {
-    font-family:Roboto Condensed, Helvetica, Arial, sans-serif;
-}
+                    <blockquote>
+                        <b>Update 2019-06-05</b>
+                        <p>Note that this styleguide has been moved over from an older version of the blog so this approach does not necessarily represent the way the markup is structured anymore. It shows, however, that embedding alternative styles into an existing page is a breeze when employing BEM blocks. The old styles literally live side-by-side with the new ones and the mild namespacing via <code>ui-theme</code> allows for selective theming on a per-subtree-basis.</p>
+                    </blockquote>
 
-small {
-    font-size:65%;
-}
+                    <p>This is the living documentation for my own little set of responsive Block Element Modifier (BEM) based CSS layout blocks being used throughout my blog. Don't expect any content here :-).</p>
 
-.header {
-    background-image:linear-gradient(142deg, #d84b97, #ff4400);
-    border-bottom:4px solid #e32636;
-    padding-top:4px;
-    overflow:hidden;
-}
+                    <div {manual-responsive-layout} class="ui-theme ui-theme--canena">
+                        <div class="ui-grid__row">
+                            <section class="ui-grid__col-8 ui-article-list">
+                                <h2>Recent posts</h2>
+                                <ul>
+                                    <li class="ui-article-list__item">
+                                        <article class="ui-article-preview">
+                                            <h3 class="ui-article-preview__title"><a href="#">Second post</a></h3>
+                                            <p class="ui-article-preview__abstract">The first lines of this post that gives the reader an
+                                                idea what to expect from this post. </p>
+                                            <ul class="ui-article-preview__tags">
+                                                <li>
+                                                    <div class="ui-tag"><a class="ui-tag__label" href="#">Some tag</a></div>
+                                                </li>
+                                                <li>
+                                                    <div class="ui-tag"><a class="ui-tag__label" href="#">Another tag</a></div>
+                                                </li>
+                                            </ul>
+                                            <div class="ui-article-preview__date">Wednesday 2017-02-01</div><a class="ui-button"
+                                                href="#"><span class="ui-button__label">Read More... </span></a>
+                                        </article>
+                                    </li>
+                                    <li class="ui-article-list__item">
+                                        <article class="ui-article-preview">
+                                            <h3 class="ui-article-preview__title"><a href="#">First post</a></h3>
+                                            <p class="ui-article-preview__abstract">The first lines of this post that gives the reader an
+                                                idea what to expect from this post. </p>
+                                            <ul class="ui-article-preview__tags">
+                                                <li>
+                                                    <div class="ui-tag"><a class="ui-tag__label" href="#">Some tag</a></div>
+                                                </li>
+                                                <li>
+                                                    <div class="ui-tag"><a class="ui-tag__label" href="#">Another tag</a></div>
+                                                </li>
+                                            </ul>
+                                            <div class="ui-article-preview__date">Wednesday 2017-02-01</div><a class="ui-button"
+                                                href="#"><span class="ui-button__label">Read More... </span></a>
+                                        </article>
+                                    </li>
+                                    <li class="ui-article-list__item">
+                                        <article class="ui-article-preview x-ui-article-preview--size-compact">
+                                            <h3 class="ui-article-preview__title"><a href="#">An older post with a really long title that
+                                                    just might wrap around</a></h3>
+                                            <p class="ui-article-preview__abstract">The first lines of this post that gives the reader an
+                                                idea what to expect from this post. </p>
+                                            <ul class="ui-article-preview__tags">
+                                                <li>
+                                                    <div class="ui-tag"><a class="ui-tag__label" href="#">Some tag</a></div>
+                                                </li>
+                                                <li>
+                                                    <div class="ui-tag"><a class="ui-tag__label" href="#">Another tag</a></div>
+                                                </li>
+                                            </ul>
+                                            <div class="ui-article-preview__date">Wednesday 2017-02-01</div><a class="ui-button"
+                                                href="#"><span class="ui-button__label">Read More... </span></a>
+                                        </article>
+                                    </li>
+                                    <li class="ui-article-list__item">
+                                        <article class="ui-article-preview x-ui-article-preview--size-compact">
+                                            <h3 class="ui-article-preview__title"><a href="#">An even older post</a></h3>
+                                            <p class="ui-article-preview__abstract">The first lines of this post that gives the reader an
+                                                idea what to expect from this post. </p>
+                                            <ul class="ui-article-preview__tags">
+                                                <li>
+                                                    <div class="ui-tag"><a class="ui-tag__label" href="#">Some tag</a></div>
+                                                </li>
+                                                <li>
+                                                    <div class="ui-tag"><a class="ui-tag__label" href="#">Another tag</a></div>
+                                                </li>
+                                            </ul>
+                                            <div class="ui-article-preview__date">Wednesday 2017-02-01</div><a class="ui-button"
+                                                href="#"><span class="ui-button__label">Read More... </span></a>
+                                        </article>
+                                    </li>
+                                    <li class="ui-article-list__item">
+                                        <article class="ui-article-preview x-ui-article-preview--size-compact">
+                                            <h3 class="ui-article-preview__title"><a href="#">The oldest post</a></h3>
+                                            <ul class="ui-article-preview__tags">
+                                                <li>
+                                                    <div class="ui-tag"><a class="ui-tag__label" href="#">Some tag</a></div>
+                                                </li>
+                                                <li>
+                                                    <div class="ui-tag"><a class="ui-tag__label" href="#">Another tag</a></div>
+                                                </li>
+                                            </ul><a class="ui-button" href="#"><span class="ui-button__label">Read More... </span></a>
+                                        </article>
+                                    </li>
+                                </ul>
+                            </section>
+                            <div class="ui-grid__col-4">
+                                <section class="ui-tag-cloud">
+                                    <h3>Sidebar with Tags</h3>
+                                    <p>Some info. </p>
+                                    <ul>
+                                        <li>
+                                            <div class="ui-tag"><a class="ui-tag__label" href="#">Some tag</a></div>
+                                        </li>
+                                        <li>
+                                            <div class="ui-tag"><a class="ui-tag__label" href="#">Another tag</a></div>
+                                        </li>
+                                    </ul>
+                                </section>
+                            </div>
+                        </div>
+                        <section>
+                            <div class="ui-grid__row">
+                                <div class="ui-grid__col-12">
+                                    <h3>Grid</h3>
+                                    <p>The default grid is using up to 12 flexbox columns. </p>
+                                </div>
+                            </div>
+                            <div class="ui-grid__row">
+                                <div class="ui-grid__col-1">Col-1 </div>
+                                <div class="ui-grid__col-11">Col-11 </div>
+                            </div>
+                            <div class="ui-grid__row">
+                                <div class="ui-grid__col-2">Col-2 </div>
+                                <div class="ui-grid__col-10">Col-10 </div>
+                            </div>
+                            <div class="ui-grid__row">
+                                <div class="ui-grid__col-3">Col-3 </div>
+                                <div class="ui-grid__col-9">Col-9 </div>
+                            </div>
+                            <div class="ui-grid__row">
+                                <div class="ui-grid__col-4">Col-4 </div>
+                                <div class="ui-grid__col-8">Col-8 </div>
+                            </div>
+                            <div class="ui-grid__row">
+                                <div class="ui-grid__col-5">Col-5 </div>
+                                <div class="ui-grid__col-7">Col-7 </div>
+                            </div>
+                            <div class="ui-grid__row">
+                                <div class="ui-grid__col-6">Col-6 </div>
+                                <div class="ui-grid__col-6">Col-6 </div>
+                            </div>
+                            <div class="ui-grid__row">
+                                <div class="ui-grid__col-7">Col-7 </div>
+                                <div class="ui-grid__col-5">Col-5 </div>
+                            </div>
+                            <div class="ui-grid__row">
+                                <div class="ui-grid__col-8">Col-8 </div>
+                                <div class="ui-grid__col-4">Col-4 </div>
+                            </div>
+                            <div class="ui-grid__row">
+                                <div class="ui-grid__col-9">Col-9 </div>
+                                <div class="ui-grid__col-3">Col-3 </div>
+                            </div>
+                            <div class="ui-grid__row">
+                                <div class="ui-grid__col-10">Col-10 </div>
+                                <div class="ui-grid__col-2">Col-2 </div>
+                            </div>
+                            <div class="ui-grid__row">
+                                <div class="ui-grid__col-11">Col-11 </div>
+                                <div class="ui-grid__col-1">Col-1 </div>
+                            </div>
+                            <div class="ui-grid__row">
+                                <div class="ui-grid__col-12">Fullsize (col-12) </div>
+                            </div>
+                        </section>
+                        <div class="ui-grid__row">
+                            <section class="ui-grid__col-6">
+                                <h3>Buttons</h3>
+                                <p>Inline tex with <button class="ui-button"><span class="ui-button__label">Real Button
+                                            Button</span></button><button class="ui-button ui-button--primary"><span
+                                            class="ui-button__label">Primary Button</span></button><button
+                                        class="ui-button ui-button--secondary"><span class="ui-button__label">Secondary
+                                            Button</span></button><a class="ui-button" href="#"><span class="ui-button__label">Link
+                                            Button</span></a><button class="ui-button ui-button--disabled" disabled="disabled"><span
+                                            class="ui-button__label">Inactive Button</span></button></p>
+                            </section>
+                            <section class="ui-grid__col-6">
+                                <form class="ui-form">
+                                    <h3>Forms</h3><label class="ui-form__group"><span class="ui-form__group-label">Simple
+                                            Textinput</span><input class="ui-form__text" name="simple-text" placeholder="Simple text..."
+                                            type="text"><button class="ui-button" type="submit"><span
+                                                class="ui-button__label">OK</span></button></label><label class="ui-form__group"><input
+                                            class="ui-form__checkbox" name="check1" type="checkbox"><span
+                                            class="ui-form__group-label">Simple Checkbox</span></label><label class="ui-form__group"><input
+                                            class="ui-form__checkbox ui-form__checkbox--disabled" disabled="disabled" name="check2"
+                                            type="checkbox"><span class="ui-form__group-label">Simple Checkbox</span></label><label
+                                        class="ui-form__group"><input class="ui-form__radio" name="radio1" type="radio" value="value1"><span
+                                            class="ui-form__group-label">Option 1</span></label><label class="ui-form__group"><input
+                                            class="ui-form__radio" name="radio1" type="radio" value="value2"><span
+                                            class="ui-form__group-label">Option 2</span></label><label class="ui-form__group"><input
+                                            class="ui-form__radio ui-form__radio--disabled" disabled="disabled" name="radio1" type="radio"
+                                            value="value3"><span class="ui-form__group-label">Option 2</span></label><label
+                                        class="ui-form__group"><span class="ui-form__group-label">Some text</span><textarea
+                                            class="ui-form__textarea" name="textarea"></textarea></label><label class="ui-form__group"><span
+                                            class="ui-form__group-label">Some text</span><select class="ui-form__select" name="select1">
+                                            <option value="1">1</option>
+                                            <optgroup label="Section 2">
+                                                <option value="2.1">2.1</option>
+                                                <option value="2.2">2.2</option>
+                                            </optgroup>
+                                            <optgroup label="Section 3">
+                                                <option value="3.1">3.1</option>
+                                                <option value="3.2">3.2</option>
+                                                <option value="3.3">3.3</option>
+                                            </optgroup>
+                                        </select></label><button class="ui-button" type="submit"><span
+                                            class="ui-button__label">Submit</span></button>
+                                </form>
+                            </section>
+                        </div>
+                    </div>
 
-.header__content {
-    margin:0 auto;
-    max-width:900px;
-    min-width:280px;
-    padding-left:20px;
-    padding-right:20px;
-}
+                </article>
+            </div>
 
-.header__logo {
-    display:inline-block;
-    line-height:70px;
-    text-align:center;
-}
+            <div {center} class="bg-default">
+                <hr>
+                <ca-gh-comments {box} issue="https://api.github.com/repos/canena/canena.github.io/issues/22">
+                    <h4 comments-heading>Comments</h4>
+                    <p>
+                        The comments for this post are available on <a href="https://github.com/canena/canena.github.io/issues/22" target="_blank" rel="noopener noreferrer">this issue on GitHub</a>.
+                        Feel free to engage in conversation over there.
+                    </p>
+                    <include-partial href="/_includes/comment-section.html"></include-partial>
+                </ca-gh-comments>
+            </div>
 
-@media only screen and (min-width: 600px) {
-    .header__logo {
-        text-align:left;
-    }
-}
+            <footer {center} {billboard}="dots" class="border-t">
+                <nav class="px-2 pb-20">
+                    <include-partial href="/_includes/footer-links.html"></include-partial>
+                </nav>
+            </footer>
+        </div>
+    </main>
 
-.header__logo  a {
-    color:#ffffff;
-    font-weight:bold;
-    text-transform:uppercase;
-}
+    <nav class="floaty-nav | fixed bottom-0 w-full">
+        <include-partial href="/_includes/floaty-nav-article.html"></include-partial>
+        <include-partial href="/_includes/floaty-nav-body.html"></include-partial>
+    </nav>
 
-.header__navigation {
-    float:right;
-    line-height:70px;
-    text-align:center;
-}
-
-@media only screen and (min-width: 600px) {
-    .header__navigation {
-        text-align:left;
-    }
-}
-
-.header__navigation  ul {
-    list-style:none;
-    margin:0;
-    padding:0;
-}
-
-.header__navigation  li {
-    display:inline-block;
-    padding-left:1em;
-}
-
-.header__navigation  a {
-    color:#ffffff;
-    font-weight:bold;
-    text-transform:uppercase;
-}
-
-.main {
-    max-width:100vw;
-}
-
-.main__content {
-    margin:50px auto 0 auto;
-    max-width:900px;
-    min-width:280px;
-    padding-left:20px;
-    padding-right:20px;
-}
-
-.footer  svg {
-    padding-right:5px;
-    vertical-align:baseline;
-}
-
-.footer__content {
-    border-color:#e0e0e0;
-    border-style:solid;
-    border-width:1px 0 0 0;
-    margin:0 auto;
-    max-width:900px;
-    min-width:280px;
-    padding-left:20px;
-    padding-right:20px;
-}
-
-.footer__content--highlighted {
-    border-color:#ff6600;
-    border-style:dotted;
-}
-
-.footer__copyright {
-    display:block;
-    padding-bottom:1em;
-    padding-top:1em;
-    text-align:center;
-}
-
-@media only screen and (min-width: 600px) {
-    .footer__copyright {
-        display:inline-block;
-    text-align:left;
-    }
-}
-
-.footer__acknowledgements {
-    display:block;
-    padding-bottom:1em;
-    padding-top:1em;
-    text-align:center;
-}
-
-@media only screen and (min-width: 600px) {
-    .footer__acknowledgements {
-        float:right;
-    overflow:hidden;
-    text-align:right;
-    }
-}
-
-.footer__navigation {
-    text-align:center;
-}
-
-@media only screen and (min-width: 600px) {
-    .footer__navigation {
-        text-align:left;
-    }
-}
-
-.footer__navigation  ul {
-    list-style:none;
-    margin:0;
-    padding:0;
-}
-
-.footer__navigation  li {
-    display:inline-block;
-    line-height:70px;
-    padding-right:1em;
-}
-
-.footer__avatar {
-    border-radius:60px;
-    float:right;
-    margin-bottom:10px;
-    margin-left:10px;
-}
-
-.post-list {
-    list-style:none;
-    margin-top:45px;
-    padding-left:0;
-}
-
-.post-list__item {
-    display:block;
-    padding-left:0;
-    margin-bottom:45px;
-}
-
-.post-metadata {
-    margin-top:-0.5em;
-    margin-bottom:2em;
-}
-
-.post-metadata  a, .post-metadata  span {
-    display:inline-block;
-    margin-right:5px;
-}
-
-.post-metadata  a {
-    border:1px solid #e0e0e0;
-    border-radius:5px;
-    border-top-left-radius:0;
-    background-color:#d84b97;
-    color:#ffffff;
-    padding-left:5px;
-    padding-right:5px;
-}
-
-.btn {
-    background-image:linear-gradient(142deg, #d84b97, #ff4400);
-    border:0px;
-    border-bottom:4px solid #e32636;
-    color:#fff;
-    cursor:pointer;
-    line-height:30px;
-    padding:3px 14px 0 14px;
-    text-transform:uppercase;
-}
-
-.btn:hover {
-    background-color:#f90;
-    background-image:none;
-    border-color:#f60;
-}
-
-.btn[disabled] {
-    cursor:not-allowed;
-    opacity:0.6;
-}
-
-.code-demo {
-    background-color:#fafafa;
-    border:1px solid #d6d6d6;
-}
-
-.code-demo__content {
-    border-bottom:1px solid #d6d6d6;
-}
-
-.code-demo__content--hidden {
-    display:none;
-}
-
-.code-demo__toolbar {
-    background-color:#fdfdfd;
-    padding:10px;
-}
-
-.no-js  ..code-demo__toolbar {
-    display:none;
-}
-
-.water__pool {
-    display:inline-block;
-}</style><script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.8/highlight.min.js" integrity="sha256-js+I1fdbke/DJrW2qXQlrw7VUEqmdeFeOW37UC0bEiU=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.8/languages/bash.min.js" integrity="sha256-zXrlim8wsIvcEFjsD3THiAfTvtPZifqx8q0rxegiWQc=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.8/languages/elm.min.js" integrity="sha256-5ZDjmDRr7i9DNIGlJKzPImNcoVZ2KGsPch+qoZuYq5M=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.8/languages/javascript.min.js" integrity="sha256-x3ducqWgfzH2JLxwkA7vfwbJC7nZgvdypVl0Gy0L/z0=" crossorigin="anonymous"></script><script>hljs.initHighlightingOnLoad();</script><script>
-var requirejs = {
-    baseUrl: "/js",
-    paths: {
-       greeshka: "libs/greeshka-0.3.0",
-       mathjax: "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"
-    }
-};
-                 </script><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha256-1fEPhSsRKlFKGfK3eO710tEweHh1fwokU5wFGDHO+vg=" crossorigin="anonymous"></script><link href="https://fonts.googleapis.com/css?family=Roboto+Condensed|Inconsolata" rel="stylesheet" type="text/css"><script>document.querySelector('html').classList.remove('no-js');</script></head><body><div class="header"><div class="header__content"><div class="header__logo"><a href="/" title="Canena blog"><img alt="Canena" src="/img/canena_sm.png" style="margin-bottom: -8px; margin-left: -4px"></a></div><div class="header__navigation"><ul><li><a href="/posts">Posts</a></li><li><a href="/about">About</a></li></ul></div></div></div><div class="main"><div class="main__content"><h1>Hello Living Styleguide</h1><link rel="stylesheet" href="/style/main.css" type="text/css"><div class="post-metadata"><span>2017-01-18</span><span>•</span><a href="/tags/bem">bem</a><a href="/tags/html">html</a></div><div class="markdown"><blockquote>
-<p>Note that this styleguide has been moved over from an older version of the blog so this approach does not necessarily represent the way the markup is structured anymore. It shows, however, that embedding alternative styles into an existing page is a breeze when employing BEM blocks. The old styles literally live side-by-side with the new ones and the mild namespacing via <code>ui-theme</code> allows for selective theming on a per-subtree-basis.</p>
-</blockquote>
-<p>This is the living documentation for my own little set of responsive Block Element Modifier (BEM) based CSS layout blocks being used throughout my blog. Don’t expect any content here :-).</p>
-</div><div class="ui-theme ui-theme--canena" style="margin-bottom: 20px; margin-top: 40px"><div class="ui-grid__row"><section class="ui-grid__col-8 ui-article-list"><h2>Recent posts</h2><ul><li class="ui-article-list__item"><article class="ui-article-preview"><h3 class="ui-article-preview__title"><a href="#">Second post</a></h3><p class="ui-article-preview__abstract">The first lines of this post that gives the reader an idea what to expect from this post.                    </p><ul class="ui-article-preview__tags"><li><div class="ui-tag"><a class="ui-tag__label" href="#">Some tag</a></div></li><li><div class="ui-tag"><a class="ui-tag__label" href="#">Another tag</a></div></li></ul><div class="ui-article-preview__date">Wednesday 2017-02-01</div><a class="ui-button" href="#"><span class="ui-button__label">Read More...                        </span></a></article></li><li class="ui-article-list__item"><article class="ui-article-preview"><h3 class="ui-article-preview__title"><a href="#">First post</a></h3><p class="ui-article-preview__abstract">The first lines of this post that gives the reader an idea what to expect from this post.                    </p><ul class="ui-article-preview__tags"><li><div class="ui-tag"><a class="ui-tag__label" href="#">Some tag</a></div></li><li><div class="ui-tag"><a class="ui-tag__label" href="#">Another tag</a></div></li></ul><div class="ui-article-preview__date">Wednesday 2017-02-01</div><a class="ui-button" href="#"><span class="ui-button__label">Read More...                        </span></a></article></li><li class="ui-article-list__item"><article class="ui-article-preview x-ui-article-preview--size-compact"><h3 class="ui-article-preview__title"><a href="#">An older post with a really long title that just might wrap around</a></h3><p class="ui-article-preview__abstract">The first lines of this post that gives the reader an idea what to expect from this post.                    </p><ul class="ui-article-preview__tags"><li><div class="ui-tag"><a class="ui-tag__label" href="#">Some tag</a></div></li><li><div class="ui-tag"><a class="ui-tag__label" href="#">Another tag</a></div></li></ul><div class="ui-article-preview__date">Wednesday 2017-02-01</div><a class="ui-button" href="#"><span class="ui-button__label">Read More...                        </span></a></article></li><li class="ui-article-list__item"><article class="ui-article-preview x-ui-article-preview--size-compact"><h3 class="ui-article-preview__title"><a href="#">An even older post</a></h3><p class="ui-article-preview__abstract">The first lines of this post that gives the reader an idea what to expect from this post.                    </p><ul class="ui-article-preview__tags"><li><div class="ui-tag"><a class="ui-tag__label" href="#">Some tag</a></div></li><li><div class="ui-tag"><a class="ui-tag__label" href="#">Another tag</a></div></li></ul><div class="ui-article-preview__date">Wednesday 2017-02-01</div><a class="ui-button" href="#"><span class="ui-button__label">Read More...                        </span></a></article></li><li class="ui-article-list__item"><article class="ui-article-preview x-ui-article-preview--size-compact"><h3 class="ui-article-preview__title"><a href="#">The oldest post</a></h3><ul class="ui-article-preview__tags"><li><div class="ui-tag"><a class="ui-tag__label" href="#">Some tag</a></div></li><li><div class="ui-tag"><a class="ui-tag__label" href="#">Another tag</a></div></li></ul><a class="ui-button" href="#"><span class="ui-button__label">Read More...                        </span></a></article></li></ul></section><div class="ui-grid__col-4"><section class="ui-tag-cloud"><h3>Sidebar with Tags</h3><p>Some info.            </p><ul><li><div class="ui-tag"><a class="ui-tag__label" href="#">Some tag</a></div></li><li><div class="ui-tag"><a class="ui-tag__label" href="#">Another tag</a></div></li></ul></section></div></div><section><div class="ui-grid__row"><div class="ui-grid__col-12"><h3>Grid</h3><p>The default grid is using up to 12 flexbox columns.            </p></div></div><div class="ui-grid__row"><div class="ui-grid__col-1">Col-1        </div><div class="ui-grid__col-11">Col-11        </div></div><div class="ui-grid__row"><div class="ui-grid__col-2">Col-2        </div><div class="ui-grid__col-10">Col-10        </div></div><div class="ui-grid__row"><div class="ui-grid__col-3">Col-3        </div><div class="ui-grid__col-9">Col-9        </div></div><div class="ui-grid__row"><div class="ui-grid__col-4">Col-4        </div><div class="ui-grid__col-8">Col-8        </div></div><div class="ui-grid__row"><div class="ui-grid__col-5">Col-5        </div><div class="ui-grid__col-7">Col-7        </div></div><div class="ui-grid__row"><div class="ui-grid__col-6">Col-6        </div><div class="ui-grid__col-6">Col-6        </div></div><div class="ui-grid__row"><div class="ui-grid__col-7">Col-7        </div><div class="ui-grid__col-5">Col-5        </div></div><div class="ui-grid__row"><div class="ui-grid__col-8">Col-8        </div><div class="ui-grid__col-4">Col-4        </div></div><div class="ui-grid__row"><div class="ui-grid__col-9">Col-9        </div><div class="ui-grid__col-3">Col-3        </div></div><div class="ui-grid__row"><div class="ui-grid__col-10">Col-10        </div><div class="ui-grid__col-2">Col-2        </div></div><div class="ui-grid__row"><div class="ui-grid__col-11">Col-11        </div><div class="ui-grid__col-1">Col-1        </div></div><div class="ui-grid__row"><div class="ui-grid__col-12">Fullsize (col-12)        </div></div></section><div class="ui-grid__row"><section class="ui-grid__col-6"><h3>Buttons</h3><p>Inline tex with            <button class="ui-button"><span class="ui-button__label">Real Button Button</span></button><button class="ui-button ui-button--primary"><span class="ui-button__label">Primary Button</span></button><button class="ui-button ui-button--secondary"><span class="ui-button__label">Secondary Button</span></button><a class="ui-button" href="#"><span class="ui-button__label">Link Button</span></a><button class="ui-button ui-button--disabled" disabled="disabled"><span class="ui-button__label">Inactive Button</span></button></p></section><section class="ui-grid__col-6"><form class="ui-form"><h3>Forms</h3><label class="ui-form__group"><span class="ui-form__group-label">Simple Textinput</span><input class="ui-form__text" name="simple-text" placeholder="Simple text..." type="text"><button class="ui-button" type="submit"><span class="ui-button__label">OK</span></button></label><label class="ui-form__group"><input class="ui-form__checkbox" name="check1" type="checkbox"><span class="ui-form__group-label">Simple Checkbox</span></label><label class="ui-form__group"><input class="ui-form__checkbox ui-form__checkbox--disabled" disabled="disabled" name="check2" type="checkbox"><span class="ui-form__group-label">Simple Checkbox</span></label><label class="ui-form__group"><input class="ui-form__radio" name="radio1" type="radio" value="value1"><span class="ui-form__group-label">Option 1</span></label><label class="ui-form__group"><input class="ui-form__radio" name="radio1" type="radio" value="value2"><span class="ui-form__group-label">Option 2</span></label><label class="ui-form__group"><input class="ui-form__radio ui-form__radio--disabled" disabled="disabled" name="radio1" type="radio" value="value3"><span class="ui-form__group-label">Option 2</span></label><label class="ui-form__group"><span class="ui-form__group-label">Some text</span><textarea class="ui-form__textarea" name="textarea"></textarea></label><label class="ui-form__group"><span class="ui-form__group-label">Some text</span><select class="ui-form__select" name="select1"><option value="1">1</option><optgroup label="Section 2"><option value="2.1">2.1</option><option value="2.2">2.2</option></optgroup><optgroup label="Section 3"><option value="3.1">3.1</option><option value="3.2">3.2</option><option value="3.3">3.3</option></optgroup></select></label><button class="ui-button" type="submit"><span class="ui-button__label">Submit</span></button></form></section></div></div></div></div><div class="footer"><div class="footer__content footer__content--highlighted"><h2>About the author<a class="--plain" href="https://github.com/mfeineis" title="github.com/mfeineis" style="margin-left: 20px"><svg width="24" height="24" viewbox="0 0 16 16"><path fill="#333" d="
-M7.999,0.431c-4.285,0-7.76,3.474-7.76,7.761 c0,3.428,2.223,6.337,5.307,7.363c0.388,0.071,0.53-0.168,0.53-0.374c0-0.184-0.007-0.672-0.01-1.32 c-2.159,0.469-2.614-1.04-2.614-1.04c-0.353-0.896-0.862-1.135-0.862-1.135c-0.705-0.481,0.053-0.472,0.053-0.472 c0.779,0.055,1.189,0.8,1.189,0.8c0.692,1.186,1.816,0.843,2.258,0.645c0.071-0.502,0.271-0.843,0.493-1.037 C4.86,11.425,3.049,10.76,3.049,7.786c0-0.847,0.302-1.54,0.799-2.082C3.768,5.507,3.501,4.718,3.924,3.65 c0,0,0.652-0.209,2.134,0.796C6.677,4.273,7.34,4.187,8,4.184c0.659,0.003,1.323,0.089,1.943,0.261 c1.482-1.004,2.132-0.796,2.132-0.796c0.423,1.068,0.157,1.857,0.077,2.054c0.497,0.542,0.798,1.235,0.798,2.082 c0,2.981-1.814,3.637-3.543,3.829c0.279,0.24,0.527,0.713,0.527,1.437c0,1.037-0.01,1.874-0.01,2.129 c0,0.208,0.14,0.449,0.534,0.373c3.081-1.028,5.302-3.935,5.302-7.362C15.76,3.906,12.285,0.431,7.999,0.431z
-            "></path></svg></a></h2><p style="overflow: hidden"><img alt="Author's blog" class="footer__avatar" src="/img/ich3.jpg" width="120">
-I love listening to and making music myself, enjoy reading, get excited when watching a decent movie, flourish in creating artwork, marvel in coding and grocking other people's code and delight in learning anything new in general while living The Dream in the beautiful city of Leipzig, Germany.
-                    </p></div><div class="footer__content"><div class="footer__navigation"><ul><li><a href="/posts">Posts</a></li><li><a href="/about">About</a></li><li><a href="/posts/2017-03-20-epic-links">Links</a></li><li><a href="/about#contact">Contact</a></li><li><a href="/about#impressum">Impressum</a></li></ul></div></div><div class="footer__content"><div class="footer__copyright">© 2019 CANENA - All rights reserved</div><div class="footer__acknowledgements"><a href="https://www.npmjs.com/package/elmstatic">Created with Elmstatic</a></div></div></div></body></html>
+    <script defer src="/deps/hubjs/hub.dev.js"></script>
+</body>
+</html>
