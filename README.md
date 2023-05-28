@@ -2,12 +2,12 @@
 
 > Life/Music/Art/Code/Stuff
 
-This repository contains the source code for [https://www.canena.de][].
+This repository contains the source code for [https://www.canena.de](https://www.canena.de).
 
 
 ## Build
 
-You'll need [Deno](www.deno.land), neither `node` nor `npm` are used.
+You'll need [Deno](https://deno.land), neither `node` nor `npm` are used.
 To build the site into `docs/` run `deno task build`.
 
 
