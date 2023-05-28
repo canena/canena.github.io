@@ -4,6 +4,7 @@
         "denoland.vscode-deno",
         "editorconfig.editorconfig",
         // "tobermory.es6-string-html",
-        "wayou.vscode-todo-highlight"
+        "wayou.vscode-todo-highlight",
+        "github.vscode-github-actions"
     ]
 }
