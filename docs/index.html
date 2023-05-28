@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="en" class="no-js"><head>
+    <!-- [docs]
+        Welcome to our not-so-fancy inline tutorial. If you read this it's probably
+        safe to assume you are interested in such things so have fun following our
+        thoughts.
+    -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="author" content="Martin Feineis">
+    <meta name="creator" content="Canena">
+    <meta name="description" content="A blog about life">
+    <meta name="viewport" content="width=device-width, user-scalable=yes, initial-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-YzxQZnYzEzF+cXKWurXLJQfpy1c+ScGqPeldlHJNbDk=' 'sha256-vvt4KWwuNr51XfE5m+hzeNEGhiOfZzG97ccfqGsPwvE='; style-src 'self' 'sha256-R0uFgpKdPRZfOYl4evdYwmPCBzouLvdCwDA/Zcg2s4U=' 'sha256-ebw9mJfs5eE3UD3i/h258DMrHilavFLsSjlHBb4z3qQ='   'unsafe-hashes' 'sha256-xaT1bR09q0i6itNOGnwwUiV/c/BOURip0BdwaHK8VsY=' 'sha256-OkecswzdOwrk3fjZkfJuQ22DZk9JXeyl5jIUBsZIhnY=' 'sha256-om0LZqLVs580zFbVeGJWfxalNyUI1QLBKkN1YW50jak=' 'sha256-hlgH3wM5Md/9QTkydL4bCAgyKcngnnSWzhIyiMkNRIA=' 'sha256-+Mq0BXW7KFfORVMMpZ3A054u+VpYjDEzO4bOOLSk5vI='">
+    <!-- [docs]
+        We like to be declarative and putting i.e. an event tracking endpoint
+        as meta tag content into the document is also easy for backend folks.
+        See `main.js` for client-side setup and usage.
+    -->
+    <meta name="hubjs:track-endpoint" content="/?track">
+    <meta name="xhubjs:debugging">
+    <title>CANENA</title>
+    <!-- [docs]
+        The JavaScript being used on this site is loosely coupled via
+        the custom `hubjs` library that provides isolated sandboxes with
+        very common functionality like logging, JSON handling etc.
+
+        It also implements some nifty things like being able to use the
+        global API before the library is even loaded via the stub here.
+        This frees us from having to take too much care with script order.
+
+        The basic library is written in the ES5 language dialect which even
+        ye-olde Internet Explorer knows what to do with, functionality that
+        progressively enhances the experience is only loaded in modern browsers
+        that understand ES2015 or up.
+    -->
+    <script>
+/*! hubjs stub */
+(function(w,t){"use strict";function a(o,x){(o._||(o._=[])).push(x)}
+function s(){return function f(){a(f,t.call(arguments))}}
+w.Hub=w.Hub||{config:s(),log:s(),use:s()};}(self,[].slice))
+    </script>
+    <link href="/cdn/common.dev.css" rel="stylesheet" type="text/css">
+    
+</head>
+<body>
+    <!-- [docs]
+        Our config file mostly takes care of configuration, specific functionality
+        lives inside custom elements loaded via "ca-requires". Interaction between
+        widgets is covered using a decoupled publish/subscribe API.
+    -->
+    <script defer="" src="/cdn/config.js"></script>
+    <script defer="" type="module" src="/cdn/site.js"></script>
+    <script defer="" type="module" src="/cdn/ca/requires.js"></script>
+
+    <!-- [docs]
+        We use the "ca-requires" element to declare which custom elements we
+        want to load. Here we request an element named "ca-intro", by convention
+        it will be located in /cdn/ca/intro.js.
+
+        Requiring multiple elements is supported, as is having more than one
+        "ca-requires" on the page, duplicate requires will only result in
+        files being requested once.
+    -->
+    <ca-requires elements="intro"></ca-requires>
+    <ca-requires elements="fx-toggle logo-switcher reading-progress scroll-behavior"></ca-requires>
+    <ca-scroll-behavior></ca-scroll-behavior>
+
+    <!-- [docs]
+        Inspired by www.every-layout.dev we have a couple of layout composition
+        primitives inside our common CSS.
+    -->
+    <header {cover}="" class="relative">
+        <!-- [docs]
+            Using our custom elements works like using any other HTML element.
+            For this site we decided to fashion our styles after tailwindcss
+            utility classes.
+        -->
+        <ca-intro {backdrop}="" {cover.ornament}="" class="pointer-events-none">
+            <template>
+                <style>
+                    :host {
+                        animation-name: cycle-bg;
+                        animation-duration: 3s;
+                        animation-iteration-count: infinite;
+                        animation-timing-function: linear;
+                    }
+                    @keyframes cycle-bg {
+                        0% {
+                            background:
+                                linear-gradient(217deg, rgba(255,0,0,.8), rgba(255,0,0,0) 70.71%),
+                                linear-gradient(127deg, rgba(0,255,0,.8), rgba(0,255,0,0) 70.71%),
+                                linear-gradient(336deg, rgba(0,0,255,.8), rgba(0,0,255,0) 70.71%);
+                        }
+                        50% {
+                            background:
+                                linear-gradient(336deg, rgba(0,0,255,.8), rgba(0,0,255,0) 70.71%),
+                                linear-gradient(217deg, rgba(255,0,0,.8), rgba(255,0,0,0) 70.71%),
+                                linear-gradient(127deg, rgba(0,255,0,.8), rgba(0,255,0,0) 70.71%);
+                        }
+                        100% {
+                            background:
+                                linear-gradient(217deg, rgba(255,0,0,.8), rgba(255,0,0,0) 70.71%),
+                                linear-gradient(127deg, rgba(0,255,0,.8), rgba(0,255,0,0) 70.71%),
+                                linear-gradient(336deg, rgba(0,0,255,.8), rgba(0,0,255,0) 70.71%);
+                        }
+                    }
+                </style>
+                <canvas></canvas>
+            </template>
+        </ca-intro>
+
+        <div {center}="" {cover.art}="" class="text-center">
+            <h1 class="m-0">
+                <img is-logo="" src="/cdn/canena.svg" width="300" height="95" alt="CANENA">
+            </h1>
+            <h2 class="text-sm">
+                <noscript>
+                    Enable JavaScript for <a href="/cdn/ca/intro.js" target="_blank" rel="noopener noreferrer">intro animation</a>
+                </noscript>
+            </h2>
+        </div>
+    </header>
+
+    <main>
+        <div {center}="">
+            <div {box}="">
+                <h3 class="capitalize">A blog about life</h3>
+                <p>
+                    Hello, There! This is my personal website covering various topics from music to design, programming and more.
+                    As this is both the home and part of my <a href="/portfolio/">portfolio</a> feel free to peruse around, there is ample documentation embedded for the curious.
+                </p>
+            </div>
+        </div>
+
+        <div {billboard}="dots" class="border-t border-b">
+            <div {center}="">
+                <div {box}="">
+    <h3>Notable Projects</h3>
+    <ul class="flex flex-wrap gap-2">
+        <li {box}="" class="grow border bg-default rounded drop-shadow">
+            <h4>
+                <a class="flex gap-1" href="https://github.com/mfeineis/hubjs" target="_blank" rel="noopener noreferrer">
+                    <span>hubjs</span>
+                </a>
+            </h4>
+            <p>
+                Provides loosely coupled sandboxes for your JavaScript apps.
+            </p>
+        </li>
+        <li {box}="" class="grow border bg-default rounded drop-shadow">
+            <h4><a href="https://www.canena.de">www.canena.de</a></h4>
+            <p>
+                The code of this website is <a href="https://www.github.com/canena/canena.github.io" target="_blank" rel="noopener noreferrer">public on GitHub</a>.
+            </p>
+        </li>
+        <li {box}="" class="grow border bg-default rounded drop-shadow">
+            <h4>
+                <a class="flex gap-1" href="https://github.com/elm-community/js-integration-examples/tree/master/more/webcomponents" target="_blank" rel="noopener noreferrer">
+                    <span>Elm WebComponents Guide</span>
+                </a>
+            </h4>
+            <p>
+                A guide to using Elm, or any other compile-to-js language for that matter, with <a href="https://www.webcomponents.org/" target="_blank" rel="noopener noreferrer">WebComponents</a>.
+            </p>
+        </li>
+    </ul>
+</div>
+
+
+                <div {box}="" class="mt--1">
+                    For more projects see <a href="/portfolio">the Portfolio section</a>.
+                </div>
+            </div>
+        </div>
+
+        <div id="blog" class="py-2 bg-gradient-subtle-radial">
+            <div {center}="">
+
+                <div {sidebar}="right">
+                    <ul {stack}="">
+
+                        <li {box}="" class="border-l-4 border-tertiary bg-default">
+                            <div class="leading-loose">
+                                <h3><a href="/posts/2020-09-18-the-last-of-us-part-ii">The Last of Us Part II</a></h3>
+                                <div>
+                                    <span class="inline-block pr-0.5">2020-09-18</span>
+                                    <span class="inline-block pr-0.5">~9min</span>
+                                    <a class="tag" href="/tags#gaming">gaming</a>
+                                </div>
+                                <p class="leading-normal">
+                                    Some thoughts I need to get off my chest after roughly 37 hours of playing the game
+                                    …
+                                </p>
+                            </div>
+                        </li>
+
+                        <li {box}="" class="border-l-4 border-primary bg-default">
+                            <div class="leading-loose">
+                                <h3><a href="/posts/2019-06-08-tales-from-the-code-crypt-book1-water">Tales From the Code Crypt - Book 1, Water</a></h3>
+                                <div>
+                                    <span class="inline-block pr-0.5">2019-06-08</span>
+                                    <span class="inline-block pr-0.5">~5min</span>
+                                    <a class="tag" href="/tags#code-crypt">code-crypt</a>
+                                    <a class="tag" href="/tags#javascript">javascript</a>
+                                    <a class="tag" href="/tags#tech">tech</a>
+                                    <a class="tag" href="/tags#web">web</a>
+                                </div>
+                                <p class="leading-normal">
+                                    I recently waded through my own code archives and rediscovered some interesting and/or formative gems
+                                    …
+                                </p>
+                            </div>
+                        </li>
+                    </ul>
+
+                    <div {box}="">
+                        <h3 class="capitalize">
+                            <a href="/tags">Topics</a>
+                        </h3>
+                        <ul class="flex flex-wrap gap-2">
+    <li><a ca-searchable="" class="tag" href="/tags#art">art</a></li>
+    <li><a ca-searchable="" class="tag" href="/tags#bem">bem</a></li>
+    <li><a ca-searchable="" class="tag" href="/tags#cicd">cicd</a></li>
+    <li><a ca-searchable="" class="tag" href="/tags#code-crypt">code-crypt</a></li>
+    <li><a ca-searchable="" class="tag" href="/tags#docker">docker</a></li>
+    <li><a ca-searchable="" class="tag" href="/tags#elm">elm</a></li>
+    <li><a ca-searchable="" class="tag" href="/tags#gaming">gaming</a></li>
+    <li><a ca-searchable="" class="tag" href="/tags#gifts">gifts</a></li>
+    <li><a ca-searchable="" class="tag" href="/tags#html">html</a></li>
+    <li><a ca-searchable="" class="tag" href="/tags#javascript">javascript</a></li>
+    <li><a ca-searchable="" class="tag" href="/tags#learning">learning</a></li>
+    <li><a ca-searchable="" class="tag" href="/tags#legacy-code">legacy-code</a></li>
+    <li><a ca-searchable="" class="tag" href="/tags#life">life</a></li>
+    <li><a ca-searchable="" class="tag" href="/tags#making-of">making-of</a></li>
+    <li><a ca-searchable="" class="tag" href="/tags#music">music</a></li>
+    <li><a ca-searchable="" class="tag" href="/tags#self-improvement">self-improvement</a></li>
+    <li><a ca-searchable="" class="tag" href="/tags#tech">tech</a></li>
+    <li><a ca-searchable="" class="tag" href="/tags#web">web</a></li>
+    <li><a ca-searchable="" class="tag" href="/tags#writing">writing</a></li>
+</ul>
+
+                    </div>
+                </div>
+
+                <ul {stack}="" class="mt-1">
+
+                        <li {box}="" class="border-l-4 bg-default">
+                            <div class="leading-loose">
+                                <h3><a href="/posts/2019-06-05-an-elmstatic-experience">An Elmstatic Experience</a></h3>
+                                <div>
+                                    <span class="inline-block pr-0.5">2019-06-05</span>
+                                    <span class="inline-block pr-0.5">~5min</span>
+                                    <a class="tag" href="/tags#elm">elm</a>
+                                    <a class="tag" href="/tags#tech">tech</a>
+                                    <a class="tag" href="/tags#web">web</a>
+                                </div>
+                                <p class="leading-normal">
+                                    A quick walkthrough of how I migrated this site to use Elmstatic
+                                    …
+                                </p>
+                            </div>
+                        </li>
+
+                        <li {box}="" class="border-l-4 bg-default">
+                            <div class="leading-loose">
+                                <h3><a href="/posts/2019-03-04-typescript-vs-the-real-world">TypeScript vs The Real World</a></h3>
+                                <div>
+                                    <span class="inline-block pr-0.5">2019-03-04</span>
+                                    <span class="inline-block pr-0.5">~10min</span>
+                                    <a class="tag" href="/tags#elm">elm</a>
+                                    <a class="tag" href="/tags#tech">tech</a>
+                                    <a class="tag" href="/tags#web">web</a>
+                                </div>
+                                <p class="leading-normal">
+                                    This started out as a YouTube comment on a talk about TypeScript that got out of control
+                                    …
+                                </p>
+                            </div>
+                        </li>
+
+                        <li {box}="" class="border-l-4 bg-default">
+                            <div class="leading-loose">
+                                <h3><a href="/posts/2018-09-25-elm-0-19-tldr">Elm 0.19 TL;DR</a></h3>
+                                <div>
+                                    <span class="inline-block pr-0.5">2018-09-25</span>
+                                    <span class="inline-block pr-0.5">~2min</span>
+                                    <a class="tag" href="/tags#elm">elm</a>
+                                </div>
+                                <p class="leading-normal">
+                                    As the Elm 0.19 upgrade docs are lacking some vital information you only know about by consistently hanging out on the Elm Slack I thought I'd list them here for all the word to see
+                                    …
+                                </p>
+                            </div>
+                        </li>
+
+                        <li {box}="" class="border-l-4 bg-default">
+                            <div class="leading-loose">
+                                <h3><a href="/posts/2018-09-09-alpine-elm-docker">Alpine Elm Docker</a></h3>
+                                <div>
+                                    <span class="inline-block pr-0.5">2018-09-09</span>
+                                    <span class="inline-block pr-0.5">~1min</span>
+                                    <a class="tag" href="/tags#cicd">cicd</a>
+                                    <a class="tag" href="/tags#docker">docker</a>
+                                    <a class="tag" href="/tags#elm">elm</a>
+                                    <a class="tag" href="/tags#tech">tech</a>
+                                </div>
+                                <p class="leading-normal">
+                                    A Dockerfile for creating a minimal alpine docker image for your CI builds
+                                    …
+                                </p>
+                            </div>
+                        </li>
+
+                        <li {box}="" class="border-l-4 bg-default">
+                            <div class="leading-loose">
+                                <h3><a href="/posts/2018-09-07-stack-to-elm-them-all">Stack To Elm Them All</a></h3>
+                                <div>
+                                    <span class="inline-block pr-0.5">2018-09-07</span>
+                                    <span class="inline-block pr-0.5">~1min</span>
+                                    <a class="tag" href="/tags#elm">elm</a>
+                                    <a class="tag" href="/tags#tech">tech</a>
+                                </div>
+                                <p class="leading-normal">
+                                    Ever wondered - or forgot - how to build the Elm Compiler with tracing using Haskell Stack? Here's how you do it
+                                    …
+                                </p>
+                            </div>
+                        </li>
+
+                        <li {box}="" class="border-l-4 bg-default">
+                            <div class="leading-loose">
+                                <h3><a href="/posts/2018-02-24-an-elm-to-the-past">An Elm To The Past</a></h3>
+                                <div>
+                                    <span class="inline-block pr-0.5">2018-02-24</span>
+                                    <span class="inline-block pr-0.5">~4min</span>
+                                    <a class="tag" href="/tags#elm">elm</a>
+                                    <a class="tag" href="/tags#legacy-code">legacy-code</a>
+                                    <a class="tag" href="/tags#tech">tech</a>
+                                    <a class="tag" href="/tags#web">web</a>
+                                </div>
+                                <p class="leading-normal">
+                                    This blog post compiles the advice I posted in a discussion on Elm Discourse on support of Elm for older browsers
+                                    …
+                                </p>
+                            </div>
+                        </li>
+
+                        <li {box}="" class="border-l-4 bg-default">
+                            <div class="leading-loose">
+                                <h3><a href="/posts/2017-01-18-hello-living-style-guide">Hello Living Style Guide</a></h3>
+                                <div>
+                                    <span class="inline-block pr-0.5">2017-01-18</span>
+                                    <span class="inline-block pr-0.5">~2min</span>
+                                    <a class="tag" href="/tags#bem">bem</a>
+                                    <a class="tag" href="/tags#html">html</a>
+                                </div>
+                                <p class="leading-normal">
+                                    This is the living documentation for my own little set of responsive Block Element Modifier (BEM) based CSS layout blocks
+                                    …
+                                </p>
+                            </div>
+                        </li>
+
+                        <li {box}="" class="border-l-4 bg-default">
+                            <div class="leading-loose">
+                                <h3><a href="/posts/2017-03-20-epic-links">Epic Links</a></h3>
+                                <div>
+                                    <span class="inline-block pr-0.5">2017-03-20</span>
+                                    <span class="inline-block pr-0.5">~2min</span>
+                                    <a class="tag" href="/tags#learning">learning</a>
+                                    <a class="tag" href="/tags#music">music</a>
+                                    <a class="tag" href="/tags#self-improvement">self-improvement</a>
+                                    <a class="tag" href="/tags#tech">tech</a>
+                                </div>
+                                <p class="leading-normal">
+                                    A collection of links that I found useful, inspired me and may bring you enjoyment and/or enlightenment as well
+                                    …
+                                </p>
+                            </div>
+                        </li>
+
+                        <li {box}="" class="border-l-4 bg-default">
+                            <div class="leading-loose">
+                                <h3><a href="/posts/2016-04-19-garbled-teenage-memories">Garbled Teenage Memories</a></h3>
+                                <div>
+                                    <span class="inline-block pr-0.5">2016-04-19</span>
+                                    <span class="inline-block pr-0.5">~2min</span>
+                                    <a class="tag" href="/tags#art">art</a>
+                                    <a class="tag" href="/tags#gifts">gifts</a>
+                                    <a class="tag" href="/tags#making-of">making-of</a>
+                                </div>
+                                <p class="leading-normal">
+                                    I've been thinking about a personal gift for a friend this year and I decided on doing a painting on canvas with acrylic colors.
+                                    …
+                                </p>
+                            </div>
+                        </li>
+
+                        <li {box}="" class="border-l-4 bg-default">
+                            <div class="leading-loose">
+                                <h3><a href="/posts/2015-08-04-making-a-habit-of-making-a-habit/">Making A Habit Of Making A Habit</a></h3>
+                                <div>
+                                    <span class="inline-block pr-0.5">2015-08-04</span>
+                                    <span class="inline-block pr-0.5">~4min</span>
+                                    <a class="tag" href="/tags#life">life</a>
+                                    <a class="tag" href="/tags#self-improvement">self-improvement</a>
+                                    <a class="tag" href="/tags#writing">writing</a>
+                                </div>
+                                <p class="leading-normal">
+                                    Lately I've been thinking a lot about writing and whether I could do it myself
+                                    …
+                                </p>
+                            </div>
+                        </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="bg-gradient-subtle">
+            <hr>
+            <div {center}="" class="bg-default">
+                <div {box}="" id="about">
+                    <h3 class="flex items-center gap-2">
+                        <span class="capitalize">About the author</span>
+                        <a class="flex --plain" href="https://github.com/mfeineis" title="The author's Github account (opens in new tab/window)" target="_blank" rel="noopener noreferrer">
+                            <svg aria-hidden="true" width="24" height="24" viewbox="0 0 16 16"><path fill="#333" d="M7.999,0.431c-4.285,0-7.76,3.474-7.76,7.761 c0,3.428,2.223,6.337,5.307,7.363c0.388,0.071,0.53-0.168,0.53-0.374c0-0.184-0.007-0.672-0.01-1.32 c-2.159,0.469-2.614-1.04-2.614-1.04c-0.353-0.896-0.862-1.135-0.862-1.135c-0.705-0.481,0.053-0.472,0.053-0.472 c0.779,0.055,1.189,0.8,1.189,0.8c0.692,1.186,1.816,0.843,2.258,0.645c0.071-0.502,0.271-0.843,0.493-1.037 C4.86,11.425,3.049,10.76,3.049,7.786c0-0.847,0.302-1.54,0.799-2.082C3.768,5.507,3.501,4.718,3.924,3.65 c0,0,0.652-0.209,2.134,0.796C6.677,4.273,7.34,4.187,8,4.184c0.659,0.003,1.323,0.089,1.943,0.261 c1.482-1.004,2.132-0.796,2.132-0.796c0.423,1.068,0.157,1.857,0.077,2.054c0.497,0.542,0.798,1.235,0.798,2.082 c0,2.981-1.814,3.637-3.543,3.829c0.279,0.24,0.527,0.713,0.527,1.437c0,1.037-0.01,1.874-0.01,2.129 c0,0.208,0.14,0.449,0.534,0.373c3.081-1.028,5.302-3.935,5.302-7.362C15.76,3.906,12.285,0.431,7.999,0.431z"></path></svg>
+                        </a>
+                        <a class="flex --plain" href="https://stackoverflow.com/users/1071526/mfeineis" title="The author's Stack Overflow account (opens in new tab/window)" target="_blank" rel="noopener noreferrer">
+                            <svg aria-hidden="true" width="21" height="24" viewbox="0 0 32 37"><path d="M26 33v-9h4v13H0V24h4v9h22Z" fill="#BCBBBB"></path><path d="m21.5 0-2.7 2 9.9 13.3 2.7-2L21.5 0ZM26 18.4 13.3 7.8l2.1-2.5 12.7 10.6-2.1 2.5ZM9.1 15.2l15 7 1.4-3-15-7-1.4 3Zm14 10.79.68-2.95-16.1-3.35L7 23l16.1 2.99ZM23 30H7v-3h16v3Z" fill="#F48024"></path></svg>
+                        </a>
+                        <a class="flex --plain" href="https://www.xing.com/profile/Martin_Feineis2" title="The author's Xing account (opens in new tab/window)" target="_blank" rel="noopener noreferrer">
+                            <!-- Icon by Iconpacks https://iconpacks.net/?utm_source=link-attribution&utm_content=2447 -->
+                            <svg aria-hidden="true" width="24" height="24" viewbox="0 0 256 256"><g style="stroke: none; stroke-width: 0; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill: none; fill-rule: nonzero; opacity: 1;" transform="translate(1.4065934065934016 1.4065934065934016) scale(2.81 2.81)"><path d="M 13.677 17.774 c -0.782 0 -1.44 0.274 -1.77 0.811 c -0.342 0.555 -0.289 1.269 0.074 1.991 l 8.776 15.193 c 0.015 0.029 0.015 0.047 0 0.074 L 6.966 60.181 c -0.36 0.717 -0.342 1.437 0 1.991 c 0.33 0.534 0.915 0.885 1.696 0.885 h 12.98 c 1.941 0 2.876 -1.31 3.54 -2.508 c 0 0 13.488 -23.854 14.013 -24.78 c -0.053 -0.086 -8.924 -15.561 -8.924 -15.561 c -0.646 -1.151 -1.623 -2.434 -3.614 -2.434 H 13.677 z" style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill: rgb(0,90,95); fill-rule: nonzero; opacity: 1;" transform=" matrix(1 0 0 1 0 0) " stroke-linecap="round"></path><path d="M 68.208 0 c -1.938 0 -2.779 1.221 -3.475 2.472 c 0 0 -27.963 49.59 -28.884 51.219 c 0.047 0.089 18.444 33.837 18.444 33.837 C 54.936 88.678 55.93 90 57.919 90 h 12.966 c 0.782 0 1.392 -0.295 1.723 -0.829 c 0.345 -0.555 0.336 -1.286 -0.027 -2.006 L 54.281 53.732 c -0.018 -0.027 -0.018 -0.059 0 -0.085 L 83.02 2.832 c 0.36 -0.717 0.369 -1.449 0.027 -2.003 C 82.717 0.295 82.103 0 81.321 0 H 68.208 z" style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill: rgb(212,214,0); fill-rule: nonzero; opacity: 1;" transform=" matrix(1 0 0 1 0 0) " stroke-linecap="round"></path></g></svg>
+                        </a>
+                        <a class="flex --plain" href="https://de.linkedin.com/in/martin-feineis-ab0a9413b" title="The author's LinkedIn account (opens in new tab/window)" target="_blank" rel="noopener noreferrer">
+                            <!-- Icon by Iconpacks https://iconpacks.net/?utm_source=link-attribution&utm_content=2430 -->
+                            <svg aria-hidden="true" width="24" height="24" viewbox="0 0 256 256"><g style="stroke: none; stroke-width: 0; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill: none; fill-rule: nonzero; opacity: 1;" transform="translate(1.4065934065934016 1.4065934065934016) scale(2.81 2.81)"><path d="M 0 6.447 C 0 2.887 2.978 0 6.651 0 h 76.698 C 87.022 0 90 2.887 90 6.447 v 77.106 C 90 87.114 87.022 90 83.349 90 H 6.651 C 2.978 90 0 87.114 0 83.553 V 6.447 z" style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill: rgb(0,102,153); fill-rule: nonzero; opacity: 1;" transform=" matrix(1 0 0 1 0 0) " stroke-linecap="round"></path><path d="M 20.485 29.151 c 4.74 0 7.691 -3.121 7.691 -7.021 c -0.088 -3.988 -2.95 -7.022 -7.601 -7.022 c -4.65 0 -7.69 3.034 -7.69 7.022 c 0 3.9 2.95 7.021 7.512 7.021 H 20.485 L 20.485 29.151 z" style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill: rgb(255,255,255); fill-rule: nonzero; opacity: 1;" transform=" matrix(1 0 0 1 0 0) " stroke-linecap="round"></path><path d="M 27.282 75.339 v -40.64 H 13.688 v 40.64 H 27.282 z" style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill: rgb(255,255,255); fill-rule: nonzero; opacity: 1;" transform=" matrix(1 0 0 1 0 0) " stroke-linecap="round"></path><path d="M 34.804 75.339 h 13.594 V 52.644 c 0 -1.215 0.088 -2.428 0.447 -3.296 c 0.983 -2.427 3.219 -4.94 6.975 -4.94 c 4.919 0 6.887 3.727 6.887 9.19 v 21.741 h 13.592 V 52.037 c 0 -12.483 -6.706 -18.291 -15.65 -18.291 c -7.333 0 -10.553 4.073 -12.342 6.847 h 0.091 v -5.894 H 34.804 C 34.982 38.513 34.804 75.339 34.804 75.339 L 34.804 75.339 z" style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill: rgb(255,255,255); fill-rule: nonzero; opacity: 1;" transform=" matrix(1 0 0 1 0 0) " stroke-linecap="round"></path></g></svg>
+                        </a>
+
+                    </h3>
+                    <div class="flex flex-row items-start gap-2">
+                        <p>
+                            I love listening to and making music myself, enjoy reading, get excited when watching a decent movie, flourish in creating artwork, marvel in coding and grocking other people's code and delight in learning anything new in general.
+                        </p>
+                        <div>
+                            <img class="rounded-full" src="/cdn/ich3.jpg" width="120" height="120" alt="the author's avatar">
+                        </div>
+                    </div>
+
+                    <h4>I'm a software developer by trade...</h4>
+                    <p>
+                        </p><ul class="list-disc list-inside">
+                            <li>with an abundance of experience in building frontends in <abbr title="Hypertext Markup Language">HTML</abbr>, <abbr title="Cascaded Style Sheets">CSS</abbr> and JavaScript as well as a great number of libraries and frameworks that build on top of this foundation.</li>
+                            <li>having experience building backends with <abbr title="The C Sharp programming language">C#</abbr> for most of my professional web projects.</li>
+                        </ul>
+                    <p></p>
+
+                    <h4>Currently obsessed with...</h4>
+                    <p>
+                        </p><ul class="list-disc list-inside">
+                            <li>progressive enhancement using <a href="https://www.webcomponents.org/" target="_blank" rel="noopener noreferrer">web standards</a> like Custom Elements and HTML templates in tandem with good-enough software engineering practices - this whole site is a showcase, you are invited to peruse around, there is documentation everywhere.</li>
+                            <li>using composable layouts inspired by <a href="https://every-layout.dev" target="_blank" rel="noopener noreferrer">every-layout.dev</a> and utility classes instead of chunky CSS abstractions.</li>
+                        </ul>
+                    <p></p>
+
+                    <h4>Not that much obsessed with anymore with...</h4>
+                    <p>
+                        </p><ul class="list-disc list-inside">
+                            <li>using <a href="http://elm-lang.org" target="_blank" rel="noopener noreferrer">Elm</a> instead of JavaScript wherever it makes sense.</li>
+                            <li>the <abbr title="Block Element Modifier">BEM</abbr> methodology of writing <abbr title="Cascaded Style Sheets">CSS</abbr> with a little help of <a href="https://www.lesscss.org" target="_blank" rel="noopener noreferrer">LESS</a>.</li>
+                        </ul>
+                    <p></p>
+                </div>
+
+                <hr>
+
+                <div id="contact" {billboard}="lined-paper">
+                    <div {box}="">
+                        <h3 class="capitalize px-4">Contact</h3>
+                        <p class="px-4">If you're human, you can surely make sense of the following gibberish where you need to reverse the letters of every word <em>anenac (ατ) liamy • moc</em>.</p>
+                    </div>
+                </div>
+
+                <hr>
+
+                <div {box}="" id="impressum">
+                    <h3 class="capitalize">Impressum</h3>
+                    <p>The views expressed in this site are my own thoughts and don't necessarily match that of my professional acquaintances like my employer or co-workers, it is a fully private endeavor. I'm not responsible for linked content that lives outside of <em>canena.de</em> and its subdomains, the respective owners' opinions are not my own and I distance myself from them and any affiliation that is not explicitly stated on my part.</p>
+
+                    <h4 class="capitalize">Data usage disclosure</h4>
+                    <p>
+                        This is a static site that doesn't collect any data, although these pages are hosted somewhere and they might be keeping track of you.
+                    </p>
+                    <p>
+                        Some of the pages include a comment section, these are being fetched <a href="https://api.github.com/" target="_blank" rel="noopener noreferrer">from GitHub via their API</a>, see <a href="#progressive-enhancement">the progressive enhancement section</a> for more details.
+                    </p>
+
+                    <h4 class="capitalize">Active content</h4>
+                    <p>Active content is subject to the following policy</p>
+                    <blockquote>
+                        The <i>one exception</i> where external data is being requested and processed to be displayed on the site is to provide commments via <a href="https://api.github.com/" target="_blank" rel="noopener noreferrer">the GitHub API</a>
+                    </blockquote>
+                    <p>Otherwise all content originates from this site directly, this means in particular:</p>
+                    <ul class="list-disc list-inside mb-1">
+                        <li>There is no JavaScript loaded from anywhere but <em>canena.de</em> and its subdomains, no external CDN, no external fonts, no external images, no analytics</li>
+                        <li><i>All JavaScript code and the site's styles are provided un-minified and with comments.</i> Legacy content may include minified CSS styles, sources are referenced. Although the file size of the served source code is larger than it could be with minification an open web where people are encouraged to learn should be worth a couple of extra bytes on the wire</li>
+                        <li>The site is usable and accessible without JavaScript. A moderately web-standards-compliant browser is required for active content. Although we could maintain feature parity in legacy browsers like Internet Explorer we refrain from doing so by choice</li>
+                        <li>No third-party code is included in the JavaScript served from this domain, no external libraries, no polyfills, no build-artifacts from i.e. Webpack or other bundlers</li>
+                        <li>You may choose to disable potentially battery-draining and/or distracting site effects via the <i>FX</i> toggle at the bottom of each page</li>
+                    </ul>
+
+                    <h4 id="progressive-enhancement" class="capitalize">Progressive Enhancements</h4>
+                    <p>Enabling JavaScript is not required but might enhance the site experience by...</p>
+                    <ul class="list-disc list-inside">
+    <li>
+        Providing <a href="/deps/hubjs/hub.dev.js" target="_blank" rel="noopener noreferrer">a mechanism for loosely-coupled sandboxes</a>
+    </li>
+    <li>
+        Defining <a href="/cdn/site.js" target="_blank" rel="noopener noreferrer">composition root for the site</a> including a thin wrapper around the <code>customElements</code> API, basic facilities to employ inversion of control and utilities like HTML sanitization and function throttling
+    </li>
+    <li>
+        Providing <a href="/cdn/ca/billboard-dancer.js" target="_blank" rel="noopener noreferrer">an animated presention</a> of the <a href="/portfolio">Portfolio section</a>
+    </li>
+    <li>
+        Showing off <a href="/cdn/ca/demo-water.js" target="_blank" rel="noopener noreferrer">a demo</a> of <a href="/posts/2019-06-08-tales-from-the-code-crypt-book1-water">an algorithm to imitate water efficiently</a>
+    </li>
+    <li>
+        Providing <a href="/cdn/ca/fx-toggle.js" target="_blank" rel="noopener noreferrer">a toggle for potentially heavy effects</a> on this site
+    </li>
+    <li>
+        Re-purposing <a href="/cdn/ca/gh-comments.js" target="_blank" rel="noopener noreferrer">GitHub issues as comment sections</a> for selected articles
+    </li>
+    <li>
+        Listening for <a href="/cdn/ca/hotkey-behavior.js" target="_blank" rel="noopener noreferrer">hotkeys</a> to use in <a href="/cdn/ca/page-search.js" target="_blank" rel="noopener noreferrer">the page search</a> in the <a href="/tags">Topics section</a>
+    </li>
+    <li>
+        Presenting you with <a href="/cdn/ca/intro.js" target="_blank" rel="noopener noreferrer">a fancy intro</a> to the site
+    </li>
+    <li>
+        Making sure <a href="/cdn/ca/logo-switcher.js" target="_blank" rel="noopener noreferrer">the site's logo is in view at most once</a>
+    </li>
+    <li>
+        Enabling easy discovery via <a href="/cdn/ca/page-search.js" target="_blank" rel="noopener noreferrer">page search</a> (using <a href="/cdn/ca/hotkey-behavior.js" target="_blank" rel="noopener noreferrer">hotkeys</a>) in the <a href="/tags">Topics section</a>
+    </li>
+    <li>
+        Gathering <a href="/cdn/ca/reading-meta.js" target="_blank" rel="noopener noreferrer">meta data like i.e. word-count</a> for selected articles like <a href="/posts/2020-09-18-the-last-of-us-part-ii">this one about the game "The Last of Us Part II"</a>
+    </li>
+    <li>
+        Indicating <a href="/cdn/ca/reading-progress.js" target="_blank" rel="noopener noreferrer">reading progress</a> (using <a href="/cdn/ca/scroll-behavior.js" target="_blank" rel="noopener noreferrer">scroll position</a>) for selected articles like <a href="/posts/2019-03-04-typescript-vs-the-real-world">this one about TypeScript</a>
+    </li>
+    <li>
+        Enabling <a href="/cdn/ca/requires.js" target="_blank" rel="noopener noreferrer">easy script loading</a> for active content features of this site
+    </li>
+    <li>
+        Listening for <a href="/cdn/ca/scroll-behavior.js" target="_blank" rel="noopener noreferrer">scroll position data</a> to use in <a href="/cdn/ca/reading-progress.js" target="_blank" rel="noopener noreferrer">displaying reading progress</a> for selected articles like <a href="/posts/2018-09-25-elm-0-19-tldr">this one about the 0.19 release of the Elm programming language</a>
+    </li>
+</ul>
+
+                </div>
+            </div>
+
+            <footer {center}="" class="border-t">
+                <nav class="bg-default px-2 pb-16">
+                    <ul class="flex flex-wrap text-xs text-center">
+    <li><a class="block p-1" href="/">Home</a></li>
+    <li><a class="block p-1" href="/#blog">Blog</a></li>
+    <li><a class="block p-1" href="/#about">About</a></li>
+    <li><a class="block p-1" href="/posts/2017-03-20-epic-links">Links</a></li>
+    <li><a class="block p-1" href="/#contact">Contact</a></li>
+    <li><a class="block p-1" href="/#impressum">Impressum</a></li>
+</ul>
+
+                </nav>
+            </footer>
+        </div>
+    </main>
+
+    <nav class="floaty-nav | fixed bottom-0 w-full">
+        <div back-to-top="" class="m-1 flex justify-between">
+    <a class="btn --link" href="#">↑ top</a>
+    <a class="btn --link" href="#">top ↑</a>
+</div>
+<ca-reading-progress progress-indicator="">
+    <template>
+        <div data-track="" class="bg-lightgray">
+            <div data-bar="" class="min-h-xs bg-primary"></div>
+        </div>
+    </template>
+</ca-reading-progress>
+
+        <div class="floaty-nav-body">
+    <ul class="max-inline-size:none | flex flex-row bg-grainy font-bold text-center">
+        <li class="grow basis-0">
+            <ca-logo-switcher class="flex h-full w-full items-center justify-center">
+                <a class="block flex items-center justify-center" href="/" title="Return back to home page">
+                    <span default-label="" class="block">Home</span>
+                    <span fancy-label="" class="block overflow-visible mt-0.3rem hidden">
+                        <img src="/cdn/canena.svg" class="invert" height="34" alt="Return to home page">
+                    </span>
+                </a>
+            </ca-logo-switcher>
+        </li>
+        <li class="grow basis-0"><a class="block p-1" href="/#blog">Blog</a></li>
+        <li class="grow basis-0"><a class="block p-1" href="/portfolio">Portfolio</a></li>
+        <li class="grow basis-0 flex items-center justify-center">
+            <ca-fx-toggle>
+                <span class="switch">
+                    <input id="fx-toggle" type="checkbox">
+                    <label for="fx-toggle">FX</label>
+                </span>
+            </ca-fx-toggle>
+        </li>
+    </ul>
+</div>
+
+    </nav>
+
+    <!-- [docs]
+        We didn't need to care that our hubjs library hadn't been loaded yet
+        because we provided a couple of bytes of stub code at the top of the
+        file that the actual library will use to catch up with the current state
+        on the page.
+
+        Custom elements in browsers are implemented in a similar fashion, if you
+        provide an element that the browser doesn't know about (yet) it'll just
+        be treated like a generic "div" container. When the actual element code
+        is requested at a later point in time it just magically knows what to do
+        with the previous information.
+    -->
+    <script defer="" src="/deps/hubjs/hub.js"></script>
+
+
+</body></html>

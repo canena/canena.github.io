@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en" class="no-js"><head>
+    <!-- [docs]
+        Welcome to our not-so-fancy inline tutorial. If you read this it's probably
+        safe to assume you are interested in such things so have fun following our
+        thoughts. This is *just* a content page, for more information on the overall
+        approach of the site visit /home.
+    -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="author" content="Martin Feineis">
+    <meta name="creator" content="Canena">
+    <meta name="description" content="A blog about life">
+    <meta name="viewport" content="width=device-width, user-scalable=yes, initial-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-YzxQZnYzEzF+cXKWurXLJQfpy1c+ScGqPeldlHJNbDk=' 'sha256-vvt4KWwuNr51XfE5m+hzeNEGhiOfZzG97ccfqGsPwvE='; style-src 'self' 'sha256-uD7ie2YbTG1HzuFUnelB4zEhDlR5sSiroNrWljEstxs='; connect-src 'self' https://api.github.com/repos/canena/canena.github.io/issues/21/comments ">
+    <title>An Elmstatic Experience • CANENA</title>
+    <script>
+/*! hubjs stub */
+(function(w,t){"use strict";function a(o,x){(o._||(o._=[])).push(x)}
+function s(){return function f(){a(f,t.call(arguments))}}
+w.Hub=w.Hub||{config:s(),log:s(),use:s()};}(self,[].slice))
+    </script>
+    <link href="/cdn/common.dev.css" rel="stylesheet" type="text/css">
+    
+</head>
+<body>
+    <script defer="" src="/cdn/config.js"></script>
+    <script defer="" type="module" src="/cdn/ca/requires.js"></script>
+    <script defer="" type="module" src="/cdn/site.js"></script>
+
+    <ca-requires elements="fx-toggle gh-comments logo-switcher reading-meta reading-progress scroll-behavior"></ca-requires>
+    <ca-scroll-behavior></ca-scroll-behavior>
+
+    <header {cover}="" class="bg-sky-400">
+        <nav>
+            <a {box}="" href="/" title="Return to home page">
+                <img is-logo="" class="invert" src="/cdn/canena.svg" width="95" height="30" alt="CANENA">
+            </a>
+        </nav>
+        <div {center}="" {cover.art}="">
+            <div {box}="" class="backdrop-blur text-white">
+                <h1 class="capitalize">An Elmstatic Experience</h1>
+                <h2 class="capitalize italic">A quick walkthrough of how I migrated this site to use Elmstatic</h2>
+                <div class="flex gap-2">
+                    <p class="whitespace-nowrap">2019-06-05</p>
+                    <ca-reading-meta class="italic"></ca-reading-meta>
+                </div>
+                <ul class="list-none flex gap-2">
+                    <li><a class="tag" href="/tags#elm">elm</a></li>
+                    <li><a class="tag" href="/tags#tech">tech</a></li>
+                    <li><a class="tag" href="/tags#web">web</a></li>
+                </ul>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="bg-gradient-subtle">
+            <div {center}="" class="bg-default">
+                <article {box}="">
+
+                    <blockquote>
+                        <b>Update 2023-02-23</b>
+                        <p>Note that this site no longer employs <b>elmstatic</b>, it's a great project nontheless so the rest of the article stays as is.</p>
+                    </blockquote>
+
+                    <p>A quick walkthrough of how I migrated this site to use <a href="https://github.com/alexkorban/elmstatic" target="_blank" rel="noopener noreferrer">Elmstatic</a> instead of my buggy, hand-made Elm-to-static-HTML script.</p>
+                    <h3>Iterate, Adapt, Repeat</h3>
+                    <p>Originally the blog started out using plain HTML/CSS employing a rather strict <a href="http://getbem.com/introduction/" target="_blank" rel="noopener noreferrer"><abbr title="Block-Element-Modifier">BEM</abbr></a> approach. As I got more into <a href="https://www.elm-lang.org" target="_blank" rel="noopener noreferrer">Elm</a> at the time I decided it would be a fun exercise to use it to create the markup and <a href="https://github.com/eeue56/elm-static-html-lib" target="_blank" rel="noopener noreferrer">elm-static-html-lib</a> seemed like a good choice. And so I hacked away at a <a href="https://www.nodejs.org" target="_blank" rel="noopener noreferrer">Node</a> script that produced the desired artifacts out of an Elm/Markdown mixture; the outcome certainly wasn't something to be proud of. It was pretty buggy and annoying to work with, to be honest, but being able to leverage Elm for the layout stuff and writing content in Markdown was still the big plus I hoped for, so I didn't roll back. I did wait for official server-side-rendering support that seemed to be on the horizon at that time.</p>
+
+                    <h3>Enter Elmstatic</h3>
+                    <p>However, as it became clear that official support for server-side-rendering would be put on hold when 0.19 was released and <a href="https://github.com/eeue56/elm-static-html-lib" target="_blank" rel="noopener noreferrer">elm-static-html-lib</a> didn't receive an upgrade to the new language version I started to look for alternatives. Since users were now barred from (ab-)using <a href="https://discourse.elm-lang.org/t/native-code-in-0-19/826" target="_blank" rel="noopener noreferrer">never published-as-an-API <code>Native</code> modules</a> many workable approaches in Elm 0.18 seized to be an option, short of forking the <a href="https://github.com/elm/compiler" target="_blank" rel="noopener noreferrer">Elm compiler</a> - probably for the better. So I ultimately opted for <a href="https://github.com/alexkorban/elmstatic" target="_blank" rel="noopener noreferrer">Elmstatic</a> instead of rolling my own because the setup is essentially the same I had thought of earlier:</p>
+                    <ul class="list-disc list-inside">
+                        <li>No dynamic content creation needed so use a static site generator</li>
+                        <li>Keep on relying on <a href="https://daringfireball.net/projects/markdown/syntax" target="_blank" rel="noopener noreferrer">Markdown</a> for content</li>
+                        <li>Continue to use <a href="https://www.elm-lang.org" target="_blank" rel="noopener noreferrer">Elm</a> for most of the layout structure and styling</li>
+                        <li>Use <a href="https://github.com/jsdom/jsdom" target="_blank" rel="noopener noreferrer">JSDOM</a> to run the Elm app to produce the final markup</li>
+                        <li>Reduce <a href="https://npmjs.com" target="_blank" rel="noopener noreferrer">NPM</a> dependencies as much as possible</li>
+                    </ul>
+                    <p>On top of that the usage is so straight forward, it is a delight</p>
+<pre><code>npm install --save-dev elm@elm0.19.0 elmstatic &amp;&amp; npx elmstatic init
+<span class="code:comment"># do your thing</span>
+npx elmstatic
+</code></pre>
+
+                    <h3>Content Migration</h3>
+                    <p>Most of my posts are pretty basic and didn't really need any adjustment apart from moving the post metadata from my custom Elm structure into the markdown <a href="https://jekyllrb.com/docs/front-matter/" target="_blank" rel="noopener noreferrer">frontmatter</a>.</p>
+<pre><code><span class="code:title">meta</span> =
+    { date = <span class="code:type">Date</span>.date <span class="code:number">2019</span> <span class="code:number">3</span> <span class="code:number">4</span>
+    , route = <span class="code:type">Article</span> <span class="code:type">Blog_2019_03_04_typescript_vs_the_real_world</span>
+    , tags =
+        [ <span class="code:type">Elm</span>
+        , <span class="code:type">Tech</span>
+        , <span class="code:type">Web</span>
+        ]
+    , title = <span class="code:string">"TypeScript vs the Real World"</span>
+    }
+</code></pre>
+<p>became</p>
+<pre><code><span class="code:comment">---</span>
+title: TypeScript vs the Real World
+tags: elm tech web
+<span class="code:comment">---</span>
+</code></pre>
+
+                    <p>Note that <a href="https://github.com/alexkorban/elmstatic" target="_blank" rel="noopener noreferrer">Elmstatic</a> takes care of the date and routing stuff for you, just name the file according to <code>YYYY-MM-DD-your-url-safe-title</code> and you're good to go.</p>
+
+                    <h3>Layout Migration</h3>
+                    <p>To my surprise I didn't even hit a bump when I migrated my <a href="/posts/2017-01-18-hello-living-style-guide" target="_blank" rel="noopener noreferrer">Hello Living Styleguide</a> post that demonstrated the <a href="http://getbem.com/introduction/" target="_blank" rel="noopener noreferrer">BEM</a> blocks used for the layout. Due to the mild namespacing of the BEM styles to a <code>.ui-theme</code> that I'd always found useful it was pretty easy to include the old styles inside a custom Elmstatic layout and have them applied only to the content sub-tree of the document without disturbing the new styling. Very nice!</p>
+
+<pre><code><span class="code:tag">&lt;<span class="code:name">html</span> <span class="code:attr">class</span>=<span class="code:string">"ui-layout"</span>&gt;</span>
+...
+<span class="code:tag">&lt;<span class="code:name">body</span>&gt;</span>
+  ...
+  <span class="code:tag">&lt;<span class="code:name">link</span> <span class="code:attr">rel</span>=<span class="code:string">"stylesheet"</span> <span class="code:attr">href</span>=<span class="code:string">"oldstyles.css"</span>&gt;</span>
+  <span class="code:tag">&lt;<span class="code:name">div</span> <span class="code:attr">class</span>=<span class="code:string">"ui-theme"</span>&gt;</span>
+    <span class="code:comment">&lt;!-- BEM styles only apply here --&gt;</span>
+  <span class="code:tag">&lt;/<span class="code:name">div</span>&gt;</span>
+<span class="code:tag">&lt;/<span class="code:name">body</span>&gt;</span>
+</code></pre>
+
+                    <p>As I had no intention of continuing to use my hopelessly over-engineered <a href="http://getbem.com/introduction/">BEM CSS</a> styles I just adapted the <a href="https://github.com/rtfeldman/elm-css" target="_blank" rel="noopener noreferrer">elm-css</a> global styles that came with the scaffold. I might come back to that and do some cleanup in the future now that that it's backed by Elm instead of <a href="http://lesscss.org/" target="_blank" rel="noopener noreferrer">less</a>.</p>
+                    <h3>Lessons Learned Along the Road</h3>
+                    <p>The migration turned out to be very straight forward but as always there were some minor annoyances.</p>
+
+                    <h4>No Typed Routes</h4>
+                    <p>I did lose one feature along the way in that my custom script supported extracting routes and tags from <a href="https://guide.elm-lang.org/types/custom_types.html" target="_blank" rel="noopener noreferrer">Elm Custom Types</a> with the help of some dark regex magic so Elm would complain when I got a route wrong, no big deal.</p>
+
+                    <h4>Static Deployment <strike>is</strike> can be easy</h4>
+                    <p>Not a problem with Elmstatic but after realizing that <a href="https://help.github.com/en/articles/user-organization-and-project-pages#user-and-organization-pages-sites" target="_blank" rel="noopener noreferrer">user/org pages on Github need to be served from / in <code>master</code></a> I scrapped my deploy-to-docs-directory strategy and moved all the source files into the <code>src</code> directory and had the build-step copy the built artifacts into the repository root. Et vóila, it works!</p>
+
+                    <h4>Yarn Is Fast</h4>
+                    <p>Lately I've been using a lot of <a href="https://yarnpkg.com" target="_blank" rel="noopener noreferrer">yarn</a> over <a href="https://npmjs.com" target="_blank" rel="noopener noreferrer">npm</a>, just feels snappier.</p>
+
+                    <h3>Conclusion</h3>
+                    <p>I'm rather happy how the site turned out due to the well-thought-out design of Elmstatic that leaves plenty of room for customization and having Elm as an ally when creating layouts and styles is always a breeze.</p>
+                    <p>It's been a great experience, thanks <a href="https://korban.net" target="_blank" rel="noopener noreferrer">Alex Korban</a> for <a href="https://github.com/alexkorban/elmstatic" target="_blank" rel="noopener noreferrer">Elmstatic</a>!</p>
+
+                </article>
+            </div>
+
+            <div {center}="" class="bg-default">
+                <hr>
+                <ca-gh-comments {box}="" issue="https://api.github.com/repos/canena/canena.github.io/issues/21">
+                    <h4 comments-heading="">Comments</h4>
+                    <p>
+                        The comments for this post are available on <a href="https://github.com/canena/canena.github.io/issues/21" target="_blank" rel="noopener noreferrer">this issue on GitHub</a>.
+                        Feel free to engage in conversation over there.
+                    </p>
+                    <p>If you decide to enable JavaScript the GitHub API will be used to display the conversation here for the viewer's convenience.</p>
+<div class="when-js">
+    <i comments-status=""></i>
+    <div comments-container="">
+        <ul {stack}=""></ul>
+    </div>
+    <template class="hidden">
+        <li class="border">
+            <div class="border-b bg-grainy p-1">
+                <h5 class="flex gap-2 m-0">
+                    <a class="grow-0 whitespace-nowrap" href="#" comment-author="" rel="noopener noreferrer"></a>
+                    <div comment-created=""></div>
+                    <div class="font-normal text-gray" comment-edited=""></div>
+                </h5>
+            </div>
+            <div {box}="" comment-body=""></div>
+        </li>
+    </template>
+</div>
+
+                </ca-gh-comments>
+            </div>
+
+            <footer {center}="" {billboard}="dots" class="border-t">
+                <nav class="px-2 pb-20">
+                    <ul class="flex flex-wrap text-xs text-center">
+    <li><a class="block p-1" href="/">Home</a></li>
+    <li><a class="block p-1" href="/#blog">Blog</a></li>
+    <li><a class="block p-1" href="/#about">About</a></li>
+    <li><a class="block p-1" href="/posts/2017-03-20-epic-links">Links</a></li>
+    <li><a class="block p-1" href="/#contact">Contact</a></li>
+    <li><a class="block p-1" href="/#impressum">Impressum</a></li>
+</ul>
+
+                </nav>
+            </footer>
+        </div>
+    </main>
+
+    <nav class="floaty-nav | fixed bottom-0 w-full">
+        <div back-to-top="" class="m-1 flex justify-between">
+    <a class="btn --link" href="#">↑ top</a>
+    <a class="btn --link" href="#">top ↑</a>
+</div>
+<ca-reading-progress progress-indicator="">
+    <template>
+        <div data-track="" class="bg-lightgray">
+            <div data-bar="" class="min-h-xs bg-primary"></div>
+        </div>
+    </template>
+</ca-reading-progress>
+
+        <div class="floaty-nav-body">
+    <ul class="max-inline-size:none | flex flex-row bg-grainy font-bold text-center">
+        <li class="grow basis-0">
+            <ca-logo-switcher class="flex h-full w-full items-center justify-center">
+                <a class="block flex items-center justify-center" href="/" title="Return back to home page">
+                    <span default-label="" class="block">Home</span>
+                    <span fancy-label="" class="block overflow-visible mt-0.3rem hidden">
+                        <img src="/cdn/canena.svg" class="invert" height="34" alt="Return to home page">
+                    </span>
+                </a>
+            </ca-logo-switcher>
+        </li>
+        <li class="grow basis-0"><a class="block p-1" href="/#blog">Blog</a></li>
+        <li class="grow basis-0"><a class="block p-1" href="/portfolio">Portfolio</a></li>
+        <li class="grow basis-0 flex items-center justify-center">
+            <ca-fx-toggle>
+                <span class="switch">
+                    <input id="fx-toggle" type="checkbox">
+                    <label for="fx-toggle">FX</label>
+                </span>
+            </ca-fx-toggle>
+        </li>
+    </ul>
+</div>
+
+    </nav>
+
+    <script defer="" src="/deps/hubjs/hub.js"></script>
+
+
+</body></html>
