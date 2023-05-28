@@ -1,10 +1,16 @@
 # A blog about life
-Life/Music/Art/Code/Stuff
 
-## How to build
-It's easy to build the content of the static site from scratch:
+> Life/Music/Art/Code/Stuff
 
-* Install NodeJS v8+
-* `cd src`
-* Install dependencies `yarn install`
-* Build it `yarn build` and you're set
+This repository contains the source code for [https://www.canena.de][].
+
+
+## Build
+
+You'll need [Deno](www.deno.land), neither `node` nor `npm` are used.
+To build the site into `docs/` run `deno task build`.
+
+
+## Test
+
+To execute tests run `deno task test`.
