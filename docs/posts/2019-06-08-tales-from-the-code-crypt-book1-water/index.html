@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en" class="no-js"><head>
+    <!-- [docs]
+        Welcome to our not-so-fancy inline tutorial. If you read this it's probably
+        safe to assume you are interested in such things so have fun following our
+        thoughts. This is *just* a content page, for more information on the overall
+        approach of the site visit /home.
+    -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="author" content="Martin Feineis">
+    <meta name="creator" content="Canena">
+    <meta name="description" content="A blog about life">
+    <meta name="viewport" content="width=device-width, user-scalable=yes, initial-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-YzxQZnYzEzF+cXKWurXLJQfpy1c+ScGqPeldlHJNbDk=' 'sha256-vvt4KWwuNr51XfE5m+hzeNEGhiOfZzG97ccfqGsPwvE='; style-src 'self' 'sha256-VupjYsZBajbcJE3W77oInzx8ftA5tjocC3ZZJ9Ivppk='; connect-src 'self' https://api.github.com/repos/canena/canena.github.io/issues/23/comments ">
+    <title>Tales From the Code Crypt - Book 1, Water • CANENA</title>
+    <script>
+/*! hubjs stub */
+(function(w,t){"use strict";function a(o,x){(o._||(o._=[])).push(x)}
+function s(){return function f(){a(f,t.call(arguments))}}
+w.Hub=w.Hub||{config:s(),log:s(),use:s()};}(self,[].slice))
+    </script>
+    <link href="/cdn/common.dev.css" rel="stylesheet" type="text/css">
+    
+    <style>
+        nobr[aria-hidden=true] {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <script defer="" src="/cdn/config.js"></script>
+    <script defer="" type="module" src="/cdn/ca/requires.js"></script>
+    <script defer="" type="module" src="/cdn/site.js"></script>
+
+    <ca-requires elements="fx-toggle gh-comments logo-switcher reading-meta reading-progress scroll-behavior"></ca-requires>
+    <ca-scroll-behavior></ca-scroll-behavior>
+
+    <ca-requires elements="demo-water"></ca-requires>
+
+    <header {cover}="" class="h-golden" {billboard}="monument">
+        <nav>
+            <a {box}="" href="/" title="Return to home page">
+                <img logo="" src="/cdn/canena.svg" width="95" height="30" alt="CANENA">
+            </a>
+        </nav>
+        <div {center}="" {cover.art}="">
+            <div {box}="" class="backdrop-blur">
+                <h1 class="capitalize">Tales From the Code Crypt</h1>
+                <h2 class="capitalize italic">Book 1, Water</h2>
+                <div class="flex gap-2">
+                    <p class="whitespace-nowrap">2019-06-08</p>
+                    <ca-reading-meta class="italic"></ca-reading-meta>
+                </div>
+                <ul class="list-none flex gap-2">
+                    <li><a class="tag" href="/tags#code-crypt">code-crypt</a></li>
+                    <li><a class="tag" href="/tags#javascript">javascript</a></li>
+                    <li><a class="tag" href="/tags#tech">tech</a></li>
+                    <li><a class="tag" href="/tags#web">web</a></li>
+                </ul>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="bg-gradient-subtle">
+            <div {center}="" class="bg-default">
+                <article {box}="">
+                    <p>I recently waded through my own code archives and rediscovered some interesting and/or formative gems I think are worth discussing. This post is the first installment of this series to showcase and evaluate what past-me-code was all about.</p>
+
+                    <h3>Efficient Water Imitation</h3>
+                    <p>This post presents a water imitation algorithm that employs a front-/back-buffer smoothing approach I fiddled around with probably around 2008. Full disclosure: I'm not the originator of this neat trick. Unfortunately, I'm not sure when and where I got the actual calculations from, I'm sorry for that.</p>
+                    <p>Before we jump into the explanation, let's have a look at a quick demo of what we are talking about. <em>Caution:</em> this might be a bit much for your mobile device.</p>
+
+                    <ca-demo-water class="bg-gradient-subtle border block p-0.5 mb-1">
+                        <noscript>
+                            If you want to see this demo you need to allow JavaScript for this page.
+                        </noscript>
+                        <div data-ref="content" class="hidden flex flex-wrap gap-1 pb-0.5">
+                            <canvas data-ref="pool" width="400" height="300">
+                                <img src="water_bg.png" width="400" height="300">
+                            </canvas>
+                            <canvas data-ref="buffer" width="400" height="300"></canvas>
+                        </div>
+                        <div class="flex gap-1">
+                            <button class="btn --fancy text-sm" data-trigger="water.start">Start Demo</button>
+                            <button class="btn --fancy text-sm" data-trigger="water.stop" disabled="">Stop</button>
+                        </div>
+                    </ca-demo-water>
+
+                    <p>The first box shows the final composited image using the <a href="https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API" target="_blank" rel="noopener noreferrer"><code>&lt;canvas&gt;</code> API</a>. You can move the mouse over the canvas, it also reacts to clicks or taps when you're on mobile. Each event causes a ripple that travels the surface and gets reflected from the border of the canvas.</p>
+                    <p>Notice how there is no loss in performance no matter how many ripples are moving around the surface. What's also interesting is that the ripples move in and out of each other with ease. </p>
+
+                    <h3>How It Works</h3>
+                    <p>The effect is produced by a surprisingly simple iterative loop of a step function, working on two full-image-sized buffers, that is comprised of three steps.</p>
+
+<pre><code><span class="code:comment">// Pseudo Code</span>
+<span class="code:function"><span class="code:keyword">function</span> <span class="code:title">step</span>(<span class="code:params"></span>) </span>{
+    swapBuffer();
+    computeNext();
+    renderCurrent();
+}
+</code></pre>
+
+                    <p>On every iteration the selected buffer is alternated between the two input buffers. <code>computeNext()</code> is a straight forward <a href="https://en.wikipedia.org/wiki/Kernel_(image_processing)" target="_blank" rel="noopener noreferrer">convolution smoothing filter</a> folding over the immediate neighboring values of the current buffer and the damped former value of the second buffer at that location</p>
+                    <p class="text-center"><span class="MathJax" id="MathJax-Element-1-Frame" tabindex="0" data-mathml="<math xmlns=&quot;http://www.w3.org/1998/Math/MathML&quot; display=&quot;block&quot;><msubsup><mi>b</mi><mn>2</mn><mo>&amp;#x2032;</mo></msubsup><mo stretchy=&quot;false&quot;>(</mo><mi>x</mi><mo>,</mo><mi>y</mi><mo stretchy=&quot;false&quot;>)</mo><mo>=</mo><mrow class=&quot;MJX-TeXAtom-ORD&quot;><mrow class=&quot;MJX-TeXAtom-ORD&quot;><mfrac><mrow><msub><mi>b</mi><mn>1</mn></msub><mo stretchy=&quot;false&quot;>(</mo><mi>x</mi><mo>&amp;#x2212;</mo><mn>1</mn><mo>,</mo><mi>y</mi><mo stretchy=&quot;false&quot;>)</mo><mo>+</mo><msub><mi>b</mi><mn>1</mn></msub><mo stretchy=&quot;false&quot;>(</mo><mi>x</mi><mo>+</mo><mn>1</mn><mo>,</mo><mi>y</mi><mo stretchy=&quot;false&quot;>)</mo><mo>+</mo><msub><mi>b</mi><mn>1</mn></msub><mo stretchy=&quot;false&quot;>(</mo><mi>x</mi><mo>,</mo><mi>y</mi><mo>+</mo><mn>1</mn><mo stretchy=&quot;false&quot;>)</mo><mo>+</mo><msub><mi>b</mi><mn>1</mn></msub><mo stretchy=&quot;false&quot;>(</mo><mi>x</mi><mo>,</mo><mi>y</mi><mo>&amp;#x2212;</mo><mn>1</mn><mo stretchy=&quot;false&quot;>)</mo></mrow><mn>2</mn></mfrac></mrow><mo>&amp;#x2212;</mo><msub><mi>b</mi><mn>2</mn></msub><mo stretchy=&quot;false&quot;>(</mo><mi>x</mi><mo>,</mo><mi>y</mi><mo stretchy=&quot;false&quot;>)</mo><mo>&amp;#x2217;</mo><mi>d</mi><mi>a</mi><mi>m</mi><mi>p</mi><mi>i</mi><mi>n</mi><mi>g</mi></mrow><mo>.</mo></math>" role="presentation"><nobr aria-hidden="true"><span class="math" id="MathJax-Span-1"><span><span><span class="mrow" id="MathJax-Span-2"><span class="msubsup" id="MathJax-Span-3"><span><span><span class="mi" id="MathJax-Span-4">b</span></span><span'><span class="mo" id="MathJax-Span-5" '="">′</span><span'></span'></span'></span></span><span'><span class="mn" id="MathJax-Span-6" '="">2</span><span'></span'></span'></span></span></span></span><span class="mo" id="MathJax-Span-7" '="">(</span><span class="mi" id="MathJax-Span-8" '="">x</span><span class="mo" id="MathJax-Span-9" '="">,</span><span class="mi" id="MathJax-Span-10" '="">y<span'></span'></span></nobr></span><nobr aria-hidden="true"><span class="mo" id="MathJax-Span-11" '="">)</span><span class="mo" id="MathJax-Span-12" '="">=</span><span class="texatom" id="MathJax-Span-13" '=""><span class="mrow" id="MathJax-Span-14"><span class="texatom" id="MathJax-Span-15"><span class="mrow" id="MathJax-Span-16"><span class="mfrac" id="MathJax-Span-17"><span'><span'><span class="mrow" id="MathJax-Span-18"><span class="msubsup" id="MathJax-Span-19"><span'><span'><span class="mi" id="MathJax-Span-20" '="">b</span><span'></span'></span'></span'></span></span><span'><span class="mn" id="MathJax-Span-21" '="">1</span><span'></span'></span'></span'></span'></span></span></span></span><span class="mo" id="MathJax-Span-22" '="">(</span><span class="mi" id="MathJax-Span-23" '="">x</span><span class="mo" id="MathJax-Span-24" '="">−</span><span class="mn" id="MathJax-Span-25" '="">1</span><span class="mo" id="MathJax-Span-26" '="">,</span><span class="mi" id="MathJax-Span-27" '="">y<span'></span'></span></span><span class="mo" id="MathJax-Span-28" '="">)</span><span class="mo" id="MathJax-Span-29" '="">+</span><span class="msubsup" id="MathJax-Span-30" '=""><span'><span'><span class="mi" id="MathJax-Span-31" '="">b</span><span'></span'></span'></span'></span><span'><span class="mn" id="MathJax-Span-32" '="">1</span><span'><span class="mo" id="MathJax-Span-33" '="">(</span><span class="mi" id="MathJax-Span-34" '="">x</span><span class="mo" id="MathJax-Span-35" '="">+</span><span class="mn" id="MathJax-Span-36" '="">1</span><span class="mo" id="MathJax-Span-37" '="">,</span><span class="mi" id="MathJax-Span-38" '="">y<span'></span'></span><span class="mo" id="MathJax-Span-39" '="">)</span><span class="mo" id="MathJax-Span-40" '="">+</span><span class="msubsup" id="MathJax-Span-41" '=""><span'><span'><span class="mi" id="MathJax-Span-42" '="">b</span><span'></span'></span'></span'></span><span'><span class="mn" id="MathJax-Span-43" '="">1</span><span'><span class="mo" id="MathJax-Span-44" '="">(</span><span class="mi" id="MathJax-Span-45" '="">x</span><span class="mo" id="MathJax-Span-46" '="">,</span><span class="mi" id="MathJax-Span-47" '="">y<span'></span'></span><span class="mo" id="MathJax-Span-48" '="">+</span><span class="mn" id="MathJax-Span-49" '="">1</span><span class="mo" id="MathJax-Span-50" '="">)</span><span class="mo" id="MathJax-Span-51" '="">+</span><span class="msubsup" id="MathJax-Span-52" '=""><span'><span'><span class="mi" id="MathJax-Span-53" '="">b</span><span'></span'></span'></span'></span><span'><span class="mn" id="MathJax-Span-54" '="">1</span><span'><span class="mo" id="MathJax-Span-55" '="">(</span><span class="mi" id="MathJax-Span-56" '="">x</span><span class="mo" id="MathJax-Span-57" '="">,</span><span class="mi" id="MathJax-Span-58" '="">y<span'></span'></span><span class="mo" id="MathJax-Span-59" '="">−</span><span class="mn" id="MathJax-Span-60" '="">1</span><span class="mo" id="MathJax-Span-61" '="">)</span><span'><span'><span class="mn" id="MathJax-Span-62" '="">2</span><span'><span'><span'><span'><span class="mo" id="MathJax-Span-63" '="">−</span><span class="msubsup" id="MathJax-Span-64" '=""><span'><span'><span class="mi" id="MathJax-Span-65" '="">b</span><span'></span'></span'></span'></span><span'><span class="mn" id="MathJax-Span-66" '="">2</span><span'><span class="mo" id="MathJax-Span-67" '="">(</span><span class="mi" id="MathJax-Span-68" '="">x</span><span class="mo" id="MathJax-Span-69" '="">,</span><span class="mi" id="MathJax-Span-70" '="">y<span'></span'></span><span class="mo" id="MathJax-Span-71" '="">)</span><span class="mo" id="MathJax-Span-72" '="">∗</span><span class="mi" id="MathJax-Span-73" '="">d<span'></span'></span><span class="mi" id="MathJax-Span-74" '="">a</span><span class="mi" id="MathJax-Span-75" '="">m</span><span class="mi" id="MathJax-Span-76" '="">p</span><span class="mi" id="MathJax-Span-77" '="">i</span><span class="mi" id="MathJax-Span-78" '="">n</span><span class="mi" id="MathJax-Span-79" '="">g<span'></span'></span><span class="mo" id="MathJax-Span-80" '="">.</span><span'><span'></span'></span'></span'></span'></span'></span'></span'></span'></span'></span'></span'></span'></span'></span'></span'></span'></nobr><span class="MJX_Assistive_MathML MJX_Assistive_MathML_Block" role="presentation"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><msubsup><mi>b</mi><mn>2</mn><mo>′</mo></msubsup><mo stretchy="false">(</mo><mi>x</mi><mo>,</mo><mi>y</mi><mo stretchy="false">)</mo><mo>=</mo><mrow class="MJX-TeXAtom-ORD"><mrow class="MJX-TeXAtom-ORD"><mfrac><mrow><msub><mi>b</mi><mn>1</mn></msub><mo stretchy="false">(</mo><mi>x</mi><mo>−</mo><mn>1</mn><mo>,</mo><mi>y</mi><mo stretchy="false">)</mo><mo>+</mo><msub><mi>b</mi><mn>1</mn></msub><mo stretchy="false">(</mo><mi>x</mi><mo>+</mo><mn>1</mn><mo>,</mo><mi>y</mi><mo stretchy="false">)</mo><mo>+</mo><msub><mi>b</mi><mn>1</mn></msub><mo stretchy="false">(</mo><mi>x</mi><mo>,</mo><mi>y</mi><mo>+</mo><mn>1</mn><mo stretchy="false">)</mo><mo>+</mo><msub><mi>b</mi><mn>1</mn></msub><mo stretchy="false">(</mo><mi>x</mi><mo>,</mo><mi>y</mi><mo>−</mo><mn>1</mn><mo stretchy="false">)</mo></mrow><mn>2</mn></mfrac></mrow><mo>−</mo><msub><mi>b</mi><mn>2</mn></msub><mo stretchy="false">(</mo><mi>x</mi><mo>,</mo><mi>y</mi><mo stretchy="false">)</mo><mo>∗</mo><mi>d</mi><mi>a</mi><mi>m</mi><mi>p</mi><mi>i</mi><mi>n</mi><mi>g</mi></mrow><mo>.</mo></math></span><script type="math/tex; mode=display" id="MathJax-Element-1">b_2'(x,y) = { {b_1(x-1,y) + b_1(x+1,y) + b_1(x,y+1) + b_1(x,y-1) \over 2} - b_2(x,y) * damping }.</script></p>
+                    <p>As you probably guessed: the second box of the demo visualizes the components being used to calculate the refraction of the waves. If you stop the demo when waves are traveling you can see the actual color coding, more specifically</p>
+                    <p class="text-center"><span class="MathJax" id="MathJax-Element-2-Frame" tabindex="0" '="" data-mathml="<math xmlns=&quot;http://www.w3.org/1998/Math/MathML&quot; display=&quot;block&quot;><mi>o</mi><mi>f</mi><mi>f</mi><mi>s</mi><mi>e</mi><msub><mi>t</mi><mi>x</mi></msub><mo>=</mo><msub><mi>b</mi><mn>1</mn></msub><mo stretchy=&quot;false&quot;>(</mo><mi>x</mi><mo>&amp;#x2212;</mo><mn>1</mn><mo>,</mo><mi>y</mi><mo stretchy=&quot;false&quot;>)</mo><mo>&amp;#x2212;</mo><msub><mi>b</mi><mn>1</mn></msub><mo stretchy=&quot;false&quot;>(</mo><mi>x</mi><mo>+</mo><mn>1</mn><mo>,</mo><mi>y</mi><mo stretchy=&quot;false&quot;>)</mo></math>" role="presentation"><nobr aria-hidden="true"><span class="math" id="MathJax-Span-81" '=""><span'><span'><span class="mrow" id="MathJax-Span-82"><span class="mi" id="MathJax-Span-83" '="">o</span><span class="mi" id="MathJax-Span-84" '="">f<span'></span'></span></span><span class="mi" id="MathJax-Span-85" '="">f<span'></span'></span></span'></span'></span><span class="mi" id="MathJax-Span-86" '="">s</span><span class="mi" id="MathJax-Span-87" '="">e</span><span class="msubsup" id="MathJax-Span-88"><span'><span'><span class="mi" id="MathJax-Span-89" '="">t</span><span'></span'></span'></span'></span></nobr></span><nobr aria-hidden="true"><span'><span class="mi" id="MathJax-Span-90" '="">x</span><span'><span class="mo" id="MathJax-Span-91" '="">=</span><span class="msubsup" id="MathJax-Span-92" '=""><span'><span'><span class="mi" id="MathJax-Span-93" '="">b</span><span'></span'></span'></span'></span><span'><span class="mn" id="MathJax-Span-94" '="">1</span><span'><span class="mo" id="MathJax-Span-95" '="">(</span><span class="mi" id="MathJax-Span-96" '="">x</span><span class="mo" id="MathJax-Span-97" '="">−</span><span class="mn" id="MathJax-Span-98" '="">1</span><span class="mo" id="MathJax-Span-99" '="">,</span><span class="mi" id="MathJax-Span-100" '="">y<span'></span'></span><span class="mo" id="MathJax-Span-101" '="">)</span><span class="mo" id="MathJax-Span-102" '="">−</span><span class="msubsup" id="MathJax-Span-103" '=""><span'><span'><span class="mi" id="MathJax-Span-104" '="">b</span><span'></span'></span'></span'></span><span'><span class="mn" id="MathJax-Span-105" '="">1</span><span'><span class="mo" id="MathJax-Span-106" '="">(</span><span class="mi" id="MathJax-Span-107" '="">x</span><span class="mo" id="MathJax-Span-108" '="">+</span><span class="mn" id="MathJax-Span-109" '="">1</span><span class="mo" id="MathJax-Span-110" '="">,</span><span class="mi" id="MathJax-Span-111" '="">y<span'></span'></span><span class="mo" id="MathJax-Span-112" '="">)</span><span'><span'></span'></span'></span'></span'></span'></span'></span'></span'></nobr><span class="MJX_Assistive_MathML MJX_Assistive_MathML_Block" role="presentation"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mi>o</mi><mi>f</mi><mi>f</mi><mi>s</mi><mi>e</mi><msub><mi>t</mi><mi>x</mi></msub><mo>=</mo><msub><mi>b</mi><mn>1</mn></msub><mo stretchy="false">(</mo><mi>x</mi><mo>−</mo><mn>1</mn><mo>,</mo><mi>y</mi><mo stretchy="false">)</mo><mo>−</mo><msub><mi>b</mi><mn>1</mn></msub><mo stretchy="false">(</mo><mi>x</mi><mo>+</mo><mn>1</mn><mo>,</mo><mi>y</mi><mo stretchy="false">)</mo></math></span><script type="math/tex; mode=display" id="MathJax-Element-2">offset_x=b_1(x-1,y) - b_1(x+1,y)</script>
+                    </p><p class="text-center"></p><div class="MathJax_Display" '=""><span class="MathJax" id="MathJax-Element-3-Frame" tabindex="0" '="" data-mathml="<math xmlns=&quot;http://www.w3.org/1998/Math/MathML&quot; display=&quot;block&quot;><mi>o</mi><mi>f</mi><mi>f</mi><mi>s</mi><mi>e</mi><msub><mi>t</mi><mi>y</mi></msub><mo>=</mo><msub><mi>b</mi><mn>1</mn></msub><mo stretchy=&quot;false&quot;>(</mo><mi>x</mi><mo>,</mo><mi>y</mi><mo>&amp;#x2212;</mo><mn>1</mn><mo stretchy=&quot;false&quot;>)</mo><mo>&amp;#x2212;</mo><msub><mi>b</mi><mn>1</mn></msub><mo stretchy=&quot;false&quot;>(</mo><mi>x</mi><mo>,</mo><mi>y</mi><mo>+</mo><mn>1</mn><mo stretchy=&quot;false&quot;>)</mo></math>" role="presentation"><nobr aria-hidden="true"><span class="math" id="MathJax-Span-113" '=""><span'><span'><span class="mrow" id="MathJax-Span-114"><span class="mi" id="MathJax-Span-115" '="">o</span><span class="mi" id="MathJax-Span-116" '="">f<span'></span'></span></span><span class="mi" id="MathJax-Span-117" '="">f<span'></span'></span></span'></span'></span><span class="mi" id="MathJax-Span-118" '="">s</span><span class="mi" id="MathJax-Span-119" '="">e</span><span class="msubsup" id="MathJax-Span-120"><span'><span'><span class="mi" id="MathJax-Span-121" '="">t</span><span'></span'></span'></span'></span></nobr></span><nobr aria-hidden="true"><span'><span class="mi" id="MathJax-Span-122" '="">y<span'></span'></span><span'><span class="mo" id="MathJax-Span-123" '="">=</span><span class="msubsup" id="MathJax-Span-124" '=""><span'><span'><span class="mi" id="MathJax-Span-125" '="">b</span><span'></span'></span'></span'></span><span'><span class="mn" id="MathJax-Span-126" '="">1</span><span'><span class="mo" id="MathJax-Span-127" '="">(</span><span class="mi" id="MathJax-Span-128" '="">x</span><span class="mo" id="MathJax-Span-129" '="">,</span><span class="mi" id="MathJax-Span-130" '="">y<span'></span'></span><span class="mo" id="MathJax-Span-131" '="">−</span><span class="mn" id="MathJax-Span-132" '="">1</span><span class="mo" id="MathJax-Span-133" '="">)</span><span class="mo" id="MathJax-Span-134" '="">−</span><span class="msubsup" id="MathJax-Span-135" '=""><span'><span'><span class="mi" id="MathJax-Span-136" '="">b</span><span'></span'></span'></span'></span><span'><span class="mn" id="MathJax-Span-137" '="">1</span><span'><span class="mo" id="MathJax-Span-138" '="">(</span><span class="mi" id="MathJax-Span-139" '="">x</span><span class="mo" id="MathJax-Span-140" '="">,</span><span class="mi" id="MathJax-Span-141" '="">y<span'></span'></span><span class="mo" id="MathJax-Span-142" '="">+</span><span class="mn" id="MathJax-Span-143" '="">1</span><span class="mo" id="MathJax-Span-144" '="">)</span><span'><span'></span'></span'></span'></span'></span'></span'></span'></span'></nobr><span class="MJX_Assistive_MathML MJX_Assistive_MathML_Block" role="presentation"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mi>o</mi><mi>f</mi><mi>f</mi><mi>s</mi><mi>e</mi><msub><mi>t</mi><mi>y</mi></msub><mo>=</mo><msub><mi>b</mi><mn>1</mn></msub><mo stretchy="false">(</mo><mi>x</mi><mo>,</mo><mi>y</mi><mo>−</mo><mn>1</mn><mo stretchy="false">)</mo><mo>−</mo><msub><mi>b</mi><mn>1</mn></msub><mo stretchy="false">(</mo><mi>x</mi><mo>,</mo><mi>y</mi><mo>+</mo><mn>1</mn><mo stretchy="false">)</mo></math></span></div><script type="math/tex; mode=display" id="MathJax-Element-3">offset_y=b_1(x,y-1) - b_1(x,y+1)</script><p></p>
+                    <p class="text-center"></p><div class="MathJax_Display" '=""><span class="MathJax" id="MathJax-Element-4-Frame" tabindex="0" '="" data-mathml="<math xmlns=&quot;http://www.w3.org/1998/Math/MathML&quot; display=&quot;block&quot;><mi>R</mi><mo>=</mo><mi>o</mi><mi>f</mi><mi>f</mi><mi>s</mi><mi>e</mi><msub><mi>t</mi><mi>x</mi></msub><mo>,</mo><mi>G</mi><mo>=</mo><mi>o</mi><mi>f</mi><mi>f</mi><mi>s</mi><mi>e</mi><msub><mi>t</mi><mi>y</mi></msub><mo>,</mo><mi>B</mi><mo>=</mo><mrow class=&quot;MJX-TeXAtom-ORD&quot;><mo stretchy=&quot;false&quot;>|</mo></mrow><mrow class=&quot;MJX-TeXAtom-ORD&quot;><mo stretchy=&quot;false&quot;>|</mo></mrow><msub><mi>L</mi><mn>2</mn></msub><mrow class=&quot;MJX-TeXAtom-ORD&quot;><mo stretchy=&quot;false&quot;>|</mo></mrow><mrow class=&quot;MJX-TeXAtom-ORD&quot;><mo stretchy=&quot;false&quot;>|</mo></mrow><mo stretchy=&quot;false&quot;>(</mo><mi>o</mi><mi>f</mi><mi>f</mi><mi>s</mi><mi>e</mi><msub><mi>t</mi><mi>x</mi></msub><mo>,</mo><mi>o</mi><mi>f</mi><mi>f</mi><mi>s</mi><mi>e</mi><msub><mi>t</mi><mi>y</mi></msub><mo stretchy=&quot;false&quot;>)</mo></math>" role="presentation"><nobr aria-hidden="true"><span class="math" id="MathJax-Span-145" '=""><span'><span'><span class="mrow" id="MathJax-Span-146"><span class="mi" id="MathJax-Span-147" '="">R</span><span class="mo" id="MathJax-Span-148" '="">=</span><span class="mi" id="MathJax-Span-149" '="">o</span><span class="mi" id="MathJax-Span-150" '="">f<span'></span'></span></span><span class="mi" id="MathJax-Span-151" '="">f<span'></span'></span></span'></span'></span><span class="mi" id="MathJax-Span-152" '="">s</span><span class="mi" id="MathJax-Span-153" '="">e</span><span class="msubsup" id="MathJax-Span-154"><span'><span'><span class="mi" id="MathJax-Span-155" '="">t</span><span'></span'></span'></span'></span></nobr></span><nobr aria-hidden="true"><span'><span class="mi" id="MathJax-Span-156" '="">x</span><span'><span class="mo" id="MathJax-Span-157" '="">,</span><span class="mi" id="MathJax-Span-158" '="">G</span><span class="mo" id="MathJax-Span-159" '="">=</span><span class="mi" id="MathJax-Span-160" '="">o</span><span class="mi" id="MathJax-Span-161" '="">f<span'></span'></span><span class="mi" id="MathJax-Span-162" '="">f<span'></span'></span><span class="mi" id="MathJax-Span-163" '="">s</span><span class="mi" id="MathJax-Span-164" '="">e</span><span class="msubsup" id="MathJax-Span-165"><span'><span'><span class="mi" id="MathJax-Span-166" '="">t</span><span'></span'></span'></span'></span><span'><span class="mi" id="MathJax-Span-167" '="">y<span'></span'></span><span'><span class="mo" id="MathJax-Span-168" '="">,</span><span class="mi" id="MathJax-Span-169" '="">B</span><span class="mo" id="MathJax-Span-170" '="">=</span><span class="texatom" id="MathJax-Span-171" '=""><span class="mrow" id="MathJax-Span-172"><span class="mo" id="MathJax-Span-173" '="">|</span></span></span><span class="texatom" id="MathJax-Span-174"><span class="mrow" id="MathJax-Span-175"><span class="mo" id="MathJax-Span-176" '="">|</span></span></span><span class="msubsup" id="MathJax-Span-177"><span'><span'><span class="mi" id="MathJax-Span-178" '="">L</span><span'></span'></span'></span'></span><span'><span class="mn" id="MathJax-Span-179" '="">2</span><span'><span class="texatom" id="MathJax-Span-180"><span class="mrow" id="MathJax-Span-181"><span class="mo" id="MathJax-Span-182" '="">|</span></span></span><span class="texatom" id="MathJax-Span-183"><span class="mrow" id="MathJax-Span-184"><span class="mo" id="MathJax-Span-185" '="">|</span></span></span><span class="mo" id="MathJax-Span-186" '="">(</span><span class="mi" id="MathJax-Span-187" '="">o</span><span class="mi" id="MathJax-Span-188" '="">f<span'></span'></span><span class="mi" id="MathJax-Span-189" '="">f<span'></span'></span><span class="mi" id="MathJax-Span-190" '="">s</span><span class="mi" id="MathJax-Span-191" '="">e</span><span class="msubsup" id="MathJax-Span-192"><span'><span'><span class="mi" id="MathJax-Span-193" '="">t</span><span'></span'></span'></span'></span><span'><span class="mi" id="MathJax-Span-194" '="">x</span><span'><span class="mo" id="MathJax-Span-195" '="">,</span><span class="mi" id="MathJax-Span-196" '="">o</span><span class="mi" id="MathJax-Span-197" '="">f<span'></span'></span><span class="mi" id="MathJax-Span-198" '="">f<span'></span'></span><span class="mi" id="MathJax-Span-199" '="">s</span><span class="mi" id="MathJax-Span-200" '="">e</span><span class="msubsup" id="MathJax-Span-201"><span'><span'><span class="mi" id="MathJax-Span-202" '="">t</span><span'></span'></span'></span'></span><span'><span class="mi" id="MathJax-Span-203" '="">y<span'></span'></span><span'><span class="mo" id="MathJax-Span-204" '="">)</span><span'><span'></span'></span'></span'></span'></span'></span'></span'></span'></span'></span'></span'></span'></nobr><span class="MJX_Assistive_MathML MJX_Assistive_MathML_Block" role="presentation"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mi>R</mi><mo>=</mo><mi>o</mi><mi>f</mi><mi>f</mi><mi>s</mi><mi>e</mi><msub><mi>t</mi><mi>x</mi></msub><mo>,</mo><mi>G</mi><mo>=</mo><mi>o</mi><mi>f</mi><mi>f</mi><mi>s</mi><mi>e</mi><msub><mi>t</mi><mi>y</mi></msub><mo>,</mo><mi>B</mi><mo>=</mo><mrow class="MJX-TeXAtom-ORD"><mo stretchy="false">|</mo></mrow><mrow class="MJX-TeXAtom-ORD"><mo stretchy="false">|</mo></mrow><msub><mi>L</mi><mn>2</mn></msub><mrow class="MJX-TeXAtom-ORD"><mo stretchy="false">|</mo></mrow><mrow class="MJX-TeXAtom-ORD"><mo stretchy="false">|</mo></mrow><mo stretchy="false">(</mo><mi>o</mi><mi>f</mi><mi>f</mi><mi>s</mi><mi>e</mi><msub><mi>t</mi><mi>x</mi></msub><mo>,</mo><mi>o</mi><mi>f</mi><mi>f</mi><mi>s</mi><mi>e</mi><msub><mi>t</mi><mi>y</mi></msub><mo stretchy="false">)</mo></math></span></div><script type="math/tex; mode=display" id="MathJax-Element-4">R=offset_x,G=offset_y,B=||L_2||(offset_x,offset_y)</script><p></p><p></p>
+                    <p>this information is then used in the rendering stage to emulate refraction by selecting the color value of the original image at the displaced location</p>
+                    <p class="text-center"></p><div class="MathJax_Display" '=""><span class="MathJax" id="MathJax-Element-5-Frame" tabindex="0" '="" data-mathml="<math xmlns=&quot;http://www.w3.org/1998/Math/MathML&quot; display=&quot;block&quot;><mi>o</mi><mi>u</mi><mi>t</mi><mo stretchy=&quot;false&quot;>(</mo><mi>x</mi><mo>,</mo><mi>y</mi><mo stretchy=&quot;false&quot;>)</mo><mo>=</mo><mrow class=&quot;MJX-TeXAtom-ORD&quot;><mi>i</mi><mi>n</mi><mo stretchy=&quot;false&quot;>(</mo><mi>x</mi><mo>+</mo><mi>o</mi><mi>f</mi><mi>f</mi><mi>s</mi><mi>e</mi><msub><mi>t</mi><mi>x</mi></msub><mo>,</mo><mi>y</mi><mo>+</mo><mi>o</mi><mi>f</mi><mi>f</mi><mi>s</mi><mi>e</mi><msub><mi>t</mi><mi>y</mi></msub><mo stretchy=&quot;false&quot;>)</mo></mrow><mo>.</mo></math>" role="presentation"><nobr aria-hidden="true"><span class="math" id="MathJax-Span-205" '=""><span'><span'><span class="mrow" id="MathJax-Span-206"><span class="mi" id="MathJax-Span-207" '="">o</span><span class="mi" id="MathJax-Span-208" '="">u</span><span class="mi" id="MathJax-Span-209" '="">t</span><span class="mo" id="MathJax-Span-210" '="">(</span><span class="mi" id="MathJax-Span-211" '="">x</span><span class="mo" id="MathJax-Span-212" '="">,</span><span class="mi" id="MathJax-Span-213" '="">y<span'></span'></span></span><span class="mo" id="MathJax-Span-214" '="">)</span><span class="mo" id="MathJax-Span-215" '="">=</span><span class="texatom" id="MathJax-Span-216" '=""><span class="mrow" id="MathJax-Span-217"><span class="mi" id="MathJax-Span-218" '="">i</span><span class="mi" id="MathJax-Span-219" '="">n</span><span class="mo" id="MathJax-Span-220" '="">(</span><span class="mi" id="MathJax-Span-221" '="">x</span><span class="mo" id="MathJax-Span-222" '="">+</span><span class="mi" id="MathJax-Span-223" '="">o</span><span class="mi" id="MathJax-Span-224" '="">f<span'></span'></span></span><span class="mi" id="MathJax-Span-225" '="">f<span'></span'></span></span><span class="mi" id="MathJax-Span-226" '="">s</span><span class="mi" id="MathJax-Span-227" '="">e</span><span class="msubsup" id="MathJax-Span-228"><span'><span'><span class="mi" id="MathJax-Span-229" '="">t</span><span'></span'></span'></span'></span></span'></span'></span><span'><span class="mi" id="MathJax-Span-230" '="">x</span><span'></span'></span'></nobr></span><nobr aria-hidden="true"><span class="mo" id="MathJax-Span-231" '="">,</span><span class="mi" id="MathJax-Span-232" '="">y<span'></span'></span><span class="mo" id="MathJax-Span-233" '="">+</span><span class="mi" id="MathJax-Span-234" '="">o</span><span class="mi" id="MathJax-Span-235" '="">f<span'></span'></span><span class="mi" id="MathJax-Span-236" '="">f<span'></span'></span><span class="mi" id="MathJax-Span-237" '="">s</span><span class="mi" id="MathJax-Span-238" '="">e</span><span class="msubsup" id="MathJax-Span-239"><span'><span'><span class="mi" id="MathJax-Span-240" '="">t</span><span'></span'></span'></span'></span><span'><span class="mi" id="MathJax-Span-241" '="">y<span'></span'></span><span'><span class="mo" id="MathJax-Span-242" '="">)</span><span class="mo" id="MathJax-Span-243" '="">.</span><span'><span'></span'></span'></span'></span'></nobr><span class="MJX_Assistive_MathML MJX_Assistive_MathML_Block" role="presentation"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mi>o</mi><mi>u</mi><mi>t</mi><mo stretchy="false">(</mo><mi>x</mi><mo>,</mo><mi>y</mi><mo stretchy="false">)</mo><mo>=</mo><mrow class="MJX-TeXAtom-ORD"><mi>i</mi><mi>n</mi><mo stretchy="false">(</mo><mi>x</mi><mo>+</mo><mi>o</mi><mi>f</mi><mi>f</mi><mi>s</mi><mi>e</mi><msub><mi>t</mi><mi>x</mi></msub><mo>,</mo><mi>y</mi><mo>+</mo><mi>o</mi><mi>f</mi><mi>f</mi><mi>s</mi><mi>e</mi><msub><mi>t</mi><mi>y</mi></msub><mo stretchy="false">)</mo></mrow><mo>.</mo></math></span></div><script type="math/tex; mode=display" id="MathJax-Element-5">out(x,y)={in(x+offset_x,y+offset_y)}.</script><p></p>
+                    <p>To create a ripple we just place a high value inside one of the buffers and watch it being smoothed out into waves.</p>
+
+                    <h3>Observations</h3>
+                    <p>Using your browser's development tools you can inspect the demo code which has been partially adapted to my preferred code structure these days.</p>
+                    <p>Looking at the code it looks pretty old-school with all the variables declared upfront to avoid <a href="https://en.wikipedia.org/wiki/Garbage_collection_(computer_science)" target="_blank" rel="noopener noreferrer"><abbr title="Garbage Collection">GC</abbr></a> hiccups and plain <code>for</code> loops. The <code>step</code> function handles scheduling the next iteration itself via <a href="https://developer.mozilla.org/en-US/docs/Web/API/window/requestAnimationFrame"><code>window.requestAnimationFrame</code></a>.</p>
+                    <p>As the smoothing algorithm employs a classic image convolution kernel the initialization logic takes care to fill up the border regions with original image data, these pixels won't be touched by the <code>step</code> function because they don't have enough neighbors for the computation. There are ways around this but this demo isn't meant to explore these edge-cases.</p>
+                    <p>There certainly is room for improvement in that the smoothing step is blindly computed on every iteration step without taking the timestamp provided by <code>window.requestAnimationFrame</code> into account - which means that the animation will be faster the more animation frames the browser allocates for the page, not exactly elegant.</p>
+                    <p>An attentive observer may also have realized that the ripples don't have a circular shape as opposed to real water ripples but instead resemble rounded rectangles - a side-effect of the simple algorithm employed.</p>
+
+                    <h3>Verdict</h3>
+                    <p>This was a nice nostalgic trip for the first entry in this series, I for one certainly have difficulty taking my eyes of that mesmerizing effect. I hope you got something out of it yourself. See you next time!</p>
+
+                </article>
+            </div>
+
+            <div {center}="" class="bg-default">
+                <hr>
+                <ca-gh-comments {box}="" issue="https://api.github.com/repos/canena/canena.github.io/issues/23">
+                    <h4 comments-heading="">Comments</h4>
+                    <p>
+                        The comments for this post are available on <a href="https://github.com/canena/canena.github.io/issues/23" target="_blank" rel="noopener noreferrer">this issue on GitHub</a>.
+                        Feel free to engage in conversation over there.
+                    </p>
+                    <p>If you decide to enable JavaScript the GitHub API will be used to display the conversation here for the viewer's convenience.</p>
+<div class="when-js">
+    <i comments-status=""></i>
+    <div comments-container="">
+        <ul {stack}=""></ul>
+    </div>
+    <template class="hidden">
+        <li class="border">
+            <div class="border-b bg-grainy p-1">
+                <h5 class="flex gap-2 m-0">
+                    <a class="grow-0 whitespace-nowrap" href="#" comment-author="" rel="noopener noreferrer"></a>
+                    <div comment-created=""></div>
+                    <div class="font-normal text-gray" comment-edited=""></div>
+                </h5>
+            </div>
+            <div {box}="" comment-body=""></div>
+        </li>
+    </template>
+</div>
+
+                </ca-gh-comments>
+            </div>
+
+            <footer {center}="" {billboard}="dots" class="border-t">
+                <nav class="px-2 pb-20">
+                    <ul class="flex flex-wrap text-xs text-center">
+    <li><a class="block p-1" href="/">Home</a></li>
+    <li><a class="block p-1" href="/#blog">Blog</a></li>
+    <li><a class="block p-1" href="/#about">About</a></li>
+    <li><a class="block p-1" href="/posts/2017-03-20-epic-links">Links</a></li>
+    <li><a class="block p-1" href="/#contact">Contact</a></li>
+    <li><a class="block p-1" href="/#impressum">Impressum</a></li>
+</ul>
+
+                </nav>
+            </footer>
+        </div>
+    </main>
+
+    <nav class="floaty-nav | fixed bottom-0 w-full">
+        <div back-to-top="" class="m-1 flex justify-between">
+    <a class="btn --link" href="#">↑ top</a>
+    <a class="btn --link" href="#">top ↑</a>
+</div>
+<ca-reading-progress progress-indicator="">
+    <template>
+        <div data-track="" class="bg-lightgray">
+            <div data-bar="" class="min-h-xs bg-primary"></div>
+        </div>
+    </template>
+</ca-reading-progress>
+
+        <div class="floaty-nav-body">
+    <ul class="max-inline-size:none | flex flex-row bg-grainy font-bold text-center">
+        <li class="grow basis-0">
+            <ca-logo-switcher class="flex h-full w-full items-center justify-center">
+                <a class="block flex items-center justify-center" href="/" title="Return back to home page">
+                    <span default-label="" class="block">Home</span>
+                    <span fancy-label="" class="block overflow-visible mt-0.3rem hidden">
+                        <img src="/cdn/canena.svg" class="invert" height="34" alt="Return to home page">
+                    </span>
+                </a>
+            </ca-logo-switcher>
+        </li>
+        <li class="grow basis-0"><a class="block p-1" href="/#blog">Blog</a></li>
+        <li class="grow basis-0"><a class="block p-1" href="/portfolio">Portfolio</a></li>
+        <li class="grow basis-0 flex items-center justify-center">
+            <ca-fx-toggle>
+                <span class="switch">
+                    <input id="fx-toggle" type="checkbox">
+                    <label for="fx-toggle">FX</label>
+                </span>
+            </ca-fx-toggle>
+        </li>
+    </ul>
+</div>
+
+    </nav>
+
+    <script defer="" src="/deps/hubjs/hub.js"></script>
+
+
+</body></html>

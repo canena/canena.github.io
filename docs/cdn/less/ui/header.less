@@ -1,0 +1,36 @@
+@import 'vars.less';
+
+.ui-header {
+    font-size: 0;
+    font-weight: bold;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+
+    &__logo {
+        display: inline-block;
+        font-size: @header-font-size;
+        position: relative;
+        vertical-align: top;
+    }
+
+    &__menu-item {
+        display: inline-block;
+        font-size: @header-font-size;
+        position: relative;
+        vertical-align: top;
+    }
+
+    &__menu-category {
+        color: #ddd;
+        display: block;
+        font-size: @header-category-font-size;
+        left: 16px;
+        line-height: @font-size + 1px;
+        position: absolute;
+        top: 8px;
+        white-space: nowrap;
+        z-index: -1;
+    }
+
+}
