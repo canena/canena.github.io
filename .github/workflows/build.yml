@@ -1,3 +1,71 @@
+
+on:
+  push:
+    branches:
+      - v3-webstandards-rewrite
+      #- master
+      
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clone repository
+        uses: actions/checkout@v3
+
+      - name: Setup Deno environment
+        uses: denoland/setup-deno@v1
+        with:
+          deno-version: v1.x
+
+      - name: Build site
+        run: |
+          deno run --allow-read=. --allow-write=docs ./scripts/build.ts
+      -
+        name: Deploy to GitHub Pages
+        if: success()
+        uses: crazy-max/ghaction-github-pages@v3
+        with:
+          target_branch: v3-webstandards-rewrite
+          #target_branch: master
+          #target_branch: gh-pages
+          build_dir: docs
+          jekyll: false
+          dry_run: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+
+
+# name: Publish to GitHub Pages
+
+# on:
+#   push:
+#     branches:
+#       - 'master'
+#       #- 'dev'
+#       #- 'releases/v*'
+
+# jobs:
+#   publish:
+#     runs-on: ubuntu-latest
+#     steps:
+#       -
+#         name: Checkout
+#         uses: actions/checkout@v3
+#       -
+#         name: Deploy to GitHub Pages
+#         if: success()
+#         uses: crazy-max/ghaction-github-pages@v3
+#         with:
+#           target_branch: master
+#           #target_branch: gh-pages
+#           build_dir: _site
+#           jekyll: false
+#           dry_run: true
+#         env:
+#           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+
 # name: Publish on GitHub Pages
 
 # on:
