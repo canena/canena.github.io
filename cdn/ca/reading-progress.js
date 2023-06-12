@@ -1,12 +1,12 @@
-Site.Elements.define("ca-reading-progress", (Base, { subscribe }) => class extends Base {
+Site.Elements.define("ca-reading-progress", (Base, { forEach, subscribe }) => class extends Base {
     /** @this {HTMLElement} */
     connectedCallback() {
         const document = this.ownerDocument;
         const root = this;
 
-        this._unsub = subscribe("document.scroll", data => {
-            this.updateProgress(data);
-        });
+        const sub = subscribe("document.scroll");
+        forEach(data => this.updateProgress(data))(sub);
+        this._unsub = sub.unsubscribe;
 
         const tmpl = root.querySelector("template");
         if (!tmpl) {

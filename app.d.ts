@@ -3,13 +3,13 @@
 // Augmenting the generic PubSub APIs for the editor support
 declare interface HubSandbox {
     publish(channel: "DBG.log", data: string[]): void;
-    subscribe(channel: "DBG.log", listener: (data: string[]) => void): Unsubscribe;
+    subscribe(channel: "DBG.log"): ColdCallbagSubscription<string[]>;
 
     publish(channel: "document.scroll", data: ScrollEventData): void;
-    subscribe(channel: "document.scroll", listener: (data: ScrollEventData) => void): Unsubscribe;
+    subscribe(channel: "document.scroll"): ColdCallbagSubscription<ScrollEventData>;
 
     publish(channel: "app.hotkey", data: HotkeyEventData): void;
-    subscribe(channel: "app.hotkey", listener: (data: HotkeyEventData) => void): Unsubscribe;
+    subscribe(channel: "app.hotkey"): ColdCallbagSubscription<HotkeyEventData>;
 }
 declare interface ScrollEventData {
     innerHeight: number,

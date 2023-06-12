@@ -1,4 +1,4 @@
-Site.Elements.define("ca-debug", (Base, { subscribe }) => class extends Base {
+Site.Elements.define("ca-debug", (Base, { forEach, subscribe }) => class extends Base {
     /** @this {HTMLElement} */
     connectedCallback() {
         const fragment = this.querySelector("template").content.cloneNode(true);
@@ -7,9 +7,9 @@ Site.Elements.define("ca-debug", (Base, { subscribe }) => class extends Base {
         this._out = this.querySelector(".out");
         this._count = 0;
 
-        this._unsub = subscribe("DBG.log", args => {
-            this.appendMessage(...args)
-        });
+        const sub = subscribe("DBG.log");
+        forEach(args => this.appendMessage(...args))(sub);
+        this._unsub = sub.unsubscribe;
     }
     disconnectedCallback() {
         this._unsub();
