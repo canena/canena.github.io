@@ -1,4 +1,4 @@
-Site.Elements.define("ca-page-search", (Base, { subscribe }) => class extends Base {
+Site.Elements.define("ca-page-search", (Base, { forEach, subscribe }) => class extends Base {
     /** @this {HTMLElement} */
     connectedCallback() {
         this._unsubs = [];
@@ -52,7 +52,8 @@ Site.Elements.define("ca-page-search", (Base, { subscribe }) => class extends Ba
             this._resetButton.removeEventListener("click", onClickReset);
         });
 
-        this._unsubs.push(subscribe("app.hotkey", ({ key }) => {
+        const sub = subscribe("app.hotkey");
+        forEach(({ key }) => {
             switch (key) {
                 case "/":
                     if (document.activeElement !== this._input) {
@@ -62,7 +63,8 @@ Site.Elements.define("ca-page-search", (Base, { subscribe }) => class extends Ba
                 default:
                     break;
             }
-        }));
+        })(sub);
+        this._unsubs.push(sub.unsubscribe);
 
         this.updateView();
     }
