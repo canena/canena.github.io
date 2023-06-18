@@ -12,7 +12,7 @@
     <meta name="creator" content="Canena">
     <meta name="description" content="A blog about life">
     <meta name="viewport" content="width=device-width, user-scalable=yes, initial-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-YzxQZnYzEzF+cXKWurXLJQfpy1c+ScGqPeldlHJNbDk=' 'sha256-vvt4KWwuNr51XfE5m+hzeNEGhiOfZzG97ccfqGsPwvE='; style-src 'self' 'sha256-R0uFgpKdPRZfOYl4evdYwmPCBzouLvdCwDA/Zcg2s4U=' 'sha256-ebw9mJfs5eE3UD3i/h258DMrHilavFLsSjlHBb4z3qQ='   'unsafe-hashes' 'sha256-xaT1bR09q0i6itNOGnwwUiV/c/BOURip0BdwaHK8VsY=' 'sha256-OkecswzdOwrk3fjZkfJuQ22DZk9JXeyl5jIUBsZIhnY=' 'sha256-om0LZqLVs580zFbVeGJWfxalNyUI1QLBKkN1YW50jak=' 'sha256-hlgH3wM5Md/9QTkydL4bCAgyKcngnnSWzhIyiMkNRIA=' 'sha256-+Mq0BXW7KFfORVMMpZ3A054u+VpYjDEzO4bOOLSk5vI='">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-YzxQZnYzEzF+cXKWurXLJQfpy1c+ScGqPeldlHJNbDk=' 'sha256-vvt4KWwuNr51XfE5m+hzeNEGhiOfZzG97ccfqGsPwvE='; style-src 'self' 'sha256-R0uFgpKdPRZfOYl4evdYwmPCBzouLvdCwDA/Zcg2s4U=' 'sha256-ebw9mJfs5eE3UD3i/h258DMrHilavFLsSjlHBb4z3qQ='   'unsafe-hashes' 'sha256-xaT1bR09q0i6itNOGnwwUiV/c/BOURip0BdwaHK8VsY=' 'sha256-OkecswzdOwrk3fjZkfJuQ22DZk9JXeyl5jIUBsZIhnY=' 'sha256-om0LZqLVs580zFbVeGJWfxalNyUI1QLBKkN1YW50jak=' 'sha256-hlgH3wM5Md/9QTkydL4bCAgyKcngnnSWzhIyiMkNRIA=' 'sha256-+Mq0BXW7KFfORVMMpZ3A054u+VpYjDEzO4bOOLSk5vI=' 'sha256-ulP4DBW0EoUTi/XdY05z8Aszs3ehv6MyXrCgerhux0U='">
     <!-- [docs]
         We like to be declarative and putting i.e. an event tracking endpoint
         as meta tag content into the document is also easy for backend folks.
@@ -77,37 +77,73 @@ w.Hub=w.Hub||{config:s(),log:s(),use:s()};}(self,[].slice))
             For this site we decided to fashion our styles after tailwindcss
             utility classes.
         -->
-        <ca-intro {backdrop} {cover.ornament} class="pointer-events-none">
+        <ca-intro {backdrop} {cover.ornament} class="x-pointer-events-none">
             <template>
                 <style>
                     :host {
-                        animation-name: cycle-bg;
-                        animation-duration: 3s;
-                        animation-iteration-count: infinite;
-                        animation-timing-function: linear;
+                        position: relative;
+                    }
+                    .bg {
+                        position: absolute;
+                        bottom: 0;
+                        left: 0;
+                        right: 0;
+                        top: 0;
+                    }
+                    .bg-0 {
+                        animation: cycle-bg ease-in 10s infinite;
+
+                        background:
+                            #000
+                            linear-gradient(21deg, rgba(183, 43, 97, 1), rgba(255,0,0,0) 70.71%);
+                    }
+                    .bg-1 {
+                        animation: cycle-bg ease-in 6s infinite;
+
+                        background:
+                            linear-gradient(-17deg, rgba(187, 78, 21, 1), rgba(255,0,0,0) 70.71%);
+                    }
+                    .bg-2 {
+                        animation: cycle-bg ease-in 8s infinite;
+
+                        background:
+                            linear-gradient(31deg, rgba(72, 23, 100, 1), rgba(255,0,0,0) 70.71%);
+                    }
+                    .bg-3 {
+                        animation: cycle-bg ease-in 7s infinite;
+
+                        background:
+                            linear-gradient(-3deg, rgba(255, 250, 43, 1), rgba(255,0,0,0) 70.71%);
+                    }
+                    .bg-4 {
+                        animation: cycle-bg ease-in 11s infinite;
+
+                        background:
+                            linear-gradient(7deg, rgba(255, 134, 0, 1), rgba(255,0,0,0) 70.71%);
                     }
                     @keyframes cycle-bg {
                         0% {
-                            background:
-                                linear-gradient(217deg, rgba(255,0,0,.8), rgba(255,0,0,0) 70.71%),
-                                linear-gradient(127deg, rgba(0,255,0,.8), rgba(0,255,0,0) 70.71%),
-                                linear-gradient(336deg, rgba(0,0,255,.8), rgba(0,0,255,0) 70.71%);
+                            opacity: 0.95;
                         }
                         50% {
-                            background:
-                                linear-gradient(336deg, rgba(0,0,255,.8), rgba(0,0,255,0) 70.71%),
-                                linear-gradient(217deg, rgba(255,0,0,.8), rgba(255,0,0,0) 70.71%),
-                                linear-gradient(127deg, rgba(0,255,0,.8), rgba(0,255,0,0) 70.71%);
+                            opacity: 0.75;
                         }
                         100% {
-                            background:
-                                linear-gradient(217deg, rgba(255,0,0,.8), rgba(255,0,0,0) 70.71%),
-                                linear-gradient(127deg, rgba(0,255,0,.8), rgba(0,255,0,0) 70.71%),
-                                linear-gradient(336deg, rgba(0,0,255,.8), rgba(0,0,255,0) 70.71%);
+                            opacity: 0.95;
                         }
+                    }
+
+                    canvas {
+                        position: relative;
+                        z-index: 1;
                     }
                 </style>
                 <canvas></canvas>
+                <div class="bg bg-0"></div>
+                <div class="bg bg-3"></div>
+                <div class="bg bg-4"></div>
+                <div class="bg bg-1"></div>
+                <div class="bg bg-2"></div>
             </template>
         </ca-intro>
 
