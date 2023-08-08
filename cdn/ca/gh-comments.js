@@ -68,7 +68,7 @@ Site.Elements.define("ca-gh-comments", (Base, { request }) => class extends Base
 
         try {
             // FIXME: Use GitHub GraphQL API to reduce transfer sizes?
-            const res = await request.json(`${this._issue}/comments`, {
+            const res = await request(`${this._issue}/comments`, {
                 headers: {
                     "Accept": "application/vnd.github.v3.html+json",
                 },
