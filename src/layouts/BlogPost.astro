@@ -1,0 +1,137 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { SITE_TITLE } from '../consts';
+import HeadMeta from '../components/HeadMeta.astro';
+import Common from '../components/Common.astro';
+import Footer from '../components/Footer.astro';
+import FormattedDate from '../components/FormattedDate.astro';
+import FooterLinks from '../components/FooterLinks.astro';
+import CommentSection from '../components/CommentSection.astro';
+import FloatyNavArticle from '../components/FloatyNavArticle.astro';
+import FloatyNavBody from '../components/FloatyNavBody.astro';
+
+type Props = CollectionEntry<'posts'>['data'];
+
+const {
+    title,
+    subtitle,
+    description,
+    publishedAt,
+    updatedAt,
+    billboard,
+    billboardSize = "",
+    githubIssue = 0,
+    tags,
+    headerStyle = "dark",
+} = Astro.props;
+
+const headerStyles =
+    headerStyle === "dark"
+        ? []
+        : headerStyle === "light"
+            ? "backdrop-blur text-white"
+            : [];
+
+const concernsElm = tags.includes("elm");
+const concernsTS = tags.includes("typescript");
+const concernsJS = tags.includes("javascript");
+
+const headerBg = concernsJS ? "bg-yellow-300" : concernsTS ? "bg-sky-600" : concernsElm ? "bg-sky-400" : ""
+---
+
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+	<head>
+		<HeadMeta title={`${title} • ${SITE_TITLE}`} description={description} />
+	</head>
+
+	<body>
+		<Common />
+
+        <ca-requires elements="fx-toggle gh-comments logo-switcher reading-meta reading-progress scroll-behavior"></ca-requires>
+        <ca-scroll-behavior></ca-scroll-behavior>
+
+        <header (cover) class:list={["h-golden", headerBg]} (billboard)={billboard ?? ""} style={{ "background-size": billboardSize }}>
+            <nav>
+                <a (box) href="/" title="Return to home page">
+                    <img is-logo src="/cdn/canena.svg" width="95" height="30" alt="CANENA">
+                </a>
+            </nav>
+            <div (center) (cover.art) >
+                <div (box) class:list={headerStyles}>
+                    <h1 class="capitalize">{title}</h1>
+                    <h2 class="capitalize italic">{subtitle}</h2>
+                    <div class="flex gap-2">
+                        <p class="whitespace-nowrap"><FormattedDate date={publishedAt} /></p>
+                        <ca-reading-meta class="italic"></ca-reading-meta>
+                    </div>
+                    <ul class="list-none flex gap-2">
+                        {tags.map((tag) => (
+                            <li><a class="tag" href={`/tags#${tag}`}>{tag}</a></li>
+                        ))}
+                    </ul>
+                </div>
+            </div>
+        </header>
+
+        <main>
+            <div class="bg-gradient-subtle">
+                <div (center) class="bg-default">
+                    <article (box) >
+
+                        <slot />
+
+                    </article>
+                </div>
+
+                {githubIssue > 0 && (
+                    <div (center) class="bg-default">
+                        <hr>
+                        <ca-gh-comments (box) issue={`https://api.github.com/repos/canena/canena.github.io/issues/${githubIssue}`}>
+                            <h4 comments-heading>Comments</h4>
+                            <p>
+                                The comments for this post are available on <a href={`https://github.com/canena/canena.github.io/issues/${githubIssue}`} target="_blank" rel="noopener noreferrer">this issue on GitHub</a>.
+                                Feel free to engage in conversation over there.
+                            </p>
+                            <CommentSection />
+                        </ca-gh-comments>
+                    </div>
+                )}
+
+                <footer (center) (billboard)="dots" class="border-t">
+                    <nav class="px-2 pb-20">
+                        <FooterLinks />
+                    </nav>
+                </footer>
+
+
+				<!-- <div class="prose">
+					<div class="title">
+						<div class="date">
+							<FormattedDate date={publishedAt} />
+							{
+								updatedAt && (
+									<div class="last-updated-on">
+										Last updated on <FormattedDate date={updatedAt} />
+									</div>
+								)
+							}
+						</div>
+						<h1>{title}</h1>
+						<hr />
+					</div>
+					<slot />
+				</div> -->
+			</article>
+		</main>
+
+        <nav class="floaty-nav | fixed bottom-0 w-full">
+            <FloatyNavArticle />
+            <FloatyNavBody />
+        </nav>
+
+		<Footer />
+
+        <script defer src="/deps/hubjs/hub.dev.js"></script>
+	</body>
+</html>

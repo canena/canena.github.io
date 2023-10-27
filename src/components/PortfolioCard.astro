@@ -1,0 +1,16 @@
+---
+import PostPreview from "./PostPreview.astro";
+const { right = false, post, title, background = "" } = Astro.props;
+
+const billboard = post.data.billboard ?? "diagonal";
+---
+
+<div (box) (center) (billboard)={`${right ? 'right' : 'left'} ${billboard}`} class="bg-lightgray">
+    <slot name="heading"></slot>
+
+    <PostPreview post={post} background={background} />
+
+    <h4>{title}</h4>
+
+    <slot />
+</div>

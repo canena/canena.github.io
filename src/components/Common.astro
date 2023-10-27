@@ -1,0 +1,13 @@
+---
+import HeaderLink from './HeaderLink.astro';
+import { SITE_TITLE } from '../consts';
+---
+
+<!-- [docs]
+    Our config file mostly takes care of configuration, specific functionality
+    lives inside custom elements loaded via "ca-requires". Interaction between
+    widgets is covered using a decoupled publish/subscribe API.
+-->
+<script defer src="/cdn/config.js"></script>
+<script defer type="module" src="/cdn/site.js"></script>
+<script defer type="module" src="/cdn/ca/requires.js"></script>

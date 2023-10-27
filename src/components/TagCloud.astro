@@ -1,0 +1,9 @@
+---
+import { postsByTag } from '../helper';
+---
+
+<ul class="flex flex-wrap gap-2">
+    {Object.entries(postsByTag).map(([tag]) => tag).sort().map((tag) => (
+        <li><a ca-searchable class="tag" href={`/tags#${tag}`}>{tag}</a></li>
+    ))}
+</ul>

@@ -1,0 +1,132 @@
+---
+import { getCollection } from 'astro:content';
+
+import HeadMeta from '../components/HeadMeta.astro';
+import Common from '../components/Common.astro';
+import Footer from '../components/Footer.astro';
+import { SITE_TITLE, SITE_DESCRIPTION } from '../consts';
+import FloatyNavArticle from '../components/FloatyNavArticle.astro';
+import FloatyNavBody from '../components/FloatyNavBody.astro';
+import NotableProjects from '../components/NotableProjects.astro';
+import FooterLinks from '../components/FooterLinks.astro';
+import SiteFeatures from '../components/SiteFeatures.astro';
+import PortfolioCard from '../components/PortfolioCard.astro';
+
+const posts = (await getCollection('posts', ({ data }) => data.tags.includes("portfolio"))).sort(
+	(a, b) => b.data.publishedAt.valueOf() - a.data.publishedAt.valueOf()
+);
+---
+
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+	<head>
+		<HeadMeta title={`Portfolio • ${SITE_TITLE}`} description={SITE_DESCRIPTION} />
+	</head>
+	<body (billboard)="wave" class="overflow-x-hidden">
+		<Common />
+
+        <!-- [docs]
+            We use the "ca-requires" element to declare which custom elements we
+            want to load. Here we request an element named "ca-intro", by convention
+            it will be located in /cdn/ca/intro.js.
+
+            Requiring multiple elements is supported, as is having more than one
+            "ca-requires" on the page, duplicate requires will only result in
+            files being requested once.
+        -->
+        <ca-requires elements="intro"></ca-requires>
+        <ca-requires elements="fx-toggle logo-switcher reading-progress scroll-behavior billboard-dancer"></ca-requires>
+        <ca-scroll-behavior></ca-scroll-behavior>
+        <ca-billboard-dancer></ca-billboard-dancer>
+
+        <header (cover) class="x-h-golden invert">
+            <div (center) (cover.art)>
+                <h1 class="m-0 pt-5 text-center">
+                    <a href="/" title="Return to home page">
+                        <img is-logo src="/cdn/canena.svg?v1" width="300" height="95" alt="CANENA">
+                    </a>
+                </h1>
+                <!-- <h2 class="capitalize font-normal text-xs text-center">A portfolio, or what we left behind</h2>
+                <h2 class="capitalize font-normal text-xs text-center">A portfolio, or what we left behind</h2> -->
+                <h2 class="font-normal text-center text-3xl mb-0 uppercase">A portfolio</h2>
+                <h2 class="font-normal text-center text-sm uppercase">or what we left behind</h2>
+            </div>
+
+        </header>
+
+        <div (center) class="mb-4">
+            <NotableProjects />
+        </div>
+
+        <main class="mb-24">
+
+            {posts.map((post, i) => (
+                <PortfolioCard post={post} right={i % 2 === 1} />
+            ))}
+
+            <div (box) (center) (billboard)="left lemons" class="bg-lightgray">
+                <h3>
+                    <a href="https://www.canena.de" target="_blank" rel="noopener noreferrer">www.canena.de</a>
+                </h3>
+                <div class="flex mb-1">
+                    <div class="flex gap-2">
+                        <span>2023-02-24</span>
+                        <a class="tag" href="/tags#portfolio">portfolio</a>
+                        <a class="tag" href="/tags#web">web</a>
+                    </div>
+                </div>
+                <h4>This Website</h4>
+                <p>
+                    The code of this website is <a href="https://github.com/canena/canena.github.io" target="_blank" rel="noopener noreferrer">public on GitHub</a>.
+                </p>
+                <p>
+                    The latest version of this site up to this point includes features like...
+                </p>
+
+                <SiteFeatures />
+            </div>
+
+            <div (box) (center) (billboard)="right monument" class="text-right bg-default">
+                <h3>
+                    <a href="https://fleshnblood.github.io/" target="_blank" rel="noopener noreferrer">fleshnblood.github.io</a>
+                </h3>
+                <div class="flex justify-end mb-1">
+                    <div class="flex justify-end gap-2">
+                        <a class="tag" href="/tags#portfolio">portfolio</a>
+                        <a class="tag" href="/tags#web">web</a>
+                        <span>2023-02-02</span>
+                    </div>
+                </div>
+                <h4>Flesh'n'Blood Band Website</h4>
+                <p>
+                    The code of this band website is <a href="https://github.com/fleshnblood/fleshnblood.github.io" target="_blank" rel="noopener noreferrer">public on GitHub</a>.
+                </p>
+            </div>
+
+        </main>
+
+        <footer>
+            <!-- <hr> -->
+            <div (center) (billboard)="dots">
+                <nav class="px-2 x-pb-16">
+                    <include-partial href="/_includes/footer-links.html"></include-partial>
+                    <FooterLinks />
+                </nav>
+            </div>
+            <div class="min-h-1 bg-orange-500"></div>
+            <div class="min-h-2 bg-orange-600"></div>
+            <div class="min-h-3 bg-orange-700"></div>
+            <div class="min-h-4 bg-orange-800"></div>
+            <div class="min-h-5 bg-orange-900"></div>
+        </footer>
+
+        <nav class="floaty-nav | fixed bottom-0 w-full">
+            <FloatyNavArticle />
+            <FloatyNavBody />
+        </nav>
+
+        <Footer />
+
+        <script defer src="/deps/hubjs/hub.dev.js"></script>
+    </body>
+</html>

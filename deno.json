@@ -1,7 +1,0 @@
-{
-    "lock": false,
-    "tasks": {
-        "build": "deno run --allow-read=. --allow-write=./docs ./scripts/build.ts",
-        "test": "deno test --allow-read=."
-    }
-}
