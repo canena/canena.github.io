@@ -1,0 +1,116 @@
+---
+import { postsByTag } from '../helper';
+
+import HeadMeta from '../components/HeadMeta.astro';
+import Common from '../components/Common.astro';
+import Footer from '../components/Footer.astro';
+import { SITE_TITLE, SITE_DESCRIPTION } from '../consts';
+import FloatyNavArticle from '../components/FloatyNavArticle.astro';
+import FloatyNavBody from '../components/FloatyNavBody.astro';
+import FooterLinks from '../components/FooterLinks.astro';
+import TagCloud from '../components/TagCloud.astro';
+import FormattedDate from '../components/FormattedDate.astro';
+
+const postEntriesSorted = Object.entries(postsByTag).sort(([a], [b]) => a < b ? -1 : a > b ? 1 : 0);
+---
+
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+	<head>
+		<HeadMeta title={`Tags • ${SITE_TITLE}`} description={SITE_DESCRIPTION} />
+        <style>
+
+            body.searching main [\(box\)] {
+                padding-bottom: var(--s0);
+                padding-top: var(--s0);
+            }
+            body.searching main .py-2 {
+                padding-bottom: var(--s0);
+                padding-top: var(--s0);
+            }
+            body.searching main [ca-category].hidden {
+                display: none !important;
+            }
+
+        </style>
+	</head>
+	<body (billboard)="lemons">
+		<Common />
+
+        <!-- [docs]
+            We use the "ca-requires" element to declare which custom elements we
+            want to load. Here we request an element named "ca-intro", by convention
+            it will be located in /cdn/ca/intro.js.
+
+            Requiring multiple elements is supported, as is having more than one
+            "ca-requires" on the page, duplicate requires will only result in
+            files being requested once.
+        -->
+        <ca-requires elements="fx-toggle logo-switcher hotkey-behavior page-search"></ca-requires>
+        <ca-hotkey-behavior></ca-hotkey-behavior>
+
+        <header>
+            <nav class="flex flex-wrap gap-2 items-center">
+                <a (box) href="/" title="Return to home page">
+                    <img is-logo src="/cdn/canena.svg" width="95" height="30px" alt="CANENA">
+                </a>
+                <ca-page-search class="when-js min-w-device">
+                    <div class="flex gap-2 | bg-default">
+                        <input class="p-1 bg-transparent grow" placeholder="Initiate search with '/', 'Esc' resets" type="text" value="">
+                        <button disabled class="btn --fancy text-xl min-w-3" type="reset" title="Reset search">&times;</button>
+                    </div>
+                </ca-page-search>
+                <h1 class="m-0 text-lg">in Tags</h1>
+                <h2 class="capitalize m-0 text-base"></h2>
+                <noscript class="when-no-js">
+                    An interactive search feature is available with JavaScript enabled.
+                </noscript>
+            </nav>
+        </header>
+
+        <main class="min-h-screen py-12 bg-gradient-subtle">
+            <div (center)}>
+
+                <div (stack) >
+                    <nav (box) ca-category class="bg-orange-100 bg-grainy drop-shadow">
+                        <h3 class="capitalize">Everything at a glance</h3>
+                        <div class="text-sm">
+                            <TagCloud />
+                        </div>
+                    </nav>
+
+                    {postEntriesSorted.map(([tag, posts]) => (
+                        <div (box) ca-category class="bg-default bg-grainy drop-shadow">
+                            <h3 class="font-normal mt-1"><a id={tag} class="tag" href={`#${tag}`}>{tag}</a></h3>
+                            <ul class="list-disc list-inside">
+                                {posts.map((post) => (
+                                    <li ca-searchable><a href={`/posts/${post.slug}`}>
+                                        <FormattedDate date={post.data.publishedAt} /> &bullet; {post.data.title}</a>
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+                    ))}
+                </div>
+
+            </div>
+        </main>
+
+        <footer class="bg-default bg-grainy x-bg-gradient-subtle">
+            <div (center) class="border-t">
+                <nav class="px-2 x-pb-16">
+                    <FooterLinks />
+                </nav>
+            </div>
+        </footer>
+
+        <nav class="floaty-nav | fixed bottom-0 w-full">
+            <FloatyNavArticle />
+            <FloatyNavBody />
+        </nav>
+
+        <Footer />
+
+        <script defer src="/deps/hubjs/hub.dev.js"></script>
+    </body>
+</html>

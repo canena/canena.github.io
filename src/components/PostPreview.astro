@@ -1,0 +1,34 @@
+---
+import type { CollectionEntry } from "astro:content";
+import FormattedDate from "./FormattedDate.astro";
+
+type Props = {
+    post: CollectionEntry<"posts">,
+    variant?: "" | "border-default" | "border-primary" | "border-tertiary",
+    background?: string,
+};
+
+const { post, variant = '', background = "bg-default" } = Astro.props;
+---
+
+<li (box) class:list={[variant ? "border-l-4" : "", variant, background]}>
+    <div class="leading-loose">
+        <h3><a href={`/posts/${post.slug}`}>{post.data.title}</a></h3>
+        <div>
+            <span class="inline-block pr-0.5">
+                <FormattedDate date={post.data.publishedAt} />
+            </span>
+            <span class="inline-block pr-0.5">~{post.data.readingTime}</span>
+            {post.data.tags.map((tag) => (
+                <>
+                    <a class="tag" href={`/tags#${tag}`}>{tag}</a>
+                    {' '}
+                </>
+            ))}
+        </div>
+        <p class="leading-normal">
+            {post.data.description.slice(0, 250)}
+            &mldr;
+        </p>
+    </div>
+</li>

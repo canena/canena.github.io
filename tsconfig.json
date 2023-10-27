@@ -1,0 +1,8 @@
+{
+  "extends": "astro/tsconfigs/strict",
+  "exclude": ["scripts"],
+  "compilerOptions": {
+    "types": ["astro/client"],
+    "strictNullChecks": true
+  }
+}

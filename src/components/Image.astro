@@ -1,0 +1,8 @@
+---
+import { Image as AstroImage } from "astro:assets";
+import { DEFAULT_IMAGE_QUALITY } from "../consts";
+
+const props: any = Astro.props;
+---
+
+<AstroImage quality={DEFAULT_IMAGE_QUALITY} {...props} />

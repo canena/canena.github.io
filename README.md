@@ -5,12 +5,29 @@
 This repository contains the source code for [https://www.canena.de](https://www.canena.de).
 
 
+## Usage
+
+```bash
+# Dev
+scripts/start
+```
+
+or
+
+```bash
+# Serve built artifacts
+scripts/build
+scripts/serve
+```
+
 ## Build
 
-You'll need [Deno](https://deno.land), neither `node` nor `npm` are used.
-To build the site into `docs/` run `deno task build`.
+You'll need [Astro](https://astro.build) and [Bun](https://bun.sh).
+To build the site into `dist/` run `scripts/build`.
 
 
-## Test
+## TODO
 
-To execute tests run `deno task test`.
+* [ ] Use Github Workflow to deploy site to GH Pages
+* [ ] Finish portfolio
+* [ ] Cleanup astro components

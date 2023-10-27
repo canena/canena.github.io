@@ -1,0 +1,19 @@
+<p>If you decide to enable JavaScript the GitHub API will be used to display the conversation here for the viewer's convenience.</p>
+<div class="when-js">
+    <i comments-status></i>
+    <div comments-container>
+        <ul (stack)></ul>
+    </div>
+    <template class="hidden">
+        <li class="border">
+            <div class="border-b bg-grainy p-1">
+                <h5 class="flex gap-2 m-0">
+                    <a class="grow-0 whitespace-nowrap" href="#" comment-author rel="noopener noreferrer"></a>
+                    <div comment-created></div>
+                    <div class="font-normal text-gray" comment-edited></div>
+                </h5>
+            </div>
+            <div (box) comment-body></div>
+        </li>
+    </template>
+</div>

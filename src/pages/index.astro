@@ -1,0 +1,232 @@
+---
+import { getCollection } from 'astro:content';
+
+import HeadMeta from '../components/HeadMeta.astro';
+import Common from '../components/Common.astro';
+import Footer from '../components/Footer.astro';
+import { SITE_TITLE, SITE_DESCRIPTION } from '../consts';
+import NotableProjects from '../components/NotableProjects.astro';
+import FooterLinks from '../components/FooterLinks.astro';
+import FloatyNavArticle from '../components/FloatyNavArticle.astro';
+import FloatyNavBody from '../components/FloatyNavBody.astro';
+import TagCloud from '../components/TagCloud.astro';
+import AboutTheAuthor from '../components/AboutTheAuthor.astro';
+import FormattedDate from '../components/FormattedDate.astro';
+import PostPreview from '../components/PostPreview.astro';
+
+const posts = (await getCollection('posts')).sort(
+	(a, b) => b.data.publishedAt.valueOf() - a.data.publishedAt.valueOf()
+);
+
+const HIGHLIGHTED_POSTS = 2;
+
+---
+
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+	<head>
+		<HeadMeta title={SITE_TITLE} description={SITE_DESCRIPTION} />
+	</head>
+	<body>
+		<Common />
+
+        <!-- [docs]
+            We use the "ca-requires" element to declare which custom elements we
+            want to load. Here we request an element named "ca-intro", by convention
+            it will be located in /cdn/ca/intro.js.
+
+            Requiring multiple elements is supported, as is having more than one
+            "ca-requires" on the page, duplicate requires will only result in
+            files being requested once.
+        -->
+        <ca-requires elements="intro"></ca-requires>
+        <ca-requires elements="fx-toggle logo-switcher reading-progress scroll-behavior"></ca-requires>
+        <ca-scroll-behavior></ca-scroll-behavior>
+
+        <!-- [docs]
+            Inspired by www.every-layout.dev we have a couple of layout composition
+            primitives inside our common CSS.
+        -->
+        <header (cover) class="relative">
+            <!-- [docs]
+                Using our custom elements works like using any other HTML element.
+                For this site we decided to fashion our styles after tailwindcss
+                utility classes.
+            -->
+            <ca-intro (backdrop) (cover.ornament) class="x-pointer-events-none">
+                <template>
+                    <style>
+                        :host {
+                            position: relative;
+                        }
+                        .bg {
+                            position: absolute;
+                            bottom: 0;
+                            left: 0;
+                            right: 0;
+                            top: 0;
+                        }
+                        .bg-0 {
+                            animation: cycle-bg ease-in 10s infinite;
+
+                            background:
+                                #000
+                                linear-gradient(21deg, rgba(183, 43, 97, 1), rgba(255,0,0,0) 70.71%);
+                        }
+                        .bg-1 {
+                            animation: cycle-bg ease-in 6s infinite;
+
+                            background:
+                                linear-gradient(-17deg, rgba(187, 78, 21, 1), rgba(255,0,0,0) 70.71%);
+                        }
+                        .bg-2 {
+                            animation: cycle-bg ease-in 8s infinite;
+
+                            background:
+                                linear-gradient(31deg, rgba(72, 23, 100, 1), rgba(255,0,0,0) 70.71%);
+                        }
+                        .bg-3 {
+                            animation: cycle-bg ease-in 7s infinite;
+
+                            background:
+                                linear-gradient(-3deg, rgba(255, 250, 43, 1), rgba(255,0,0,0) 70.71%);
+                        }
+                        .bg-4 {
+                            animation: cycle-bg ease-in 11s infinite;
+
+                            background:
+                                linear-gradient(7deg, rgba(255, 134, 0, 1), rgba(255,0,0,0) 70.71%);
+                        }
+                        @keyframes cycle-bg {
+                            0% {
+                                opacity: 0.95;
+                            }
+                            50% {
+                                opacity: 0.75;
+                            }
+                            100% {
+                                opacity: 0.95;
+                            }
+                        }
+
+                        canvas {
+                            position: relative;
+                            z-index: 1;
+                        }
+                    </style>
+                    <canvas></canvas>
+                    <div class="bg bg-0"></div>
+                    <div class="bg bg-3"></div>
+                    <div class="bg bg-4"></div>
+                    <div class="bg bg-1"></div>
+                    <div class="bg bg-2"></div>
+                </template>
+            </ca-intro>
+
+            <div (center) (cover.art) class="text-center">
+                <h1 class="m-0">
+                    <img is-logo src="/cdn/canena.svg" width="300" height="95" alt="CANENA">
+                </h1>
+                <h2 class="text-sm">
+                    <noscript>
+                        Enable JavaScript for <a href="/cdn/ca/intro.js" target="_blank" rel="noopener noreferrer">intro animation</a>
+                    </noscript>
+                </h2>
+            </div>
+        </header>
+
+        <main>
+            <div (center)>
+                <div (box)>
+                    <h3 class="capitalize">A blog about life</h3>
+                    <p>
+                        Hello, There! This is my personal website covering various topics from music to design, programming and more.
+                        As this is both the home and part of my <a href="/portfolio/">portfolio</a> feel free to peruse around, there is ample documentation embedded for the curious.
+                    </p>
+                </div>
+            </div>
+
+            <div (billboard)="dots" class="border-t border-b">
+                <div (center)>
+                    <NotableProjects />
+
+                    <div (box) class="mt--1">
+                        For more projects see <a href="/portfolio">the Portfolio section</a>.
+                    </div>
+                </div>
+            </div>
+
+            <div id="blog" class="py-2 bg-gradient-subtle-radial">
+                <div (center)>
+
+                    <div (sidebar)="right">
+                        <ul (stack)>
+
+                            <PostPreview
+                                post={posts[0]}
+                                variant="border-tertiary"
+                            />
+
+                            <PostPreview
+                                post={posts[1]}
+                                variant="border-primary"
+                            />
+
+                        </ul>
+
+                        <div (box)>
+                            <h3 class="capitalize">
+                                <a href="/tags">Topics</a>
+                            </h3>
+                            <TagCloud />
+                        </div>
+                    </div>
+
+
+                    <ul (stack) class="mt-1">
+
+                        {posts.slice(HIGHLIGHTED_POSTS).map((post) => (
+                            <PostPreview post={post} variant="border-default" />
+                        ))}
+
+                    </ul>
+
+
+                </div>
+            </div>
+
+            <div class="bg-gradient-subtle">
+                <hr (center) />
+                <AboutTheAuthor />
+
+                <footer (center) class="border-t">
+                    <nav class="bg-default px-2 pb-16">
+                        <include-partial href="/_includes/footer-links.html"></include-partial>
+                        <FooterLinks />
+                    </nav>
+                </footer>
+            </div>
+        </main>
+
+        <nav class="floaty-nav | fixed bottom-0 w-full">
+            <FloatyNavArticle />
+            <FloatyNavBody />
+        </nav>
+
+        <Footer />
+
+        <!-- [docs]
+            We didn't need to care that our hubjs library hadn't been loaded yet
+            because we provided a couple of bytes of stub code at the top of the
+            file that the actual library will use to catch up with the current state
+            on the page.
+
+            Custom elements in browsers are implemented in a similar fashion, if you
+            provide an element that the browser doesn't know about (yet) it'll just
+            be treated like a generic "div" container. When the actual element code
+            is requested at a later point in time it just magically knows what to do
+            with the previous information.
+        -->
+        <script defer src="/deps/hubjs/hub.dev.js"></script>
+	</body>
+</html>

@@ -1,0 +1,15 @@
+---
+import BlogPostLayout from '../layouts/BlogPost.astro';
+import AboutTheAuthor from '../components/AboutTheAuthor.astro';
+---
+
+<BlogPostLayout
+	title="About Me"
+    description="About Me"
+	publishedAt={new Date('2015-08-04')}
+	updatedAt={new Date('2023-10-27')}
+    billboard="monument"
+    tags={[]}
+>
+    <AboutTheAuthor />
+</Layout>

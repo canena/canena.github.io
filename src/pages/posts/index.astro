@@ -1,0 +1,71 @@
+---
+import HeadMeta from '../../components/HeadMeta.astro';
+import Common from '../../components/Common.astro';
+import Footer from '../../components/Footer.astro';
+import { SITE_TITLE, SITE_DESCRIPTION } from '../../consts';
+import { getCollection } from 'astro:content';
+import PostPreview from '../../components/PostPreview.astro';
+import FloatyNavArticle from '../../components/FloatyNavArticle.astro';
+import FloatyNavBody from '../../components/FloatyNavBody.astro';
+import FooterLinks from '../../components/FooterLinks.astro';
+
+const posts = (await getCollection('posts')).sort(
+	(a, b) => b.data.publishedAt.valueOf() - a.data.publishedAt.valueOf()
+);
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<HeadMeta title={`Posts • ${SITE_TITLE}`} description={SITE_DESCRIPTION} />
+	</head>
+	<body>
+		<Common />
+
+        <ca-requires elements="fx-toggle gh-comments logo-switcher reading-meta reading-progress scroll-behavior"></ca-requires>
+        <ca-scroll-behavior></ca-scroll-behavior>
+
+        <header (cover) class="h-golden invert" (billboard)="cicada-stripes x-honeycomb">
+            <nav>
+                <a (box) href="/" title="Return to home page">
+                    <img is-logo src="/cdn/canena.svg" width="95" height="30" alt="CANENA">
+                </a>
+            </nav>
+            <div (center) (cover.art) >
+                <div (box) >
+                    <h1 class="capitalize">Posts</h1>
+                    <h2 class="capitalize italic"></h2>
+                </div>
+            </div>
+        </header>
+
+		<main>
+            <div class="bg-gradient-subtle">
+                <div (center) class="bg-default">
+                    <ul>
+                        {posts.map((post) => (
+                            <li>
+                                <PostPreview post={post} />
+                            </li>
+                        ))}
+                    </ul>
+                </div>
+            </div>
+		</main>
+
+        <nav class="floaty-nav | fixed bottom-0 w-full">
+            <FloatyNavArticle />
+            <FloatyNavBody />
+        </nav>
+
+        <footer (center) (billboard)="dots" class="border-t">
+            <nav class="px-2 pb-20">
+                <FooterLinks />
+            </nav>
+        </footer>
+
+		<Footer />
+
+        <script defer src="/deps/hubjs/hub.dev.js"></script>
+	</body>
+</html>
