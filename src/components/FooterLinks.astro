@@ -1,9 +1,15 @@
+---
+const today = new Date();
+---
 
-<ul class="flex flex-wrap text-xs text-center">
-    <li><a class="block p-4" href="/">Home</a></li>
-    <li><a class="block p-4" href="/posts">Blog</a></li>
-    <li><a class="block p-4" href="/about">About</a></li>
-    <li><a class="block p-4" href="/posts/2017-03-20-epic-links">Links</a></li>
-    <li><a class="block p-4" href="/about#contact">Contact</a></li>
-    <li><a class="block p-4" href="/about#impressum">Impressum</a></li>
-</ul>
+<div (manual-responsive-layout) >
+    <ul class="flex flex-wrap text-xs text-center">
+        <li><a class="block p-4" href="/">Home</a></li>
+        <li><a class="block p-4" href="/posts">Blog</a></li>
+        <li><a class="block p-4" href="/about">About</a></li>
+        <li><a class="block p-4" href="/posts/2017-03-20-epic-links">Links</a></li>
+        <li><a class="block p-4" href="/about#contact">Contact</a></li>
+        <li><a class="block p-4" href="/about#impressum">Impressum</a></li>
+        <li class="block p-4 text-gray-400 grow text-right">All rights reserved &copy; {today.getFullYear()} Canena</li>
+    </ul>
+</div>
