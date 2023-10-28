@@ -6,7 +6,8 @@ import tailwind from "@astrojs/tailwind";
 // https://astro.build/config
 export default defineConfig({
   // compressHTML: false,
-  site: 'https://www.canena.de',
+  site: "https://www.canena.de",
+  // base: "/",
   integrations: [mdx(), sitemap(), tailwind({
     applyBaseStyles: false
   })],
