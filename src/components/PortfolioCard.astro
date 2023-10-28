@@ -5,12 +5,15 @@ const { right = false, post, title, background = "" } = Astro.props;
 const billboard = post.data.billboard ?? "diagonal";
 ---
 
-<div (box) (center) (billboard)={`${right ? 'right' : 'left'} ${billboard}`} class="bg-lightgray">
+<div (box) (center) (billboard)={`${right ? 'right' : 'left'} ${billboard}`} class="bg-lightgray bg-cover rounded drop-shadow border-white border-8">
     <slot name="heading"></slot>
 
-    <PostPreview post={post} background={background} />
+    <div (box) class="bg-default rounded">
+        <PostPreview post={post} background={background} />
 
-    <h4>{title}</h4>
+        <h4>{title}</h4>
 
-    <slot />
+        <slot />
+    </div>
+
 </div>

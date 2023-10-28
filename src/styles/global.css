@@ -570,7 +570,7 @@ html.fx .fade-in-smooth {
     }
 }
 
-[\(billboard\)~=right] {
+/* [\(billboard\)~=right] {
     animation: 6s ease-in infinite alternate;
     transform: translateX(3rem) perspective(20cm) rotateX(-3deg) rotateY(15deg) rotateZ(0deg);
 }
@@ -584,7 +584,7 @@ html.fx .present-billboard-right {
     }
     100% {
         transform: translateX(2rem) perspective(20cm) rotateX(-1deg) rotateY(10deg) rotateZ(-2deg);
-        /* transform: translateX(0cm) rotateX(0deg) rotateY(0deg) rotateZ(0deg); */
+        // transform: translateX(0cm) rotateX(0deg) rotateY(0deg) rotateZ(0deg);
     }
 }
 [\(billboard\)~=left] {
@@ -601,9 +601,9 @@ html.fx .present-billboard-left {
     }
     100% {
         transform: translateX(-2rem) perspective(20cm) rotateX(1deg) rotateY(-10deg) rotateZ(2deg);
-        /* transform: translateX(0cm) rotateX(0deg) rotateY(0deg) rotateZ(0deg); */
+        // transform: translateX(0cm) rotateX(0deg) rotateY(0deg) rotateZ(0deg);
     }
-}
+} */
 
 /** Billboards **/
 

@@ -1,6 +1,11 @@
+---
+const { portfolio } = Astro.props;
+---
 
-<div (box)>
-    <h3>Notable Projects</h3>
+<div (box) >
+    {!portfolio && (
+        <h3>Notable Projects</h3>
+    )}
     <ul class="flex flex-wrap gap-2">
         <li (box) class="grow border bg-default rounded drop-shadow">
             <h4>
@@ -13,12 +18,6 @@
             </p>
         </li>
         <li (box) class="grow border bg-default rounded drop-shadow">
-            <h4><a href="https://www.canena.de">www.canena.de</a></h4>
-            <p>
-                The code of this website is <a href="https://www.github.com/canena/canena.github.io" target="_blank" rel="noopener noreferrer">public on GitHub</a>.
-            </p>
-        </li>
-        <li (box) class="grow border bg-default rounded drop-shadow">
             <h4>
                 <a class="flex gap-1" href="https://github.com/elm-community/js-integration-examples/tree/master/more/webcomponents" target="_blank" rel="noopener noreferrer">
                     <span>Elm WebComponents Guide</span>
@@ -28,5 +27,13 @@
                 A guide to using Elm, or any other compile-to-js language for that matter, with <a href="https://www.webcomponents.org/" target="_blank" rel="noopener noreferrer">WebComponents</a>.
             </p>
         </li>
+        {!portfolio && (
+            <li (box) class="grow border bg-default rounded drop-shadow">
+                <h4><a href="https://www.canena.de">www.canena.de</a></h4>
+                <p>
+                    The code of this website is <a href="https://www.github.com/canena/canena.github.io" target="_blank" rel="noopener noreferrer">public on GitHub</a>.
+                </p>
+            </li>
+        )}
     </ul>
 </div>
