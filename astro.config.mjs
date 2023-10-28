@@ -5,7 +5,7 @@ import tailwind from "@astrojs/tailwind";
 
 // https://astro.build/config
 export default defineConfig({
-  compressHTML: false,
+  // compressHTML: false,
   site: 'https://www.canena.de',
   integrations: [mdx(), sitemap(), tailwind({
     applyBaseStyles: false
