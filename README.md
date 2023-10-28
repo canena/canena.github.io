@@ -30,4 +30,5 @@ To build the site into `dist/` run `scripts/build`.
 
 * [ ] Use Github Workflow to deploy site to GH Pages
 * [ ] Finish portfolio
+* [ ] Finish intro animation
 * [ ] Cleanup astro components
