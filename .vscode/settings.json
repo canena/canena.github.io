@@ -1,0 +1,6 @@
+{
+    "emmet.useInlineCompletions": false,
+    "emmet.showAbbreviationSuggestions": false,
+    "emmet.optimizeStylesheetParsing": false,
+    "emmet.showExpandedAbbreviation": "never"
+}
