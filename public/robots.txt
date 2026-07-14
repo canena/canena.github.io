@@ -1,20 +1,85 @@
-User-agent: Teleport 
-Disallow: / 
-User-agent: Webwhacker 
-Disallow: / 
-User-agent: Webzip 
-Disallow: / 
-User-agent: Net Attache 
-Disallow: / 
-User-agent: SiteSnagger 
-Disallow: / 
-User-agent: HTTrack 
-Disallow: / 
-User-agent: WebCapture 
-Disallow: / 
-User-agent: WebSauger 
-Disallow: /
+# Normal search engines and other well-behaved crawlers
 User-agent: *
+Allow: /
 Disallow: /dev/
 Disallow: /drafts/
+Disallow: /private/
 Disallow: /src/
+
+# OpenAI: allow ChatGPT search, decline model-training collection
+User-agent: OAI-SearchBot
+Allow: /
+Disallow: /dev/
+Disallow: /drafts/
+Disallow: /private/
+Disallow: /src/
+
+User-agent: GPTBot
+Disallow: /
+
+# Anthropic: allow Claude search, decline model-training collection
+User-agent: Claude-SearchBot
+Allow: /
+Disallow: /dev/
+Disallow: /drafts/
+Disallow: /private/
+Disallow: /src/
+
+User-agent: ClaudeBot
+Disallow: /
+
+# PerplexityBot is used for search results, not foundation-model training
+User-agent: PerplexityBot
+Allow: /
+Disallow: /dev/
+Disallow: /drafts/
+Disallow: /private/
+Disallow: /src/
+
+# Amazon: allow search experiences, decline AI-training collection
+User-agent: Amzn-SearchBot
+Allow: /
+Disallow: /dev/
+Disallow: /drafts/
+Disallow: /private/
+Disallow: /src/
+
+User-agent: Amazonbot
+Disallow: /
+
+# Other large-scale AI/model-data controls
+User-agent: Google-Extended
+Disallow: /
+
+User-agent: Applebot-Extended
+Disallow: /
+
+User-agent: Meta-ExternalAgent
+Disallow: /
+
+User-agent: CCBot
+Disallow: /
+
+User-agent: Teleport
+Disallow: /
+
+User-agent: Webwhacker
+Disallow: /
+
+User-agent: Webzip
+Disallow: /
+
+User-agent: Net Attache
+Disallow: /
+
+User-agent: SiteSnagger
+Disallow: /
+
+User-agent: HTTrack
+Disallow: /
+
+User-agent: WebCapture
+Disallow: /
+
+User-agent: WebSauger
+Disallow: /
