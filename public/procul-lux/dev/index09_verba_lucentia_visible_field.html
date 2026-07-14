@@ -1,0 +1,893 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+<title>verba lucentia — a Latin audio-reactive visualizer</title>
+
+<!-- The ONLY two dependencies, vendored from a CDN. No build step, no npm. -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/addons/p5.sound.min.js"></script>
+
+<style>
+  :root { --ink: rgba(255,255,255,0.86); --dim: rgba(255,255,255,0.4); }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; background: #05060a; overflow: hidden;
+    font-family: 'Iowan Old Style', 'Palatino Linotype', Palatino, Georgia, serif; }
+  canvas { display: block; position: fixed; inset: 0; }
+
+  .bar {
+    position: fixed; left: 50%; bottom: 28px; transform: translateX(-50%);
+    display: flex; gap: 10px; align-items: center; z-index: 10;
+    width: min(640px, 92vw);
+  }
+  .bar input[type=text] {
+    flex: 1; padding: 12px 16px; font-size: 18px; letter-spacing: .3px;
+    color: var(--ink); background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.14); border-radius: 12px;
+    backdrop-filter: blur(8px); font-family: inherit; outline: none;
+  }
+  .bar input::placeholder { color: var(--dim); font-style: italic; }
+  .btn {
+    padding: 12px 16px; font-size: 14px; white-space: nowrap; cursor: pointer;
+    color: var(--ink); background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.16); border-radius: 12px;
+    backdrop-filter: blur(8px); font-family: inherit; transition: .2s;
+  }
+  .btn:hover { background: rgba(255,255,255,0.12); }
+  .btn.on { color: #9ff5d9; border-color: rgba(159,245,217,0.5); }
+
+  .hint {
+    position: fixed; left: 50%; bottom: 80px; transform: translateX(-50%);
+    color: var(--dim); font-size: 13px; font-style: italic; z-index: 10;
+    text-align: center; width: min(640px, 92vw); pointer-events: none;
+  }
+  .hint b { color: rgba(255,255,255,0.6); font-style: normal; cursor: default; }
+
+  .reveal {
+    position: fixed; top: 18px; right: 20px; z-index: 10;
+    color: var(--dim); font-size: 13px; display: flex; gap: 7px; align-items: center;
+    user-select: none; cursor: pointer;
+  }
+  .reveal input { accent-color: #9ff5d9; }
+</style>
+</head>
+<body>
+
+<div class="hint" id="hint">
+  type Latin — change a <b>casus</b> and the form shifts · genitives nest into fractals · then sing
+</div>
+
+<div class="bar">
+  <input id="text" type="text" spellcheck="false"
+         value="lux et umbra noctis"
+         placeholder="lux umbrae… carmen stellarum… anima ignis" />
+  <button id="mic" class="btn">Start mic</button>
+</div>
+
+<label class="reveal"><input id="reveal" type="checkbox"> reveal grammar</label>
+
+<script>
+'use strict';
+/* ============================================================================
+   verba lucentia  —  instance-mode, performance-tuned edition
+   ----------------------------------------------------------------------------
+   Two halves, kept deliberately separate:
+     (1) TEXT  -> a deterministic grammatical parse -> a node graph (JSON-able)
+     (2) MIC   -> live audio features modulate that graph every frame
+   The parse is the visual's "DNA"; the voice modulates it.
+
+   Structure of this file:
+     PART A — pure Latin morphology + L-system machinery. Framework-free:
+              no p5, no canvas, no globals it doesn't own. Swap the tiny
+              LEXICON / paradigm tables for full Whitaker's-Words or
+              Collatinus data later WITHOUT touching the renderer —
+              analyzeWord() is the only contract.
+     PART B — rendering helpers that also don't need p5 (color conversion,
+              sprite atlas for particles).
+     PART C — the p5 sketch, in INSTANCE MODE: everything that touches p5
+              lives inside `new p5(sketch)`, prefixed with `p.` so it is
+              always visible where the framework is being invoked.
+
+   Performance notes (what changed vs. the naive draft, and why):
+     • pixelDensity(1): full-screen additive blending is fill-rate bound; on
+       a 2× retina display the default density quadruples the pixels pushed.
+     • L-system turtle walk is CACHED. The rewritten string only changes on
+       re-expansion, and the sway angle drifts slowly — so segments are
+       recomputed only when the (quantized) angle or the string changes,
+       not every frame.
+     • Segments are pre-BUCKETED BY BRANCH DEPTH, and each bucket is drawn
+       as ONE canvas path with ONE strokeStyle. Previously: up to 820
+       stroke()+strokeWeight()+line() calls per genitive node per frame,
+       each allocating a p5.Color. Now: ~8 beginPath/stroke pairs.
+     • Particles are drawn as ONE pre-rendered radial-gradient sprite each
+       (drawImage), cached per 10° hue bucket, instead of two alpha-blended
+       circle() fills. drawImage of a small sprite is the fastest way to
+       get a soft glow out of Canvas2D.
+     • Pitch autocorrelation only scans lags in the plausible vocal range
+       (~80–600 Hz), strides the sample buffer by 2, and runs every other
+       frame. The naive version was O(n²) over the whole buffer, per frame.
+     • Adaptive particle budget: if the smoothed frame time creeps above
+       ~22 ms the field thins out; when there is headroom it grows back.
+   ============================================================================ */
+
+/* ======================= PART A · LATIN MORPHOLOGY ======================== */
+/* (v0: paradigm tables, no ML, ~deterministic) */
+
+// A small, evocative lexicon. {pos, decl|conj, gender, stem, nom}
+// stem = the part that survives inflection; nom = nominative singular surface.
+const LEXICON = {
+  // --- 1st declension (a-stem, mostly feminine)
+  umbra:  {pos:'noun', decl:1, gender:'f', stem:'umbr',  nom:'umbra'},
+  vita:   {pos:'noun', decl:1, gender:'f', stem:'vit',   nom:'vita'},
+  rosa:   {pos:'noun', decl:1, gender:'f', stem:'ros',   nom:'rosa'},
+  stella: {pos:'noun', decl:1, gender:'f', stem:'stell', nom:'stella'},
+  aqua:   {pos:'noun', decl:1, gender:'f', stem:'aqu',   nom:'aqua'},
+  anima:  {pos:'noun', decl:1, gender:'f', stem:'anim',  nom:'anima'},
+  luna:   {pos:'noun', decl:1, gender:'f', stem:'lun',   nom:'luna'},
+  // --- 2nd declension (-us masc / -um neuter)
+  ventus: {pos:'noun', decl:2, gender:'m', stem:'vent',  nom:'ventus'},
+  somnus: {pos:'noun', decl:2, gender:'m', stem:'somn',  nom:'somnus'},
+  caelum: {pos:'noun', decl:2, gender:'n', stem:'cael',  nom:'caelum'},
+  verbum: {pos:'noun', decl:2, gender:'n', stem:'verb',  nom:'verbum'},
+  // --- 3rd declension (irregular nominative -> store explicitly)
+  lux:    {pos:'noun', decl:3, gender:'f', stem:'luc',   nom:'lux'},
+  nox:    {pos:'noun', decl:3, gender:'f', stem:'noct',  nom:'nox'},
+  ignis:  {pos:'noun', decl:3, gender:'m', stem:'ign',   nom:'ignis'},
+  amor:   {pos:'noun', decl:3, gender:'m', stem:'amor',  nom:'amor'},
+  mare:   {pos:'noun', decl:3, gender:'n', stem:'mar',   nom:'mare'},
+  flos:   {pos:'noun', decl:3, gender:'m', stem:'flor',  nom:'flos'},
+  mors:   {pos:'noun', decl:3, gender:'f', stem:'mort',  nom:'mors'},
+  sol:    {pos:'noun', decl:3, gender:'m', stem:'sol',   nom:'sol'},
+  carmen: {pos:'noun', decl:3, gender:'n', stem:'carmin',nom:'carmen'},
+  tempus: {pos:'noun', decl:3, gender:'n', stem:'tempor',nom:'tempus'},
+};
+
+// Declension endings: ending -> candidate {case, number}. Order longest-first.
+const DECL = {
+  1: {
+    arum:[['gen','pl']], am:[['acc','sg']], as:[['acc','pl']],
+    ae:[['gen','sg'],['dat','sg'],['nom','pl'],['voc','pl']],
+    is:[['dat','pl'],['abl','pl']],
+    a:[['nom','sg'],['abl','sg'],['voc','sg']],
+  },
+  2: {
+    orum:[['gen','pl']], us:[['nom','sg']], um:[['acc','sg'],['nom','sg']],
+    os:[['acc','pl']], is:[['dat','pl'],['abl','pl']],
+    i:[['gen','sg'],['nom','pl'],['voc','pl']],
+    o:[['dat','sg'],['abl','sg']],
+    a:[['nom','pl'],['acc','pl']],   // neuter plural
+    e:[['voc','sg']],
+  },
+  3: {
+    ibus:[['dat','pl'],['abl','pl']], ium:[['gen','pl']], um:[['gen','pl']],
+    em:[['acc','sg']], es:[['nom','pl'],['acc','pl'],['voc','pl']],
+    is:[['gen','sg']], i:[['dat','sg']], e:[['abl','sg']],
+  },
+};
+const CASE_ORDER = ['nom','gen','dat','acc','abl','voc'];
+
+// Closed-class words: particles / conjunctions / prepositions / adverbs.
+const PARTICLES = new Set(['et','in','cum','sub','super','per','ad','sine','sed',
+  'non','ut','ex','de','a','ab','aut','nec','que','sic','iam','semper','ubi']);
+
+// A few adjectives + verbs so POS lands right on common words.
+const ADJECTIVES = new Set(['magnus','parvus','pulcher','clarus','obscurus',
+  'aeternus','profundus','altus','niger','albus','sacer','novus']);
+const VERB_STEMS = { // stem -> conjugation (present system only, v0)
+  am:1, cant:1, vol:1, luce:2, arde:2, flu:3, viv:3, cad:3, can:3,
+};
+const VERB_PRES = { o:['1','sg'], as:['2','sg'], at:['3','sg'],
+  amus:['1','pl'], atis:['2','pl'], ant:['3','pl'],
+  es:['2','sg'], et:['3','sg'], emus:['1','pl'], etis:['2','pl'], ent:['3','pl'],
+  is:['2','sg'], it:['3','sg'], imus:['1','pl'], itis:['2','pl'], unt:['3','pl'] };
+
+function normalize(s){
+  return s.toLowerCase()
+    .normalize('NFD').replace(/[\u0300-\u036f]/g,'')   // strip macrons/accents
+    .replace(/[^a-z\s]/g,' ').replace(/\s+/g,' ').trim();
+}
+
+// Try to read a word as an inflected form of a known lexicon noun.
+function parseKnownNoun(w){
+  for (const key in LEXICON){
+    const e = LEXICON[key];
+    if (e.pos !== 'noun') continue;
+    if (w === e.nom) return mkParse(w, e, [['nom','sg']]);
+    if (w.startsWith(e.stem)){
+      const suf = w.slice(e.stem.length);
+      const cand = DECL[e.decl][suf];
+      if (cand) return mkParse(w, e, cand);
+    }
+  }
+  return null;
+}
+function mkParse(surface, e, cand){
+  const [c,n] = cand[0]; // primary reading; rest kept as alternates
+  return {
+    surface, pos:'noun', gender:e.gender, decl:e.decl, stem:e.stem, nom:e.nom,
+    features:{case:c, number:n}, alternates:cand.slice(1).map(([c2,n2])=>({case:c2,number:n2})),
+    known:true, recurse:0,
+  };
+}
+
+// Generic ending-based guess for unknown but Latin-looking words.
+function parseByEndings(w){
+  // verb?
+  for (const suf in VERB_PRES){
+    if (w.length > suf.length+1 && w.endsWith(suf)){
+      const [pn,n] = VERB_PRES[suf];
+      return {surface:w, pos:'verb', features:{person:pn, number:n, tense:'pres'},
+              gender:null, alternates:[], known:false, recurse:0};
+    }
+  }
+  // noun by ending, across all declensions; collect candidates
+  for (const d of [1,2,3]){
+    for (const suf of Object.keys(DECL[d])){
+      if (w.endsWith(suf) && w.length > suf.length){
+        const [c,n] = DECL[d][suf][0];
+        return {surface:w, pos:'noun', gender:guessGender(d,suf), decl:d,
+                features:{case:c, number:n}, alternates:[], known:false, recurse:0};
+      }
+    }
+  }
+  return null;
+}
+function guessGender(d,suf){ if (d===1) return 'f'; if (d===2) return suf[0]==='u'?'m':'n'; return 'n'; }
+
+// The single contract the renderer depends on.
+function analyzeWord(raw){
+  const w = raw;
+  if (PARTICLES.has(w)) return baseParse(w,'particle');
+  if (ADJECTIVES.has(w)) return baseParse(w,'adj');
+  const known = parseKnownNoun(w); if (known) return known;
+  // known verb by stem?
+  for (const st in VERB_STEMS){
+    if (w.startsWith(st)){
+      const guess = parseByEndings(w);
+      if (guess && guess.pos==='verb') return guess;
+    }
+  }
+  const byEnd = parseByEndings(w); if (byEnd) return byEnd;
+  return baseParse(w,'unknown');
+}
+function baseParse(w,pos){ return {surface:w, pos, gender:null, features:{}, alternates:[], known:false, recurse:0}; }
+
+// Generate the full declension of a known noun (powers "watch a casus morph").
+function declineKnown(key){
+  const e = LEXICON[key]; if (!e || e.pos!=='noun') return null;
+  const out = {};
+  const find = (d,c,n) => {
+    for (const suf in DECL[d]) for (const [cc,nn] of DECL[d][suf])
+      if (cc===c && nn===n) return suf;
+    return null;
+  };
+  for (const c of CASE_ORDER) for (const n of ['sg','pl']){
+    if (c==='nom' && n==='sg'){ out[c+'.'+n] = e.nom; continue; }
+    const suf = find(e.decl,c,n);
+    out[c+'.'+n] = suf!=null ? e.stem+suf : '—';
+  }
+  return out;
+}
+
+// Cheap, stable string hash for the non-Latin / unknown fallback colouring.
+function hashStr(s){ let h=2166136261; for(let i=0;i<s.length;i++){ h^=s.charCodeAt(i); h=Math.imul(h,16777619);} return (h>>>0)/4294967295; }
+
+/* ---- tiny framework-free math helpers (keep hot loops off p5's globals) -- */
+const TAU = Math.PI*2;
+const clamp = (v,a,b) => v<a?a : v>b?b : v;
+const mix   = (a,b,k) => a + (b-a)*k;
+const remap = (v,a,b,c,d) => c + (d-c)*((v-a)/(b-a));
+
+/* ---------- L-SYSTEM: genitive chains grow into hybrid fractal forms ------ */
+// A genitive node grows a turtle-interpreted Lindenmayer system whose form is a
+// MIXTURE of two species: the primary picked by gender, the one it blends toward
+// picked by DECLENSION. Each symbol has several stochastic productions, chosen by
+// a per-WORD seeded RNG, so every lemma grows its own variant. The blend ratio is
+// the live signal: idle it is the word's vowel ratio; while singing it is driven
+// by vocal brightness (treble-vs-bass), so the vowel you sing morphs the species.
+// Re-expansion is throttled (only when the ratio shifts); the turtle walk is
+// CACHED and only redone when the string or the (quantized) angle changes.
+
+const LMAXLEN  = 1500;  // hard cap on the rewritten string -> bounded cost
+const LSEGCAP  = 820;   // hard cap on segments considered for drawing
+const ANG_QUANT = 0.5;  // degrees; sway is quantized to this so the turtle
+                        // walk is reused across frames instead of redone
+
+// Each species: angle, base orientation, axiom, and STOCHASTIC rules
+// (symbol -> array of candidate productions). Turtle alphabet: F + - [ ] (X structural).
+const SPECIES = {
+  fern:    {angle:23, up:true,  axiom:'X',
+            rules:{ X:['F-[[X]+X]+F[+FX]-X','F+[[X]-X]-F[-FX]+X','FF-[X+X]+[X-X]'], F:['FF','FF','F'] }},
+  tree:    {angle:27, up:true,  axiom:'X',
+            rules:{ X:['F[+X]F[-X]+X','F[-X]F[+X]-X','F[+X][-X]FX'], F:['FF','F'] }},
+  crystal: {angle:60, up:false, axiom:'F++F++F',
+            rules:{ X:['F-F++F','F+F--F','F[-F][+F]'], F:['F-F++F-F','F+F--F+F'] }},
+};
+const SP_NAMES = ['fern','tree','crystal'];
+const SP_ARR    = [SPECIES.fern, SPECIES.tree, SPECIES.crystal];
+const SP_ANGLES = [SPECIES.fern.angle, SPECIES.tree.angle, SPECIES.crystal.angle];
+
+// Deterministic PRNG so a word's variant is stable across frames.
+function mulberry32(a){ return function(){ a|=0; a=(a+0x6D2B79F5)|0; let t=Math.imul(a^(a>>>15),1|a); t=(t+Math.imul(t^(t>>>7),61|t))^t; return ((t^(t>>>14))>>>0)/4294967296; }; }
+
+function vowelRatio(w){ const v=(w.match(/[aeiouy]/g)||[]).length; return w.length ? v/w.length : 0.5; }
+function speciesByGender(g, seed){ return g==='f'?'fern':g==='m'?'tree':g==='n'?'crystal':SP_NAMES[Math.floor(((seed*101)%1)*3)%3]; }
+function speciesByDecl(d, seed){ return d===1?'fern':d===2?'tree':d===3?'crystal':SP_NAMES[Math.floor(((seed*53)%1)*3)%3]; }
+function branchIters(name, recurse){ return name==='crystal' ? clamp(recurse,1,3) : clamp(recurse+1,2,3); }
+
+// Barycentric helpers for the fern/tree/crystal simplex: a word lives somewhere
+// inside this triangle, and the voice pushes it around.
+function wNorm(a){ const s=(a[0]+a[1]+a[2])||1; return [a[0]/s, a[1]/s, a[2]/s]; }
+function vertexOf(name){ return name==='fern'?0 : name==='tree'?1 : 2; }
+
+// A word's RESTING position in the simplex: gender pulls toward one vertex,
+// declension toward another, the vowel ratio nudges organic(fern) vs faceted(crystal).
+function homeSimplex(parse, seed){
+  const w = [0.18, 0.18, 0.18];                                // baseline keeps disagreements 3-way
+  w[vertexOf(speciesByGender(parse.gender, seed))] += 0.50;    // GENDER
+  w[vertexOf(speciesByDecl(parse.decl, seed))]     += 0.34;    // DECLENSION
+  const vr = vowelRatio(parse.surface);
+  w[0] += vr*0.16; w[2] += (1-vr)*0.16;                        // vowels -> fern, consonants -> crystal
+  return wNorm(w);
+}
+
+// Roulette pick of a species from barycentric weights.
+function pickSpecies(rng, weights, arr){
+  const r = rng(); let acc = 0;
+  for (let i=0;i<arr.length;i++){ acc += weights[i]; if (r < acc) return arr[i]; }
+  return arr[arr.length-1];
+}
+
+// Expand as a 3-WAY MIXTURE: at each site, choose a species by the weight vector,
+// then one of its stochastic productions. Reseeded per iteration so a given
+// (seed, weights) is reproducible, and moving through the simplex morphs the form.
+function lExpandSimplex(arr, weights, axiom, iters, seedInt, maxLen){
+  let s = axiom;
+  for (let k=0;k<iters;k++){
+    if (s.length > maxLen) break;
+    const rng = mulberry32(seedInt + k*2654435761);
+    let out = '';
+    for (let i=0;i<s.length;i++){
+      const c = s[i];
+      const sp = pickSpecies(rng, weights, arr);     // <- the simplex decision
+      const prods = sp.rules[c];
+      out += prods ? prods[Math.floor(rng()*prods.length)] : c;
+      if (out.length > maxLen) break;
+    }
+    s = out;
+  }
+  return s.length > maxLen ? s.slice(0, maxLen) : s;
+}
+
+// Walk the rewritten string with a turtle; returns segments [x1,y1,x2,y2,branchDepth].
+function lsysSegments(str, angleDeg, startUp){
+  const segs = [], stack = [];
+  let x=0, y=0, h = startUp ? -Math.PI/2 : 0, depth = 0;
+  const a = angleDeg * Math.PI/180;
+  for (let i=0;i<str.length;i++){
+    const ch = str[i];
+    if (ch==='F'){ const nx=x+Math.cos(h), ny=y+Math.sin(h); segs.push([x,y,nx,ny,depth]); x=nx; y=ny; }
+    else if (ch==='+'){ h += a; }
+    else if (ch==='-'){ h -= a; }
+    else if (ch==='['){ stack.push([x,y,h,depth]); depth++; }
+    else if (ch===']'){ if (stack.length){ const s=stack.pop(); x=s[0]; y=s[1]; h=s[2]; depth=s[3]; } }
+  }
+  return segs;
+}
+
+// Re-expand at a given simplex point and refit bounds (called sparingly:
+// only when the simplex position has moved by more than an L1 threshold).
+function reExpandBranch(b, w){
+  b.str = lExpandSimplex(b.arr, w, b.axiom, b.iters, b.seedInt, LMAXLEN);
+  const ang = w[0]*b.angles[0] + w[1]*b.angles[1] + w[2]*b.angles[2];
+  const ref = lsysSegments(b.str, ang, b.up);
+  let minx=1e9,maxx=-1e9,miny=1e9,maxy=-1e9;
+  for (const s of ref){
+    minx=Math.min(minx,s[0],s[2]); maxx=Math.max(maxx,s[0],s[2]);
+    miny=Math.min(miny,s[1],s[3]); maxy=Math.max(maxy,s[1],s[3]);
+  }
+  if (!isFinite(minx)){ minx=maxx=miny=maxy=0; }
+  b.ext = Math.max(maxx-minx, maxy-miny) || 1;
+  b.cx = (minx+maxx)/2; b.cy = (miny+maxy)/2;
+  b.lastW = w.slice();
+  b.cache = null;                 // geometry changed -> invalidate the walk cache
+}
+
+// The per-frame geometry, CACHED: the turtle walk plus depth-bucketed draw
+// lists are recomputed only when the string or the quantized angle changed.
+// Buckets mean the renderer issues ONE path + ONE strokeStyle per depth
+// instead of one per segment.
+function branchGeometry(b, angleDeg){
+  const q = Math.round(angleDeg / ANG_QUANT) * ANG_QUANT;
+  if (b.cache && b.cache.angQ === q) return b.cache;
+  const segs = lsysSegments(b.str, q, b.up);
+  const lim = Math.min(segs.length, LSEGCAP);
+  const lines  = new Map();   // depth -> flat [x1,y1,x2,y2, ...]
+  const blooms = new Map();   // depth -> flat [x,y, ...]  (every 7th tip, depth>=2)
+  let maxDepth = 0;
+  for (let i=0;i<lim;i++){
+    const s = segs[i], d = s[4];
+    if (d > maxDepth) maxDepth = d;
+    let L = lines.get(d); if (!L) lines.set(d, L=[]);
+    L.push(s[0],s[1],s[2],s[3]);
+    if (i%7===0 && d>=2){ let B = blooms.get(d); if (!B) blooms.set(d, B=[]); B.push(s[2],s[3]); }
+  }
+  b.cache = {angQ:q, lines, blooms, maxDepth};
+  return b.cache;
+}
+
+// Built once per genitive node: the simplex recipe + an initial expansion.
+function buildBranch(node, parse){
+  const seed = node.seed;
+  const home = homeSimplex(parse, seed);
+  const dom = SP_NAMES[home.indexOf(Math.max(home[0], home[1], home[2]))]; // dominant -> skeleton
+  const A = SPECIES[dom];
+  const b = {
+    arr: SP_ARR, angles: SP_ANGLES,
+    home, axiom: A.axiom, up: A.up,
+    iters: branchIters(dom, parse.recurse),
+    seedInt: (Math.floor(seed*2147483647) ^ 0x9e3779b9) >>> 0,
+    str:'', lastW:[-1,-1,-1], cx:0, cy:0, ext:1, cache:null,
+  };
+  reExpandBranch(b, home);
+  return b;
+}
+
+/* ================== PART B · FRAMEWORK-FREE RENDER HELPERS =============== */
+
+// HSB(360,100,100,a) -> CSS hsla(). Canvas wants HSL, p5's colorMode wants
+// HSB; converting here keeps the hot paths free of p5.Color allocations.
+function hsba(h,s,b,a){
+  h = ((h%360)+360)%360; s/=100; b/=100;
+  const l  = b*(1 - s/2);
+  const sl = (l<=0 || l>=1) ? 0 : (b-l)/Math.min(l, 1-l);
+  return `hsla(${h.toFixed(1)},${(sl*100).toFixed(1)}%,${(l*100).toFixed(2)}%,${a})`;
+}
+
+// Pre-rendered glow sprite (soft halo + hot core baked into one radial
+// gradient), cached per 10° hue bucket. One drawImage per particle replaces
+// two alpha-blended circle fills — the single biggest particle-field win.
+const SPRITE_R = 32;
+const spriteCache = new Map();
+function glowSprite(hue){
+  const key = Math.round((((hue%360)+360)%360)/10)*10 % 360;
+  let c = spriteCache.get(key);
+  if (c) return c;
+  c = document.createElement('canvas');
+  c.width = c.height = SPRITE_R*2;
+  const g = c.getContext('2d');
+  const grad = g.createRadialGradient(SPRITE_R,SPRITE_R,0, SPRITE_R,SPRITE_R,SPRITE_R);
+  grad.addColorStop(0.00, `hsla(${key},35%,92%,0.85)`);   // bright core
+  grad.addColorStop(0.18, `hsla(${key},65%,62%,0.40)`);   // colored body
+  grad.addColorStop(1.00, `hsla(${key},65%,50%,0)`);      // soft halo falloff
+  g.fillStyle = grad;
+  g.fillRect(0,0,SPRITE_R*2,SPRITE_R*2);
+  spriteCache.set(key, c);
+  return c;
+}
+
+// Autocorrelation pitch detector (time-domain), good enough for a sung note.
+// Tuned: lag search restricted to the vocal range (~80–600 Hz) and the inner
+// products stride the buffer by 2 — the naive version was O(n²) on the full
+// 1024-sample buffer. The caller additionally runs this every OTHER frame.
+function autoCorrelate(buf, sampleRate){
+  const SIZE = buf.length;
+  let rms = 0;
+  for (let i=0;i<SIZE;i+=2) rms += buf[i]*buf[i];
+  rms = Math.sqrt(rms/(SIZE/2));
+  if (rms < 0.01) return -1;
+  const minLag = Math.max(2, Math.floor(sampleRate/600));
+  const maxLag = Math.min(Math.floor(sampleRate/80), SIZE-2);
+  let best = -1, bestLag = -1;
+  const c = new Float32Array(maxLag+2);
+  for (let lag=minLag; lag<=maxLag; lag++){
+    let sum = 0;
+    for (let i=0, e=SIZE-lag; i<e; i+=2) sum += buf[i]*buf[i+lag];
+    c[lag] = sum;
+    if (sum > best){ best = sum; bestLag = lag; }
+  }
+  if (bestLag <= minLag) return -1;
+  const x1=c[bestLag-1]||0, x2=c[bestLag], x3=c[bestLag+1]||0;   // parabolic refine
+  const a=(x1+x3-2*x2)/2, bb=(x3-x1)/2;
+  let T0 = bestLag;
+  if (a) T0 = bestLag - bb/(2*a);
+  return T0>0 ? sampleRate/T0 : -1;
+}
+
+/* ==================== PART C · THE SKETCH (INSTANCE MODE) ================= */
+// Everything that touches p5 lives here. `p` is the instance: every call into
+// the framework is spelled `p.something`, so there are no magical globals.
+
+const sketch = (p) => {
+
+  /* ---------- grammar -> visual graph ---------- */
+  // POS picks the visual system; CASE picks the spatial/relational role;
+  // number -> count, gender -> palette, GENITIVE RUNS -> fractal recursion depth.
+
+  const GENDER_HUE = { f:[330,30], m:[205,55], n:[120,90] }; // [centre, spread]
+  const CASE_LABEL = {nom:'nominative',gen:'genitive',dat:'dative',acc:'accusative',abl:'ablative',voc:'vocative'};
+
+  let nodes = [], emitters = [], ambientHue = 215;
+
+  /* ---------- audio state (mic -> level / bands / pitch), all smoothed ---- */
+  let mic = null, fft = null, audioCtx = null, micOn = false;
+  let levelS = 0, bassS = 0, midS = 0, trebleS = 0, pitchHz = 0, hueShift = 0, hueTarget = 0;
+  let brightS = 0.5, pitchNorm = 0.5;   // vocal brightness & normalised pitch -> L-system simplex
+  // AUTO-GAIN: raw mic levels are tiny (~0.02–0.15 at singing distance) and
+  // vary wildly by hardware, so everything visual is driven by levelN — the
+  // level normalized against a slowly-decaying running peak. "Your loud"
+  // maps to ~1.0 no matter the mic; silence still maps to ~0.
+  let levelPeak = 0.05, levelN = 0;
+
+  /* ---------- particle field + adaptive budget ---------- */
+  const N_PARTICLES = 460;   // ceiling
+  const N_FLOOR     = 180;   // floor under load
+  let particles = [];
+  let particleBudget = N_PARTICLES;
+  let frameMsAvg = 16;
+
+  function buildSentence(text){
+    const words = normalize(text).split(' ').filter(Boolean);
+    const parsed = words.map(analyzeWord);
+
+    // GENITIVE -> FRACTAL SEAM: a trailing run of genitives sets nesting depth.
+    let run = 0;
+    for (const q of parsed){
+      if (q.features.case === 'gen'){ run++; q.recurse = Math.min(run,4); }
+      else run = 0;
+    }
+
+    nodes = parsed.map((q,i) => makeNode(q,i));
+    ambientHue = nodes.length ? nodes.reduce((s,n)=>s+n.hue,0)/nodes.length : 215;
+    layoutNodes();
+    emitters = nodes.filter(n => n.pos==='verb' || n.features.case==='abl' || n.pos==='noun');
+    if (!emitters.length) emitters = nodes.slice();
+
+    window.__graph = parsed; // the JSON-able IR — what a Clojure/Overtone backend would read
+  }
+
+  function makeNode(q,i){
+    const seed = hashStr(q.surface);
+    let hue, sides;
+    if (q.gender && GENDER_HUE[q.gender]){
+      const [c,sp] = GENDER_HUE[q.gender];
+      hue = (c + (seed-0.5)*sp + 360) % 360;
+      sides = q.gender==='m' ? 3 : q.gender==='n' ? 8 : 6;
+    } else {
+      hue = (seed*360) % 360;          // unknown -> hashed hue
+      sides = 4 + Math.floor(seed*4);
+    }
+    const node = {
+      ...q, seed, hue, sides,
+      size: 34 + seed*22,
+      spin: (seed-0.5)*0.5,
+      angle: seed*TAU,
+      count: q.features.number === 'pl' ? 4 : 1,   // plural -> satellites
+      x:0, y:0, baseX:0, baseY:0, branch:null,
+    };
+    if (q.recurse > 0) node.branch = buildBranch(node, q);   // GENITIVE -> L-SYSTEM
+    return node;
+  }
+
+  function layoutNodes(){
+    const cx = p.width/2, cy = p.height/2, R = Math.min(p.width,p.height)*0.30, N = nodes.length;
+    nodes.forEach((n,i)=>{
+      const ang = (i/Math.max(N,1))*TAU - Math.PI/2;
+      const rad = n.features.case==='nom' ? R*0.34 : R*(0.78 + 0.22*(i%3));
+      n.baseX = cx + Math.cos(ang)*rad;
+      n.baseY = cy + Math.sin(ang)*rad;
+      n.x = n.baseX; n.y = n.baseY;
+    });
+  }
+
+  /* ---------- audio ---------- */
+  function readAudio(t){
+    if (micOn && fft && mic){
+      const level = mic.getLevel();
+      fft.analyze();
+      // running peak decays ~0.5%/frame (halves in ~2.3 s) with a floor, so
+      // it re-adapts if you move closer/farther from the mic
+      levelPeak = Math.max(levelPeak*0.995, level, 0.02);
+      levelN  = mix(levelN, clamp(level/levelPeak, 0, 1), 0.25);
+      levelS  = mix(levelS,  level,                     0.25);
+      bassS   = mix(bassS,   fft.getEnergy('bass')/255,  0.20);
+      midS    = mix(midS,    fft.getEnergy('mid')/255,   0.20);
+      trebleS = mix(trebleS, fft.getEnergy('treble')/255,0.25);
+      const bright = trebleS / (trebleS + bassS + 0.001);   // spectral balance ~ vowel timbre
+      brightS = mix(brightS, bright, 0.15);
+      // Pitch only when voiced, and only every other frame — smoothing hides
+      // the halved update rate completely, and it halves the priciest DSP.
+      if (level > 0.012 && (p.frameCount & 1) === 0){
+        const f = autoCorrelate(fft.waveform(), audioCtx.sampleRate);
+        if (f > 0){
+          pitchHz = mix(pitchHz || f, f, 0.2);
+          pitchNorm = mix(pitchNorm, clamp(remap(pitchHz, 120, 560, 0, 1), 0, 1), 0.15);
+          hueTarget = clamp(remap(pitchHz, 90, 700, -45, 110), -45, 130);
+        }
+      }
+    } else { // idle "breath" so it's alive before the mic is on
+      levelS  = 0.05 + 0.04*(Math.sin(t*1.2)*0.5+0.5);
+      levelN  = 0.10 + 0.12*(Math.sin(t*1.2)*0.5+0.5);   // breath on the normalized scale
+      bassS   = 0.34 + 0.24*(Math.sin(t*0.6)*0.5+0.5);
+      midS    = 0.30 + 0.20*(Math.sin(t*0.9+1)*0.5+0.5);
+      trebleS = 0.20 + 0.14*(Math.sin(t*1.7+2)*0.5+0.5);
+      brightS = 0.5 + 0.16*Math.sin(t*0.27);
+      pitchNorm = 0.5 + 0.18*Math.sin(t*0.21);
+      hueTarget = 26*Math.sin(t*0.05);
+    }
+    hueShift = mix(hueShift, hueTarget, 0.05);
+  }
+
+  async function startMic(btn){
+    try {
+      await p.userStartAudio();
+      audioCtx = p.getAudioContext();
+      mic = new p5.AudioIn();
+      mic.start(()=>{
+        fft = new p5.FFT(0.8, 1024);
+        fft.setInput(mic);
+        micOn = true;
+        btn.textContent = 'listening'; btn.classList.add('on');
+      }, ()=>{ btn.textContent = 'mic blocked'; });
+    } catch(e){ btn.textContent = 'mic blocked'; }
+  }
+
+  /* ---------- p5 lifecycle ---------- */
+  p.setup = () => {
+    p.createCanvas(p.windowWidth, p.windowHeight);
+    // Fill-rate is the budget here: full-screen additive glow at retina
+    // density is 4× the pixels for imperceptible gain on a bloomy piece.
+    // Raise this to 2 only if you have GPU headroom to spare.
+    p.pixelDensity(1);
+    p.colorMode(p.HSB, 360, 100, 100, 1);
+    for (let i=0;i<N_PARTICLES;i++) particles.push(new Particle());
+
+    const input = document.getElementById('text');
+    const apply = ()=> buildSentence(input.value);
+    input.addEventListener('change', apply);
+    input.addEventListener('keydown', e=>{ if (e.key==='Enter'){ input.blur(); apply(); }});
+    const micBtn = document.getElementById('mic');
+    micBtn.addEventListener('click', ()=> startMic(micBtn));
+
+    buildSentence(input.value);
+    setTimeout(()=>{
+      const h = document.getElementById('hint');
+      if (h){ h.style.transition = 'opacity 2s'; h.style.opacity = '0'; }
+    }, 9000);
+  };
+
+  p.windowResized = () => { p.resizeCanvas(p.windowWidth, p.windowHeight); layoutNodes(); };
+
+  p.draw = () => {
+    const t = p.millis()/1000;
+    const ctx = p.drawingContext;
+    readAudio(t);
+
+    // Adaptive particle budget: smooth the frame time; shed under load,
+    // regrow when there's headroom. Keeps worst-case machines fluent.
+    frameMsAvg = mix(frameMsAvg, p.deltaTime, 0.05);
+    if (frameMsAvg > 22 && particleBudget > N_FLOOR) particleBudget -= 4;
+    else if (frameMsAvg < 14 && particleBudget < N_PARTICLES) particleBudget += 2;
+
+    // motion-trail backdrop: a translucent dark wash, never a hard clear
+    ctx.globalCompositeOperation = 'source-over';
+    ctx.fillStyle = FADE_CSS;
+    ctx.fillRect(0, 0, p.width, p.height);
+
+    // node drift (gentle noise + audio outward push)
+    const cx = p.width/2, cy = p.height/2;
+    for (const n of nodes){
+      const dx = (p.noise(n.seed*10,    t*0.18)-0.5)*70;
+      const dy = (p.noise(n.seed*10+99, t*0.18)-0.5)*70;
+      const push = 1 + bassS*0.28;
+      n.x = mix(n.x, cx + (n.baseX-cx)*push + dx, 0.05);
+      n.y = mix(n.y, cy + (n.baseY-cy)*push + dy, 0.05);
+    }
+
+    // smoke / particle field: one cached sprite drawImage per particle,
+    // additively composited. No per-particle fill styles, no p5.Color.
+    ctx.globalCompositeOperation = 'lighter';
+    for (let i=0;i<particleBudget;i++){ particles[i].update(t); particles[i].show(ctx); }
+    ctx.globalAlpha = 1;
+
+    // connective lines (conjunctions/prepositions tie their neighbours)
+    for (let i=0;i<nodes.length;i++){
+      const n = nodes[i];
+      if (n.pos==='particle'){
+        const a = nodes[i-1], b = nodes[i+1];
+        if (a && b){
+          ctx.strokeStyle = hsba(ambientHue+hueShift, 40, 100, 0.10+levelN*0.28);
+          ctx.lineWidth = 1+midS*2;
+          ctx.beginPath(); ctx.moveTo(a.x,a.y); ctx.lineTo(b.x,b.y); ctx.stroke();
+        }
+      }
+    }
+
+    // forms
+    for (const n of nodes) drawNode(n, t);
+
+    // grammar overlay (BLEND so text reads cleanly; going through p.blendMode
+    // keeps p5's internal blend-mode cache in sync with the raw ctx writes above)
+    p.blendMode(p.BLEND);
+    if (document.getElementById('reveal').checked) drawGrammar();
+  };
+
+  const FADE_CSS = hsba(232, 55, 6, 0.15);
+
+  /* ---------- node rendering ---------- */
+  function drawNode(n, t){
+    p.push();
+    p.translate(n.x, n.y);
+
+    if (n.pos==='adj'){ // adjective -> a breathing aura ring
+      p.blendMode(p.ADD); p.noFill();
+      const r = 60 + 30*Math.sin(t*1.5 + n.seed*6) + levelN*80;
+      p.stroke((n.hue+hueShift)%360, 55, 100, 0.10+trebleS*0.2);
+      p.strokeWeight(2); p.circle(0,0,r);
+      p.pop(); return;
+    }
+    if (n.pos==='verb'){ // verb -> a turning streak (and it seeds particles via emitters)
+      p.blendMode(p.ADD); p.noFill();
+      p.stroke((n.hue+hueShift)%360, 50, 100, 0.18+levelN*0.35);
+      p.strokeWeight(2+midS*3);
+      const r = n.size*(1+levelN*0.7);
+      p.arc(0,0,r,r, t*2+n.angle, t*2+n.angle+Math.PI*1.1);
+      p.pop(); return;
+    }
+
+    // nouns (and unknown): voc pulses; genitive -> L-system growth; plural -> satellites
+    const pulse = n.features.case==='voc' ? Math.sin(t*4+n.seed*7)*0.32 : 0;
+    const sz = n.size*(1 + bassS*0.85 + levelN*0.4 + pulse);
+    const hue = (n.hue+hueShift)%360;
+
+    if (n.branch){                            // GENITIVE: an L-system grows from the seed
+      drawBranch(n, sz, hue, t);
+      p.push(); p.rotate(t*n.spin + n.angle); drawShape(n, sz*0.55, hue, 0); p.pop();  // bright seed core
+    } else {
+      p.push(); p.rotate(t*n.spin + n.angle); drawShape(n, sz, hue, 0); p.pop();
+      for (let s=1; s<n.count; s++){          // number: plural satellites
+        p.push();
+        p.rotate(t*0.6 + s*TAU/Math.max(n.count-1,1));
+        p.translate(sz*1.5, 0);
+        drawShape(n, sz*0.34, (hue+18)%360, 0);
+        p.pop();
+      }
+    }
+    p.pop();
+  }
+
+  // Drawn every frame, in node-local space (caller has already translated).
+  // Geometry comes from branchGeometry()'s cache; here we only pick the
+  // simplex point, maybe trigger a (rare) re-expansion, and stroke the
+  // depth-bucketed paths — one strokeStyle + one path per depth.
+  function drawBranch(n, sz, hue, t){
+    const b = n.branch;
+    // SIMPLEX POSITION: the word's resting point, pushed by the whole vocal gesture.
+    let w = b.home;
+    if (micOn){
+      const voc = wNorm([levelN + 0.02, pitchNorm + 0.02, brightS + 0.02]); // loud->fern, pitch->tree, bright->crystal
+      const k = 0.62;
+      w = wNorm([(1-k)*b.home[0]+k*voc[0], (1-k)*b.home[1]+k*voc[1], (1-k)*b.home[2]+k*voc[2]]);
+    }
+    // throttle re-expansion to meaningful moves through the simplex (L1 distance)
+    if (Math.abs(w[0]-b.lastW[0]) + Math.abs(w[1]-b.lastW[1]) + Math.abs(w[2]-b.lastW[2]) > 0.10) reExpandBranch(b, w);
+
+    const ang = w[0]*b.angles[0] + w[1]*b.angles[1] + w[2]*b.angles[2];
+    const sway = (p.noise(n.seed*5, t*0.4) - 0.5)*9 + midS*7;     // wind, partly from the voice
+    const geo = branchGeometry(b, ang + sway);                    // cached turtle walk
+
+    const target = sz*(2.4 + n.recurse*0.7);
+    const sc = target / b.ext;
+
+    const ctx = p.drawingContext;
+    p.push();
+    p.rotate(Math.sin(t*0.25 + n.seed*6)*0.16);
+    p.scale(sc);
+    p.translate(-b.cx, -b.cy);
+    ctx.globalCompositeOperation = 'lighter';
+
+    const strokeAlpha = 0.09 + trebleS*0.12;
+    const baseW = (2.0/sc) * (1 + bassS*0.5);
+    for (const [d, L] of geo.lines){                              // ONE path per depth
+      ctx.strokeStyle = hsba(hue + d*7 - w[2]*26, 55 + w[0]*16, 100, strokeAlpha);  // crystalline -> cooler/desaturated
+      ctx.lineWidth = baseW / (1 + d*0.45);
+      ctx.beginPath();
+      for (let i=0;i<L.length;i+=4){ ctx.moveTo(L[i],L[i+1]); ctx.lineTo(L[i+2],L[i+3]); }
+      ctx.stroke();
+    }
+
+    // blossoms at the tips open the louder you sing
+    const bloom = 0.15 + levelN*1.7;
+    const bloomAlpha = clamp((0.05 + trebleS*0.22)*bloom, 0, 1);
+    for (const [d, B] of geo.blooms){                             // ONE fill per depth
+      ctx.fillStyle = hsba(hue + d*10 + 20, 45, 100, bloomAlpha);
+      const r = ((3.0/sc) * bloom * (1 + d*0.2)) / 2;
+      ctx.beginPath();
+      for (let i=0;i<B.length;i+=2){ ctx.moveTo(B[i]+r, B[i+1]); ctx.arc(B[i], B[i+1], r, 0, TAU); }
+      ctx.fill();
+    }
+    p.pop();
+  }
+
+  function drawShape(n, sz, hue, depth){
+    p.blendMode(p.ADD);
+    p.noFill();
+    for (let g=3; g>=1; g--){            // layered glow strokes
+      p.stroke(hue, 72, 100, 0.11);
+      p.strokeWeight(g*1.4*(1+trebleS*1.4));
+      polygon(0,0, sz*(1+(3-g)*0.05), n.sides);
+    }
+    p.fill(hue, 52, 100, 0.16); p.noStroke();
+    polygon(0,0, sz*0.5, n.sides);
+
+    if (depth>0 && sz>7){                 // GENITIVE nesting -> fractal recursion
+      p.push();
+      p.rotate(0.5 + p.millis()*0.0003);
+      drawShape(n, sz*0.56, (hue+26)%360, depth-1);
+      p.pop();
+    }
+  }
+
+  function polygon(x,y,r,sides){
+    p.beginShape();
+    for (let i=0;i<sides;i++){ const a=TAU*i/sides - Math.PI/2; p.vertex(x+Math.cos(a)*r, y+Math.sin(a)*r); }
+    p.endShape(p.CLOSE);
+  }
+
+  function drawGrammar(){
+    p.textFont('Menlo, monospace'); p.textSize(11); p.textAlign(p.CENTER, p.TOP);
+    for (const n of nodes){
+      const f = n.features;
+      let line2 = n.pos;
+      if (f.case) line2 = `${n.pos} · ${CASE_LABEL[f.case]||f.case} ${f.number||''}`;
+      else if (f.person) line2 = `verb · ${f.person}${f.number} ${f.tense||''}`;
+      p.fill(0,0,100,0.85); p.text(n.surface, n.x, n.y + n.size*0.8);
+      p.fill(0,0,100,0.45); p.text(line2,   n.x, n.y + n.size*0.8 + 14);
+    }
+    // legend
+    p.textAlign(p.LEFT, p.BOTTOM); p.textSize(11); p.fill(0,0,100,0.4);
+    const L = ['nom → centred · gen → L-system · abl → emits smoke',
+               'species = gender × declension · each word → its own variant',
+               'voice → 3-way species morph: loud↔fern · pitch↔tree · bright↔crystal · pitch→hue',
+               `${Math.round(p.frameRate())} fps · ${particleBudget} particles · voice ${Math.round(levelN*100)}%${micOn?'':' (idle breath)'}`];
+    L.forEach((s,i)=> p.text(s, 18, p.height-18-(L.length-1-i)*15));
+  }
+
+  /* ---------- Particle: smoke advected by a Perlin flow field ------------- */
+  class Particle{
+    constructor(){ this.reset(Math.random()*window.innerWidth, Math.random()*window.innerHeight); }
+    reset(x,y){
+      this.x=x; this.y=y; this.vx=0; this.vy=0;
+      this.maxlife = 60 + Math.random()*160; this.life=this.maxlife;
+      this.sz = 1.4 + Math.random()*3.2;
+      this.hue = ambientHue;
+    }
+    update(t){
+      const a = p.noise(this.x*0.0016, this.y*0.0016, t*0.15) * TAU * 2.2;
+      const speed = 0.35 + levelN*2.4 + midS*0.6;         // voice ~7×'s the drift
+      this.vx = mix(this.vx, Math.cos(a)*speed, 0.08);
+      this.vy = mix(this.vy, Math.sin(a)*speed - 0.18, 0.08); // drifts upward, like smoke
+      this.x += this.vx; this.y += this.vy;
+      this.life -= 0.9 + (1-levelN)*1.1;                  // singing nearly halves the decay
+      if (this.life<=0 || this.x<-25||this.x>p.width+25||this.y<-25||this.y>p.height+25){
+        const e = emitters.length ? emitters[(Math.random()*emitters.length)|0] : null;
+        if (e){ this.reset(e.x+(Math.random()-0.5)*36, e.y+(Math.random()-0.5)*36); this.hue=e.hue; }
+        else this.reset(Math.random()*p.width, Math.random()*p.height);
+      }
+    }
+    show(ctx){
+      const lf = this.life/this.maxlife;
+      // halo diameter grows as the particle dies, plus treble shimmer and a
+      // loudness swell so the whole field visibly billows with the voice
+      const d = this.sz*2.4 + (1-lf)*this.sz*3 + trebleS*4 + levelN*6 + this.sz*1.6;
+      ctx.globalAlpha = clamp(lf*(0.08 + levelN*0.5), 0, 1);
+      ctx.drawImage(glowSprite(this.hue + hueShift), this.x - d/2, this.y - d/2, d, d);
+    }
+  }
+};
+
+new p5(sketch);
+</script>
+</body>
+</html>

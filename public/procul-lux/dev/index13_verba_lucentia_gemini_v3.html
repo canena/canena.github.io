@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="la">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vox Latina - Visualizer Matrix</title>
+    <style>
+        * { box-sizing: border-box; }
+        body, html {
+            margin: 0; padding: 0; width: 100%; height: 100%;
+            overflow: hidden; background-color: #030305;
+            font-family: monospace; color: #a0a0c0;
+        }
+        #canvas {
+            position: absolute; top: 0; left: 0;
+            width: 100vw; height: 100vh; z-index: 1;
+            image-rendering: pixelated;
+            image-rendering: crisp-edges;
+        }
+        #ui-layer {
+            position: absolute; bottom: 20px; left: 50%;
+            transform: translateX(-50%); z-index: 10;
+            width: 90%; max-width: 700px;
+            background: rgba(8, 8, 15, 0.85);
+            padding: 15px; border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 0 30px rgba(0,0,0,0.7);
+            backdrop-filter: blur(8px);
+            transition: opacity 0.4s;
+        }
+        #ui-layer.hidden { opacity: 0.02; }
+        #ui-layer.hidden:hover { opacity: 1; }
+        textarea {
+            width: 100%; height: 80px; background: rgba(0, 0, 0, 0.6);
+            border: 1px solid #334; color: #fff; padding: 8px;
+            border-radius: 4px; resize: none; font-family: inherit;
+        }
+        .controls {
+            display: flex; justify-content: space-between; align-items: center; margin-top: 8px;
+        }
+        button {
+            background: #1a2a4a; color: #fff; border: 1px solid #3a4a6a;
+            padding: 6px 12px; border-radius: 4px; cursor: pointer; font-family: inherit;
+        }
+        button:hover { background: #2a3a5a; }
+        .stats { font-size: 11px; color: #557; }
+    </style>
+    <script type="importmap">
+      {
+        "imports": {
+          "gl-matrix": "https://unpkg.com/gl-matrix@3.4.3/esm/index.js"
+        }
+      }
+    </script>
+</head>
+<body>
+
+    <canvas id="canvas"></canvas>
+
+    <div id="ui-layer">
+        <textarea id="latin-input">Initio mundi
+Victuri te salutant
+Illumina tenebras
+Idolum redux, serpens caudam suam mordens
+Insidens oculatus, obtutu figens
+Procul lux, ultra caligo
+In monte ardentem laeti saltamus</textarea>
+        <div class="controls">
+            <button id="mic-btn">🎙️ Start Audio Engine</button>
+            <div class="stats" id="stats-out">Grammar Matrix Status...</div>
+        </div>
+    </div>
+
+<script type="module">
+import { mat4 } from 'gl-matrix';
+
+// ==========================================
+// 1. LATIN LEXICON & GRAMMAR HEURISTIC
+// ==========================================
+const LEXICON_STATIC = {
+    umbra:   {pos:'noun', decl:1, gender:'f', stem:'umbr', nom:'umbra'},
+    ventus:  {pos:'noun', decl:2, gender:'m', stem:'vent', nom:'ventus'},
+    lux:     {pos:'noun', decl:3, gender:'f', stem:'luc',  nom:'lux'},
+    mundus:  {pos:'noun', decl:2, gender:'m', stem:'mund', nom:'mundus'},
+    initium: {pos:'noun', decl:2, gender:'n', stem:'initi',nom:'initium'},
+    tenebrae:{pos:'noun', decl:1, gender:'f', stem:'tenebr',nom:'tenebrae'},
+    cauda:   {pos:'noun', decl:1, gender:'f', stem:'caud', nom:'cauda'},
+    idolum:  {pos:'noun', decl:2, gender:'n', stem:'idol', nom:'idolum'},
+    caligo:  {pos:'noun', decl:3, gender:'f', stem:'caligin', nom:'caligo'},
+    mons:    {pos:'noun', decl:3, gender:'m', stem:'mont', nom:'mons'}
+};
+
+const DECL = {
+    1: { arum:[['gen','pl']], am:[['acc','sg']], as:[['acc','pl']], ae:[['gen','sg'],['dat','sg']], a:[['nom','sg'],['abl','sg']] },
+    2: { orum:[['gen','pl']], us:[['nom','sg']], um:[['acc','sg']], i:[['gen','sg']], o:[['dat','sg'],['abl','sg']], a:[['nom','pl']] },
+    3: { ibus:[['dat','pl']], ium:[['gen','pl']], um:[['gen','pl']], em:[['acc','sg']], es:[['nom','pl']], is:[['gen','sg']], e:[['abl','sg']] }
+};
+
+// Clamped global parameters for geometric clarity
+const grammarState = { nominatives: 3, genitives: 1, accusatives: 1, ablatives: 1 };
+
+function parseGrammar(text) {
+    let cleanText = text.toLowerCase().replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g,"").trim();
+    if (!cleanText) return;
+    let words = cleanText.split(/\s+/).filter(Boolean);
+
+    let nom = 0, gen = 0, acc = 0, abl = 0;
+
+    words.forEach(word => {
+        let found = false;
+        for (let key in LEXICON_STATIC) {
+            let item = LEXICON_STATIC[key];
+            if (word.startsWith(item.stem) || word === item.nom) {
+                const ending = word.substring(item.stem.length);
+                const rules = DECL[item.decl]?.[ending] || [];
+                rules.forEach(r => {
+                    if (r[0] === 'nom') nom++; if (r[0] === 'gen') gen++;
+                    if (r[0] === 'acc') acc++; if (r[0] === 'abl') abl++;
+                });
+                found = true; break;
+            }
+        }
+        if (!found) {
+            if (word.endsWith('orum') || word.endsWith('arum') || word.endsWith('ium')) gen++;
+            else if (word.endsWith('um') || word.endsWith('am') || word.endsWith('os') || word.endsWith('as')) acc++;
+            else if (word.endsWith('o') || word.endsWith('is') || word.endsWith('e')) abl++;
+            else if (word.endsWith('us') || word.endsWith('a') || word.endsWith('es')) nom++;
+        }
+    });
+
+    // g) Clamping loop bounds to keep complexity structured, organic, and elegant
+    grammarState.nominatives = Math.min(12, Math.max(3, nom));
+    grammarState.genitives = Math.min(8, Math.max(1, gen));
+    grammarState.accusatives = Math.min(10, Math.max(1, acc));
+    grammarState.ablatives = Math.min(10, Math.max(1, abl));
+
+    document.getElementById('stats-out').innerText =
+        `NOM: ${grammarState.nominatives} | GEN: ${grammarState.genitives} | ACC: ${grammarState.accusatives} | ABL: ${grammarState.ablatives}`;
+}
+
+// ==========================================
+// 2. AUDIO ANALYSIS MATRIX
+// ==========================================
+let audioCtx = null, analyser = null, dataArrayFreq = null, dataArrayTime = null;
+const audioState = { volume: 0, bass: 0, mid: 0, high: 0 };
+
+async function initAudio() {
+    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    const stream = await navigator.mediaDevices.getUserMedia({ audio: true, video: false });
+    const source = audioCtx.createMediaStreamSource(stream);
+    analyser = audioCtx.createAnalyser();
+    analyser.fftSize = 512;
+    source.connect(analyser);
+    dataArrayFreq = new Uint8Array(analyser.frequencyBinCount);
+    dataArrayTime = new Uint8Array(analyser.frequencyBinCount);
+    document.getElementById('mic-btn').innerText = "🎙️ Engine Online";
+    document.getElementById('mic-btn').disabled = true;
+}
+
+function updateAudioMetrics() {
+    if (!analyser) return;
+    analyser.getByteFrequencyData(dataArrayFreq);
+    analyser.getByteTimeDomainData(dataArrayTime);
+
+    let total = 0, bass = 0, mid = 0, high = 0;
+    const len = dataArrayFreq.length;
+
+    for (let i = 0; i < len; i++) {
+        const val = dataArrayFreq[i] / 255.0;
+        total += val;
+        if (i < len * 0.15) bass += val;
+        else if (i < len * 0.55) mid += val;
+        else high += val;
+    }
+
+    audioState.volume = total / len;
+    audioState.bass = bass / (len * 0.15);
+    audioState.mid = mid / (len * 0.40);
+    audioState.high = high / (len * 0.45);
+}
+
+// ==========================================
+// 3. SHADERS (With Dynamic Tunnel System)
+// ==========================================
+const baseVertexSrc = `#version 300 es
+in vec2 position;
+out vec2 v_texCoord;
+void main() {
+    v_texCoord = position * 0.5 + 0.5;
+    gl_Position = vec4(position, 0.0, 1.0);
+}`;
+
+const feedbackFragmentSrc = `#version 300 es
+precision highp float;
+in vec2 v_texCoord;
+uniform sampler2D u_prevFrame;
+uniform float u_time;
+uniform float u_decay;
+uniform float u_zoom;
+uniform float u_rotate;
+uniform vec2 u_shift;
+
+uniform vec2 u_mousePos;
+uniform float u_mouseIntensity;
+
+out vec4 fragColor;
+
+float hash(vec2 p) {
+    return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453123);
+}
+
+void main() {
+    vec2 uv = v_texCoord - 0.5;
+
+    // Rotate and map coordinates
+    float c = cos(u_rotate); float s = sin(u_rotate);
+    uv = mat2(c, -s, s, c) * uv;
+
+    // f) Inverting zoom behavior to scale the coordinate buffer downward (< 1.0)
+    // This causes previous frames to stretch outward toward the margins, generating a tunnel look.
+    uv *= u_zoom;
+    uv += u_shift;
+
+    vec2 sampleCoord = uv + 0.5;
+
+    // Sample trail texture data
+    vec4 prev = texture(u_prevFrame, sampleCoord);
+
+    // Neon phosphor trailing calculations
+    prev.rgb *= vec3(u_decay, u_decay * 0.96, u_decay * 0.98);
+
+    // a) Background ambient starfield/noise perturbation fog
+    float noise = hash(v_texCoord + u_time) * 0.022;
+    prev.rgb += vec3(noise * 0.3, noise * 0.1, noise * 0.5) * (1.0 - u_decay);
+
+    // d) Click / Touch shockwave calculation
+    float dist = distance(v_texCoord, u_mousePos);
+    if (u_mouseIntensity > 0.01) {
+        float wave = sin(dist * 35.0 - u_time * 30.0) * 0.5 + 0.5;
+        float flash = wave * smoothstep(0.3, 0.0, dist) * u_mouseIntensity;
+        prev.rgb += vec3(flash * 0.5, flash * 0.8, flash * 1.2);
+        sampleCoord += (v_texCoord - u_mousePos) * flash * 0.04;
+    }
+
+    if(sampleCoord.x < 0.0 || sampleCoord.x > 1.0 || sampleCoord.y < 0.0 || sampleCoord.y > 1.0) {
+        prev = vec4(0.0, 0.0, 0.0, 1.0);
+    }
+
+    fragColor = vec4(prev.rgb, 1.0);
+}`;
+
+const sceneVertexSrc = `#version 300 es
+in vec3 position;
+in vec3 color;
+uniform mat4 u_matrix;
+out vec3 v_color;
+void main() {
+    v_color = color;
+    gl_Position = u_matrix * vec4(position, 1.0);
+}`;
+
+const sceneFragmentSrc = `#version 300 es
+precision highp float;
+in vec3 v_color;
+out vec4 fragColor;
+void main() {
+    fragColor = vec4(v_color, 1.0);
+}`;
+
+// ==========================================
+// 4. CORE GRAPHICS MANAGEMENT SETUP
+// ==========================================
+const canvas = document.getElementById('canvas');
+const gl = canvas.getContext('webgl2', { preserveDrawingBuffer: true });
+
+const feedbackProg = gl.createProgram();
+const vsG = gl.createShader(gl.VERTEX_SHADER); gl.shaderSource(vsG, baseVertexSrc); gl.compileShader(vsG);
+const fsG = gl.createShader(gl.FRAGMENT_SHADER); gl.shaderSource(fsG, feedbackFragmentSrc); gl.compileShader(fsG);
+gl.attachShader(feedbackProg, vsG); gl.attachShader(feedbackProg, fsG); gl.linkProgram(feedbackProg);
+
+const sceneProg = gl.createProgram();
+const vsS = gl.createShader(gl.VERTEX_SHADER); gl.shaderSource(vsS, sceneVertexSrc); gl.compileShader(vsS);
+const fsS = gl.createShader(gl.FRAGMENT_SHADER); gl.shaderSource(fsS, sceneFragmentSrc); gl.compileShader(fsS);
+gl.attachShader(sceneProg, vsS); gl.attachShader(sceneProg, fsS); gl.linkProgram(sceneProg);
+
+const quadVAO = gl.createVertexArray();
+gl.bindVertexArray(quadVAO);
+const quadVBO = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, quadVBO);
+gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1, 1,-1, -1,1, -1,1, 1,-1, 1,1]), gl.STATIC_DRAW);
+gl.enableVertexAttribArray(gl.getAttribLocation(feedbackProg, "position"));
+gl.vertexAttribPointer(gl.getAttribLocation(feedbackProg, "position"), 2, gl.FLOAT, false, 0, 0);
+
+const sceneVAO = gl.createVertexArray();
+gl.bindVertexArray(sceneVAO);
+const sceneVBO = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, sceneVBO);
+gl.enableVertexAttribArray(gl.getAttribLocation(sceneProg, "position"));
+gl.vertexAttribPointer(gl.getAttribLocation(sceneProg, "position"), 3, gl.FLOAT, false, 24, 0);
+gl.enableVertexAttribArray(gl.getAttribLocation(sceneProg, "color"));
+gl.vertexAttribPointer(gl.getAttribLocation(sceneProg, "color"), 3, gl.FLOAT, false, 24, 12);
+
+let width, height;
+let fbA = gl.createFramebuffer(), fbB = gl.createFramebuffer();
+let texA = null, texB = null;
+let currentPixelScale = 2.0;
+
+function allocateFramebufferTextures(targetWidth, targetHeight) {
+    if (width === targetWidth && height === targetHeight) return;
+    width = targetWidth; height = targetHeight;
+
+    if (texA) { gl.deleteTexture(texA); gl.deleteTexture(texB); }
+
+    const buildTex = () => {
+        const tex = gl.createTexture();
+        gl.bindTexture(gl.TEXTURE_2D, tex);
+        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, width, height, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+        return tex;
+    };
+
+    texA = buildTex(); texB = buildTex();
+    gl.bindFramebuffer(gl.FRAMEBUFFER, fbA); gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, texA, 0);
+    gl.bindFramebuffer(gl.FRAMEBUFFER, fbB); gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, texB, 0);
+}
+
+// ==========================================
+// 5. GEOMETRY STAGE (Harmonic Orbitals)
+// ==========================================
+function drawCentralGeometry(time) {
+    const vertexData = [];
+
+    // g) Reduced, intentional edge segments to keep geometric purity clean
+    const count = 120;
+    const baseNodes = grammarState.nominatives;
+    const innerHarmonics = grammarState.genitives;
+
+    const pulse = 1.0 + audioState.bass * 0.6;
+    const jitter = audioState.mid * 0.03;
+
+    // g) Scaled larger to confidently fill the center of the tunnel
+    const globalScale = 0.62 * pulse;
+
+    for (let i = 0; i <= count; i++) {
+        let t = (i / count) * Math.PI * 2;
+
+        let r = 0.6;
+        r += Math.sin(baseNodes * t + time * 1.5) * 0.25;
+        r += Math.cos(innerHarmonics * 2 * t - time) * 0.15 * pulse;
+        r += (Math.random() - 0.5) * jitter;
+
+        let x = Math.cos(t) * r * globalScale;
+        let y = Math.sin(t) * r * globalScale;
+
+        let rCol = Math.sin(t + time) * 0.5 + 0.5;
+        let gCol = Math.cos(t - time * 2.0) * 0.3 + 0.7;
+        let bCol = Math.sin(t * 3.0 + time) * 0.4 + 0.6;
+
+        vertexData.push(x, y, 0, rCol, gCol, bCol);
+    }
+
+    // g) Variable line width mapping driven by mid/high frequency range
+    let lineThickness = 1.0 + Math.floor(audioState.mid * 5.0 + audioState.volume * 3.0);
+    gl.lineWidth(lineThickness);
+
+    gl.bindBuffer(gl.ARRAY_BUFFER, sceneVBO);
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertexData), gl.DYNAMIC_DRAW);
+    gl.bindVertexArray(sceneVAO);
+    gl.drawArrays(gl.LINE_STRIP, 0, vertexData.length / 6);
+}
+
+// ==========================================
+// 6. PIPELINE ITERATION LOOP
+// ==========================================
+let startTime = performance.now();
+const touchState = { x: 0, y: 0, intensity: 0 };
+
+function render() {
+    requestAnimationFrame(render);
+    updateAudioMetrics();
+
+    let time = (performance.now() - startTime) * 0.001;
+
+    // h) Dynamic pixelation downsampling driven by audio metrics
+    // Bass pushes resolution numbers up (chunky pixels), treble pulls them back to crisp lines
+    let audioResolutionMod = (audioState.bass * 6.0) - (audioState.high * 2.5);
+    currentPixelScale = Math.max(1.0, Math.min(8.0, 2.0 + audioResolutionMod));
+
+    let calcW = Math.max(64, Math.floor(window.innerWidth / currentPixelScale));
+    let calcH = Math.max(64, Math.floor(window.innerHeight / currentPixelScale));
+    allocateFramebufferTextures(calcW, calcH);
+
+    let decayVal = 0.91 + Math.min(0.075, (grammarState.ablatives * 0.007));
+    let driftSpeed = time * (1.0 + grammarState.accusatives * 0.1);
+    touchState.intensity *= 0.95;
+
+    // Phase 1: Render the expanding tunnel feedback canvas to FBO-B
+    gl.bindFramebuffer(gl.FRAMEBUFFER, fbB);
+    gl.viewport(0, 0, width, height);
+    gl.useProgram(feedbackProg);
+
+    gl.uniform1i(gl.getUniformLocation(feedbackProg, "u_prevFrame"), 0);
+    gl.uniform1f(gl.getUniformLocation(feedbackProg, "u_time"), time);
+    gl.uniform1f(gl.getUniformLocation(feedbackProg, "u_decay"), decayVal);
+
+    // f) Values less than 1.0 push older pixels outward towards view margins
+    let tunnelZoom = 0.972 - (grammarState.genitives * 0.003) - (audioState.bass * 0.015);
+    gl.uniform1f(gl.getUniformLocation(feedbackProg, "u_zoom"), tunnelZoom);
+    gl.uniform1f(gl.getUniformLocation(feedbackProg, "u_rotate"), 0.018 + Math.sin(time * 0.15) * 0.01);
+    gl.uniform2f(gl.getUniformLocation(feedbackProg, "u_shift"), Math.cos(driftSpeed)*0.002, Math.sin(driftSpeed)*0.002);
+
+    gl.uniform2f(gl.getUniformLocation(feedbackProg, "u_mousePos"), touchState.x, touchState.y);
+    gl.uniform1f(gl.getUniformLocation(feedbackProg, "u_mouseIntensity"), touchState.intensity);
+
+    gl.activeTexture(gl.TEXTURE0);
+    gl.bindTexture(gl.TEXTURE_2D, texA);
+    gl.bindVertexArray(quadVAO);
+    gl.drawArrays(gl.TRIANGLES, 0, 6);
+
+    // Phase 2: Render central structural vectors on top
+    gl.useProgram(sceneProg);
+    const matrix = mat4.create();
+    const aspect = width / height;
+    mat4.ortho(matrix, -aspect, aspect, -1, 1, -1, 1);
+    mat4.rotateZ(matrix, matrix, time * 0.08);
+    gl.uniformMatrix4fv(gl.getUniformLocation(sceneProg, "u_matrix"), false, matrix);
+
+    drawCentralGeometry(time);
+
+    // Phase 3: Display results to display window viewport
+    gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+    gl.viewport(0, 0, canvas.width = window.innerWidth, canvas.height = window.innerHeight);
+    gl.useProgram(feedbackProg);
+
+    gl.uniform1f(gl.getUniformLocation(feedbackProg, "u_zoom"), 1.0);
+    gl.uniform1f(gl.getUniformLocation(feedbackProg, "u_rotate"), 0.0);
+    gl.uniform2f(gl.getUniformLocation(feedbackProg, "u_shift"), 0.0, 0.0);
+    gl.uniform1f(gl.getUniformLocation(feedbackProg, "u_decay"), 1.0);
+    gl.uniform1f(gl.getUniformLocation(feedbackProg, "u_mouseIntensity"), 0.0);
+
+    gl.bindTexture(gl.TEXTURE_2D, texB);
+    gl.bindVertexArray(quadVAO);
+    gl.drawArrays(gl.TRIANGLES, 0, 6);
+
+    // Swap buffers
+    let tempTex = texA; texA = texB; texB = tempTex;
+    let tempFb = fbA; fbA = fbB; fbB = tempFb;
+}
+
+// ==========================================
+// 7. EVENTS & UI INITIALIZATION
+// ==========================================
+window.addEventListener('pointerdown', (e) => {
+    if(e.target.closest('#ui-layer')) return;
+    touchState.x = e.clientX / window.innerWidth;
+    touchState.y = 1.0 - (e.clientY / window.innerHeight);
+    touchState.intensity = 1.5;
+});
+
+const inputArea = document.getElementById('latin-input');
+inputArea.addEventListener('input', (e) => parseGrammar(e.target.value));
+document.getElementById('mic-btn').addEventListener('click', () => {
+    initAudio().catch(err => console.error(err));
+});
+
+let uiTimer;
+document.addEventListener('pointermove', () => {
+    const ui = document.getElementById('ui-layer');
+    ui.classList.remove('hidden');
+    clearTimeout(uiTimer);
+    uiTimer = setTimeout(() => ui.classList.add('hidden'), 4000);
+});
+
+// Seed State
+parseGrammar(inputArea.value);
+gl.clearColor(0.0, 0.0, 0.0, 1.0);
+requestAnimationFrame(render);
+</script>
+</body>
+</html>

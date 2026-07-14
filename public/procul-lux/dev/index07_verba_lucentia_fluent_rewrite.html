@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+<title>verba lucentia — fluent rewrite</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/addons/p5.sound.min.js"></script>
+<style>
+  :root { --ink: rgba(255,255,255,0.86); --dim: rgba(255,255,255,0.42); }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; background: #05060a; overflow: hidden;
+    font-family: 'Iowan Old Style', 'Palatino Linotype', Palatino, Georgia, serif; }
+  canvas { display: block; position: fixed; inset: 0; }
+  .bar { position: fixed; left: 50%; bottom: 28px; transform: translateX(-50%);
+    display: flex; gap: 10px; align-items: center; z-index: 10; width: min(700px, 92vw); }
+  .bar input[type=text] { flex: 1; padding: 12px 16px; font-size: 18px; letter-spacing: .3px;
+    color: var(--ink); background: rgba(255,255,255,0.065); border: 1px solid rgba(255,255,255,0.14);
+    border-radius: 12px; backdrop-filter: blur(8px); font-family: inherit; outline: none; }
+  .bar input::placeholder { color: var(--dim); font-style: italic; }
+  .btn { padding: 12px 16px; font-size: 14px; white-space: nowrap; cursor: pointer;
+    color: var(--ink); background: rgba(255,255,255,0.065); border: 1px solid rgba(255,255,255,0.16);
+    border-radius: 12px; backdrop-filter: blur(8px); font-family: inherit; transition: .2s; }
+  .btn:hover { background: rgba(255,255,255,0.12); }
+  .btn.on { color: #9ff5d9; border-color: rgba(159,245,217,0.5); }
+  .hint { position: fixed; left: 50%; bottom: 82px; transform: translateX(-50%);
+    color: var(--dim); font-size: 13px; font-style: italic; z-index: 10; text-align: center;
+    width: min(700px, 92vw); pointer-events: none; }
+  .hint b { color: rgba(255,255,255,0.62); font-style: normal; }
+  .reveal { position: fixed; top: 18px; right: 20px; z-index: 10; color: var(--dim);
+    font-size: 13px; display: flex; gap: 7px; align-items: center; user-select: none; cursor: pointer; }
+  .reveal input { accent-color: #9ff5d9; }
+  .perf { position: fixed; top: 18px; left: 20px; z-index: 10; color: rgba(255,255,255,0.32);
+    font: 12px/1.4 Menlo, Consolas, monospace; pointer-events: none; }
+</style>
+</head>
+<body>
+<div class="perf" id="perf"></div>
+<div class="hint" id="hint">type Latin — genitives grow cached fractals · grammar remains inspectable · then sing</div>
+<div class="bar">
+  <input id="text" type="text" spellcheck="false" value="lux et umbra noctis" placeholder="lux umbrae… carmen stellarum… anima ignis" />
+  <button id="mic" class="btn">Start mic</button>
+</div>
+<label class="reveal"><input id="reveal" type="checkbox"> reveal grammar</label>
+
+<script>
+(function(){
+'use strict';
+
+/*
+  Fluent rewrite principles:
+  - p5 instance mode: p5 names are scoped as p.*; exported API is intentional.
+  - text parse and branch geometry are event-driven, not per-frame.
+  - genitive L-systems render into p5.Graphics buffers; draw() only composites them.
+  - mic analysis is smoothed and pitch is sampled at low frequency.
+  - the global IR is kept as window.__graph for external consumers.
+*/
+
+const CONFIG = {
+  targetFps: 60,
+  smokeScale: 0.50,
+  particles: 150,
+  branchMaxLen: 520,
+  branchMaxSegments: 360,
+  branchCacheMin: 180,
+  branchCacheMax: 340,
+  branchRefreshEveryFrames: 8,
+  pitchEveryMs: 140,
+};
+
+const DEFAULT_LEXICON = {
+  umbra:  {pos:'noun', decl:1, gender:'f', stem:'umbr',  nom:'umbra'},
+  vita:   {pos:'noun', decl:1, gender:'f', stem:'vit',   nom:'vita'},
+  rosa:   {pos:'noun', decl:1, gender:'f', stem:'ros',   nom:'rosa'},
+  stella: {pos:'noun', decl:1, gender:'f', stem:'stell', nom:'stella'},
+  aqua:   {pos:'noun', decl:1, gender:'f', stem:'aqu',   nom:'aqua'},
+  anima:  {pos:'noun', decl:1, gender:'f', stem:'anim',  nom:'anima'},
+  luna:   {pos:'noun', decl:1, gender:'f', stem:'lun',   nom:'luna'},
+  ventus: {pos:'noun', decl:2, gender:'m', stem:'vent',  nom:'ventus'},
+  somnus: {pos:'noun', decl:2, gender:'m', stem:'somn',  nom:'somnus'},
+  caelum: {pos:'noun', decl:2, gender:'n', stem:'cael',  nom:'caelum'},
+  verbum: {pos:'noun', decl:2, gender:'n', stem:'verb',  nom:'verbum'},
+  lux:    {pos:'noun', decl:3, gender:'f', stem:'luc',   nom:'lux'},
+  nox:    {pos:'noun', decl:3, gender:'f', stem:'noct',  nom:'nox'},
+  ignis:  {pos:'noun', decl:3, gender:'m', stem:'ign',   nom:'ignis'},
+  amor:   {pos:'noun', decl:3, gender:'m', stem:'amor',  nom:'amor'},
+  mare:   {pos:'noun', decl:3, gender:'n', stem:'mar',   nom:'mare'},
+  flos:   {pos:'noun', decl:3, gender:'m', stem:'flor',  nom:'flos'},
+  mors:   {pos:'noun', decl:3, gender:'f', stem:'mort',  nom:'mors'},
+  sol:    {pos:'noun', decl:3, gender:'m', stem:'sol',   nom:'sol'},
+  carmen: {pos:'noun', decl:3, gender:'n', stem:'carmin',nom:'carmen'},
+  tempus: {pos:'noun', decl:3, gender:'n', stem:'tempor',nom:'tempus'},
+};
+let LEXICON = window.VERBA_LEXICON || DEFAULT_LEXICON;
+let externalAnalyzer = null;
+
+const DECL = {
+  1: { arum:[['gen','pl']], am:[['acc','sg']], as:[['acc','pl']], ae:[['gen','sg'],['dat','sg'],['nom','pl'],['voc','pl']], is:[['dat','pl'],['abl','pl']], a:[['nom','sg'],['abl','sg'],['voc','sg']] },
+  2: { orum:[['gen','pl']], us:[['nom','sg']], um:[['acc','sg'],['nom','sg']], os:[['acc','pl']], is:[['dat','pl'],['abl','pl']], i:[['gen','sg'],['nom','pl'],['voc','pl']], o:[['dat','sg'],['abl','sg']], a:[['nom','pl'],['acc','pl']], e:[['voc','sg']] },
+  3: { ibus:[['dat','pl'],['abl','pl']], ium:[['gen','pl']], um:[['gen','pl']], em:[['acc','sg']], es:[['nom','pl'],['acc','pl'],['voc','pl']], is:[['gen','sg']], i:[['dat','sg']], e:[['abl','sg']] },
+};
+const CASE_ORDER = ['nom','gen','dat','acc','abl','voc'];
+const CASE_LABEL = {nom:'nominative',gen:'genitive',dat:'dative',acc:'accusative',abl:'ablative',voc:'vocative'};
+const PARTICLES = new Set(['et','in','cum','sub','super','per','ad','sine','sed','non','ut','ex','de','a','ab','aut','nec','que','sic','iam','semper','ubi']);
+const ADJECTIVES = new Set(['magnus','parvus','pulcher','clarus','obscurus','aeternus','profundus','altus','niger','albus','sacer','novus']);
+const VERB_STEMS = { am:1, cant:1, vol:1, luce:2, arde:2, flu:3, viv:3, cad:3, can:3 };
+const VERB_PRES = { o:['1','sg'], as:['2','sg'], at:['3','sg'], amus:['1','pl'], atis:['2','pl'], ant:['3','pl'], es:['2','sg'], et:['3','sg'], emus:['1','pl'], etis:['2','pl'], ent:['3','pl'], is:['2','sg'], it:['3','sg'], imus:['1','pl'], itis:['2','pl'], unt:['3','pl'] };
+const GENDER_HUE = { f:[330,30], m:[205,55], n:[120,90] };
+
+function normalize(s){ return String(s).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z\s]/g,' ').replace(/\s+/g,' ').trim(); }
+function base(w,pos){ return {surface:w, pos, gender:null, features:{}, alternates:[], known:false, recurse:0}; }
+function hashStr(s){ let h=2166136261; for(let i=0;i<s.length;i++){ h^=s.charCodeAt(i); h=Math.imul(h,16777619); } return (h>>>0)/4294967295; }
+function guessGender(d,suf){ if (d===1) return 'f'; if (d===2) return suf[0]==='u'?'m':'n'; return 'n'; }
+function mkParse(surface, e, cand){ const [c,n] = cand[0]; return {surface, pos:'noun', gender:e.gender, decl:e.decl, stem:e.stem, nom:e.nom, features:{case:c, number:n}, alternates:cand.slice(1).map(([case_,number])=>({case:case_,number})), known:true, recurse:0}; }
+function parseKnownNoun(w){
+  for (const key in LEXICON){
+    const e = LEXICON[key];
+    if (!e || e.pos !== 'noun') continue;
+    if (w === e.nom || w === key) return mkParse(w, e, [['nom','sg']]);
+    if (e.stem && w.startsWith(e.stem)){
+      const suf = w.slice(e.stem.length);
+      const cand = DECL[e.decl] && DECL[e.decl][suf];
+      if (cand) return mkParse(w, e, cand);
+    }
+  }
+  return null;
+}
+function parseByEndings(w){
+  for (const suf in VERB_PRES){
+    if (w.length > suf.length+1 && w.endsWith(suf)){ const [p,n] = VERB_PRES[suf]; return {surface:w, pos:'verb', features:{person:p, number:n, tense:'pres'}, gender:null, alternates:[], known:false, recurse:0}; }
+  }
+  for (const d of [1,2,3]){
+    const endings = Object.keys(DECL[d]).sort((a,b)=>b.length-a.length);
+    for (const suf of endings){
+      if (w.endsWith(suf) && w.length > suf.length){ const [c,n] = DECL[d][suf][0]; return {surface:w, pos:'noun', gender:guessGender(d,suf), decl:d, features:{case:c, number:n}, alternates:[], known:false, recurse:0}; }
+    }
+  }
+  return null;
+}
+function analyzeWord(raw){
+  const w = raw;
+  if (externalAnalyzer) {
+    const r = externalAnalyzer(w, {lexicon:LEXICON, declensions:DECL});
+    if (r) return Object.assign({surface:w, features:{}, alternates:[], known:true, recurse:0}, r);
+  }
+  if (PARTICLES.has(w)) return base(w,'particle');
+  if (ADJECTIVES.has(w)) return base(w,'adj');
+  const known = parseKnownNoun(w); if (known) return known;
+  for (const st in VERB_STEMS){ if (w.startsWith(st)){ const guess = parseByEndings(w); if (guess && guess.pos==='verb') return guess; } }
+  const byEnd = parseByEndings(w); if (byEnd) return byEnd;
+  return base(w,'unknown');
+}
+function parseText(text){
+  const words = normalize(text).split(' ').filter(Boolean);
+  const parsed = words.map(analyzeWord);
+  let run = 0;
+  for (const p of parsed){ if (p.features.case === 'gen'){ run++; p.recurse = Math.min(run,4); } else run = 0; }
+  return parsed;
+}
+
+const SPECIES = {
+  fern:    {angle:23, up:true,  axiom:'X', rules:{ X:['F-[[X]+X]+F[+FX]-X','F+[[X]-X]-F[-FX]+X','FF-[X+X]+[X-X]'], F:['FF','FF','F'] }},
+  tree:    {angle:27, up:true,  axiom:'X', rules:{ X:['F[+X]F[-X]+X','F[-X]F[+X]-X','F[+X][-X]FX'], F:['FF','F'] }},
+  crystal: {angle:60, up:false, axiom:'F++F++F', rules:{ X:['F-F++F','F+F--F','F[-F][+F]'], F:['F-F++F-F','F+F--F+F'] }},
+};
+const SP_NAMES = ['fern','tree','crystal'];
+function mulberry32(a){ return function(){ a|=0; a=(a+0x6D2B79F5)|0; let t=Math.imul(a^(a>>>15),1|a); t=(t+Math.imul(t^(t>>>7),61|t))^t; return ((t^(t>>>14))>>>0)/4294967296; }; }
+function vowelRatio(w){ const v=(w.match(/[aeiouy]/g)||[]).length; return w.length ? v/w.length : 0.5; }
+function speciesByGender(g, seed){ return g==='f'?'fern':g==='m'?'tree':g==='n'?'crystal':SP_NAMES[Math.floor(((seed*101)%1)*3)%3]; }
+function speciesByDecl(d, seed){ return d===1?'fern':d===2?'tree':d===3?'crystal':SP_NAMES[Math.floor(((seed*53)%1)*3)%3]; }
+function branchIters(name, recurse){ return name==='crystal' ? Math.max(1, Math.min(recurse,3)) : Math.max(2, Math.min(recurse+1,3)); }
+function wNorm(a){ const s=(a[0]+a[1]+a[2])||1; return [a[0]/s, a[1]/s, a[2]/s]; }
+function vertexOf(name){ return name==='fern'?0 : name==='tree'?1 : 2; }
+function homeSimplex(p, seed){
+  const w = [0.18,0.18,0.18];
+  w[vertexOf(speciesByGender(p.gender, seed))] += 0.50;
+  w[vertexOf(speciesByDecl(p.decl, seed))] += 0.34;
+  const vr = vowelRatio(p.surface); w[0] += vr*0.16; w[2] += (1-vr)*0.16;
+  return wNorm(w);
+}
+function pickSpecies(rng, weights, arr){ const r=rng(); let acc=0; for(let i=0;i<arr.length;i++){ acc += weights[i]; if(r<acc) return arr[i]; } return arr[arr.length-1]; }
+function lExpandSimplex(arr, weights, axiom, iters, seedInt, maxLen){
+  let s = axiom;
+  for (let k=0;k<iters;k++){
+    if (s.length > maxLen) break;
+    const rng = mulberry32(seedInt + k*2654435761);
+    let out = '';
+    for (let i=0;i<s.length;i++){
+      const c=s[i], sp=pickSpecies(rng, weights, arr), prods=sp.rules[c];
+      out += prods ? prods[Math.floor(rng()*prods.length)] : c;
+      if (out.length > maxLen) break;
+    }
+    s = out;
+  }
+  return s.length > maxLen ? s.slice(0,maxLen) : s;
+}
+function lsysSegments(str, angleDeg, startUp){
+  const segs = [], stack = [];
+  let x=0, y=0, h=startUp ? -Math.PI/2 : 0, depth=0;
+  const a = angleDeg*Math.PI/180;
+  for (let i=0;i<str.length;i++){
+    const ch=str[i];
+    if (ch==='F'){ const nx=x+Math.cos(h), ny=y+Math.sin(h); segs.push([x,y,nx,ny,depth]); x=nx; y=ny; }
+    else if (ch==='+') h += a;
+    else if (ch==='-') h -= a;
+    else if (ch==='['){ stack.push([x,y,h,depth]); depth++; }
+    else if (ch===']' && stack.length){ const s=stack.pop(); x=s[0]; y=s[1]; h=s[2]; depth=s[3]; }
+  }
+  return segs;
+}
+
+const exported = window.verbaLucentia = {
+  setLexicon(next){ LEXICON = next || DEFAULT_LEXICON; if (exported.rebuild) exported.rebuild(); },
+  installAnalyzer(fn){ externalAnalyzer = typeof fn === 'function' ? fn : null; if (exported.rebuild) exported.rebuild(); },
+  analyzeWord,
+  parseText,
+  getGraph(){ return window.__graph || []; },
+};
+
+new p5(function(p){
+  let nodes = [], emitters = [], ambientHue = 215;
+  let particles = [];
+  let smoke;
+  let input, micBtn, reveal, perf;
+  let mic = null, fft = null, audioCtx = null, micOn = false;
+  let lastPitchMs = 0, cacheCursor = 0;
+  const audio = { level:0, bass:0.35, mid:0.30, treble:0.20, bright:0.5, pitchNorm:0.5, pitchHz:0, hueShift:0, hueTarget:0 };
+  let lastPerfAt = 0, frames = 0, fps = 0;
+
+  p.setup = function(){
+    p.pixelDensity(1);
+    p.createCanvas(p.windowWidth, p.windowHeight);
+    p.colorMode(p.HSB, 360, 100, 100, 1);
+    p.frameRate(CONFIG.targetFps);
+    createSmoke();
+    initParticles();
+
+    input = document.getElementById('text');
+    micBtn = document.getElementById('mic');
+    reveal = document.getElementById('reveal');
+    perf = document.getElementById('perf');
+
+    const debounced = debounce(()=>buildSentence(input.value), 140);
+    input.addEventListener('input', debounced);
+    input.addEventListener('keydown', e=>{ if(e.key==='Enter'){ input.blur(); buildSentence(input.value); } });
+    micBtn.addEventListener('click', startMic);
+
+    exported.rebuild = ()=>buildSentence(input.value);
+    exported.setText = t => { input.value = String(t || ''); buildSentence(input.value); };
+
+    buildSentence(input.value);
+    setTimeout(()=>{ const h=document.getElementById('hint'); if(h){ h.style.transition='opacity 1.8s'; h.style.opacity='0'; } }, 9000);
+  };
+
+  p.windowResized = function(){
+    p.resizeCanvas(p.windowWidth, p.windowHeight);
+    createSmoke();
+    layoutNodes();
+    for (const n of nodes) if (n.branch) n.branch.dirty = true;
+  };
+
+  p.draw = function(){
+    const t = p.millis()/1000;
+    updateAudio(t);
+    refreshOneBranchCache();
+
+    p.blendMode(p.BLEND);
+    p.noStroke();
+    p.fill(232, 55, 6, 0.22);
+    p.rect(0,0,p.width,p.height);
+
+    updateNodeMotion(t);
+    updateSmoke(t);
+
+    p.blendMode(p.ADD);
+    p.image(smoke, 0, 0, p.width, p.height);
+    drawConnections();
+    for (const n of nodes) drawNode(n, t);
+
+    p.blendMode(p.BLEND);
+    if (reveal && reveal.checked) drawGrammar();
+    updatePerf();
+  };
+
+  function debounce(fn, ms){ let id = 0; return function(){ clearTimeout(id); id = setTimeout(fn, ms); }; }
+
+  function buildSentence(text){
+    const parsed = parseText(text);
+    window.__graph = parsed.map(x => JSON.parse(JSON.stringify(x)));
+    nodes = parsed.map(makeRenderNode);
+    ambientHue = nodes.length ? nodes.reduce((s,n)=>s+n.hue,0)/nodes.length : 215;
+    layoutNodes();
+    emitters = nodes.filter(n => n.pos==='verb' || n.features.case==='abl' || n.pos==='noun');
+    if (!emitters.length) emitters = nodes.slice();
+    for (const n of nodes) if (n.branch) renderBranchCache(n, n.branch.home, 'initial');
+  }
+
+  function makeRenderNode(parsed, i){
+    const seed = hashStr(parsed.surface);
+    let hue, sides;
+    if (parsed.gender && GENDER_HUE[parsed.gender]){
+      const pair = GENDER_HUE[parsed.gender];
+      hue = (pair[0] + (seed-0.5)*pair[1] + 360) % 360;
+      sides = parsed.gender==='m' ? 3 : parsed.gender==='n' ? 8 : 6;
+    } else { hue = (seed*360)%360; sides = 4 + Math.floor(seed*4); }
+    const n = Object.assign({}, parsed, {
+      index:i, seed, hue, sides, size:34 + seed*22, spin:(seed-0.5)*0.5, angle:seed*p.TWO_PI,
+      count: parsed.features.number === 'pl' ? 4 : 1, x:0, y:0, baseX:0, baseY:0, branch:null,
+    });
+    if (parsed.recurse > 0) n.branch = makeBranchRecipe(n, parsed);
+    return n;
+  }
+
+  function makeBranchRecipe(node, parsed){
+    const home = homeSimplex(parsed, node.seed);
+    const dom = SP_NAMES[home.indexOf(Math.max(home[0], home[1], home[2]))];
+    const A = SPECIES[dom];
+    return { home, axiom:A.axiom, up:A.up, iters:branchIters(dom, parsed.recurse),
+      arr:[SPECIES.fern,SPECIES.tree,SPECIES.crystal], angles:[23,27,60],
+      seedInt:(Math.floor(node.seed*2147483647) ^ 0x9e3779b9) >>> 0,
+      cache:null, cacheDim:0, bucket:'', dirty:true };
+  }
+
+  function layoutNodes(){
+    const cx = p.width/2, cy = p.height/2, R = Math.min(p.width,p.height)*0.30, N = Math.max(nodes.length,1);
+    for (let i=0;i<nodes.length;i++){
+      const n = nodes[i];
+      const ang = (i/N)*p.TWO_PI - p.HALF_PI;
+      const rad = n.features.case === 'nom' ? R*0.34 : R*(0.78 + 0.22*(i%3));
+      n.baseX = cx + Math.cos(ang)*rad;
+      n.baseY = cy + Math.sin(ang)*rad;
+      n.x = n.baseX; n.y = n.baseY;
+    }
+  }
+
+  function branchWeights(home){
+    if (!micOn) return home;
+    const loud = p.constrain(audio.level/0.30, 0, 1);
+    const voice = wNorm([loud+0.02, audio.pitchNorm+0.02, audio.bright+0.02]);
+    const k = 0.58;
+    return wNorm([(1-k)*home[0]+k*voice[0], (1-k)*home[1]+k*voice[1], (1-k)*home[2]+k*voice[2]]);
+  }
+  function branchBucket(w){ return w.map(v => Math.round(v*5)/5).join('|'); }
+
+  function refreshOneBranchCache(){
+    if (p.frameCount % CONFIG.branchRefreshEveryFrames !== 0 || !nodes.length) return;
+    for (let k=0;k<nodes.length;k++){
+      cacheCursor = (cacheCursor + 1) % nodes.length;
+      const n = nodes[cacheCursor];
+      if (!n.branch) continue;
+      const w = branchWeights(n.branch.home), b = branchBucket(w);
+      if (n.branch.dirty || b !== n.branch.bucket){ renderBranchCache(n, w, b); }
+      break;
+    }
+  }
+
+  function renderBranchCache(n, weights, bucket){
+    const b = n.branch;
+    const str = lExpandSimplex(b.arr, weights, b.axiom, b.iters, b.seedInt, CONFIG.branchMaxLen);
+    const angle = weights[0]*b.angles[0] + weights[1]*b.angles[1] + weights[2]*b.angles[2];
+    let segs = lsysSegments(str, angle, b.up);
+    if (segs.length > CONFIG.branchMaxSegments) segs = segs.slice(0, CONFIG.branchMaxSegments);
+    let minx=1e9,maxx=-1e9,miny=1e9,maxy=-1e9;
+    for (const s of segs){ minx=Math.min(minx,s[0],s[2]); maxx=Math.max(maxx,s[0],s[2]); miny=Math.min(miny,s[1],s[3]); maxy=Math.max(maxy,s[1],s[3]); }
+    if (!isFinite(minx)){ minx=maxx=miny=maxy=0; }
+    const ext = Math.max(maxx-minx, maxy-miny, 1);
+    const cx = (minx+maxx)/2, cy=(miny+maxy)/2;
+    const dim = Math.round(p.constrain(CONFIG.branchCacheMin + n.recurse*42, CONFIG.branchCacheMin, CONFIG.branchCacheMax));
+    const g = p.createGraphics(dim, dim);
+    g.pixelDensity(1);
+    g.colorMode(p.HSB, 360, 100, 100, 1);
+    g.clear();
+    g.blendMode(p.ADD);
+    g.push();
+    g.translate(dim/2, dim/2);
+    const sc = (dim*0.76) / ext;
+    g.scale(sc);
+    g.translate(-cx, -cy);
+    for (let i=0;i<segs.length;i++){
+      const s = segs[i], d = s[4];
+      g.stroke((n.hue + d*8 - weights[2]*24 + 360) % 360, 54 + weights[0]*16, 100, 0.11);
+      g.strokeWeight((1.7/sc) / (1+d*0.42));
+      g.line(s[0],s[1],s[2],s[3]);
+    }
+    g.noStroke();
+    for (let i=0;i<segs.length;i+=10){
+      const s = segs[i], d=s[4];
+      if (d<2) continue;
+      g.fill((n.hue + d*10 + 22)%360, 45, 100, 0.11);
+      g.circle(s[2], s[3], 2.8/sc * (1+d*0.15));
+    }
+    g.pop();
+    b.cache = g; b.cacheDim = dim; b.bucket = bucket; b.dirty = false;
+  }
+
+  function updateNodeMotion(t){
+    const cx = p.width/2, cy = p.height/2;
+    for (const n of nodes){
+      const dx = (p.noise(n.seed*10, t*0.15)-0.5)*54;
+      const dy = (p.noise(n.seed*10+99, t*0.15)-0.5)*54;
+      const push = 1 + audio.bass*0.22;
+      n.x = p.lerp(n.x, cx + (n.baseX-cx)*push + dx, 0.055);
+      n.y = p.lerp(n.y, cy + (n.baseY-cy)*push + dy, 0.055);
+    }
+  }
+
+  function drawConnections(){
+    for (let i=0;i<nodes.length;i++){
+      const n = nodes[i];
+      if (n.pos==='particle'){
+        const a = nodes[i-1], b = nodes[i+1];
+        if (a && b){
+          p.stroke((ambientHue+audio.hueShift+360)%360, 40, 100, 0.10+audio.level*0.28);
+          p.strokeWeight(1+audio.mid*1.7);
+          p.line(a.x,a.y,b.x,b.y);
+        }
+      }
+    }
+  }
+
+  function drawNode(n, t){
+    p.push();
+    p.translate(n.x, n.y);
+    if (n.pos==='adj'){
+      p.blendMode(p.ADD); p.noFill();
+      const r = 54 + 24*Math.sin(t*1.5 + n.seed*6) + audio.level*90;
+      p.stroke((n.hue+audio.hueShift+360)%360, 55, 100, 0.12+audio.treble*0.18);
+      p.strokeWeight(1.8); p.circle(0,0,r);
+      p.pop(); return;
+    }
+    if (n.pos==='verb'){
+      p.blendMode(p.ADD); p.noFill();
+      p.stroke((n.hue+audio.hueShift+360)%360, 50, 100, 0.20+audio.level*0.35);
+      p.strokeWeight(2+audio.mid*2.5);
+      const r = n.size*(1+audio.level*0.8);
+      p.arc(0,0,r,r, t*2+n.angle, t*2+n.angle+p.PI*1.1);
+      p.pop(); return;
+    }
+
+    const pulse = n.features.case==='voc' ? Math.sin(t*4+n.seed*7)*0.32 : 0;
+    const sz = n.size*(1 + audio.bass*0.65 + audio.level*0.42 + pulse);
+    const hue = (n.hue+audio.hueShift+360)%360;
+
+    if (n.branch && n.branch.cache){
+      const scale = (sz*(2.55+n.recurse*0.54)) / n.branch.cacheDim;
+      p.blendMode(p.ADD);
+      p.push();
+      p.rotate(Math.sin(t*0.24+n.seed*6)*0.14 + audio.mid*0.08);
+      p.scale(scale);
+      p.image(n.branch.cache, -n.branch.cacheDim/2, -n.branch.cacheDim/2);
+      p.pop();
+      p.push(); p.rotate(t*n.spin+n.angle); drawShape(n, sz*0.55, hue); p.pop();
+    } else {
+      p.push(); p.rotate(t*n.spin+n.angle); drawShape(n, sz, hue); p.pop();
+      for (let s=1;s<n.count;s++){
+        p.push();
+        p.rotate(t*0.6 + s*p.TWO_PI/Math.max(n.count-1,1));
+        p.translate(sz*1.35, 0);
+        drawShape(n, sz*0.32, (hue+18)%360);
+        p.pop();
+      }
+    }
+    p.pop();
+  }
+
+  function drawShape(n, sz, hue){
+    p.blendMode(p.ADD);
+    p.noFill();
+    for (let g=3; g>=1; g--){
+      p.stroke(hue, 72, 100, 0.105);
+      p.strokeWeight(g*1.2*(1+audio.treble*1.1));
+      polygon(0,0,sz*(1+(3-g)*0.05),n.sides);
+    }
+    p.fill(hue, 52, 100, 0.16); p.noStroke();
+    polygon(0,0,sz*0.5,n.sides);
+  }
+  function polygon(x,y,r,sides){
+    p.beginShape();
+    for (let i=0;i<sides;i++){ const a=p.TWO_PI*i/sides-p.HALF_PI; p.vertex(x+Math.cos(a)*r, y+Math.sin(a)*r); }
+    p.endShape(p.CLOSE);
+  }
+
+  function drawGrammar(){
+    p.textFont('Menlo, monospace'); p.textSize(11); p.textAlign(p.CENTER, p.TOP);
+    for (const n of nodes){
+      const f = n.features || {};
+      let line2 = n.pos;
+      if (f.case) line2 = `${n.pos} · ${CASE_LABEL[f.case]||f.case} ${f.number||''}`;
+      else if (f.person) line2 = `verb · ${f.person}${f.number} ${f.tense||''}`;
+      p.noStroke(); p.fill(0,0,100,0.86); p.text(n.surface, n.x, n.y+n.size*0.82);
+      p.fill(0,0,100,0.48); p.text(line2, n.x, n.y+n.size*0.82+14);
+    }
+    p.textAlign(p.LEFT, p.BOTTOM); p.textSize(11); p.fill(0,0,100,0.42);
+    const L = ['nom → centred · gen → cached L-system · particles respawn from nouns/verbs',
+               'renderer contract: analyzeWord(surface) → {pos, gender, decl, features}',
+               'voice → smoothed loudness / bass / treble / pitch; branch morphs are quantized'];
+    L.forEach((s,i)=>p.text(s,18,p.height-18-(L.length-1-i)*15));
+  }
+
+  function createSmoke(){
+    const w = Math.max(160, Math.round(p.width*CONFIG.smokeScale));
+    const h = Math.max(120, Math.round(p.height*CONFIG.smokeScale));
+    smoke = p.createGraphics(w,h);
+    smoke.pixelDensity(1);
+    smoke.colorMode(p.HSB,360,100,100,1);
+    smoke.clear();
+  }
+  function initParticles(){
+    particles = [];
+    for (let i=0;i<CONFIG.particles;i++) particles.push(resetParticle({}, Math.random()*p.width, Math.random()*p.height));
+  }
+  function resetParticle(pt, x, y){
+    pt.x=x; pt.y=y; pt.vx=0; pt.vy=0; pt.maxlife=70+Math.random()*150; pt.life=pt.maxlife;
+    pt.sz=1.4+Math.random()*3.0; pt.hue=ambientHue; return pt;
+  }
+  function updateSmoke(t){
+    smoke.blendMode(p.BLEND);
+    smoke.noStroke();
+    smoke.fill(232,55,6,0.075);
+    smoke.rect(0,0,smoke.width,smoke.height);
+    smoke.blendMode(p.ADD);
+    const sx = smoke.width / Math.max(p.width,1), sy = smoke.height / Math.max(p.height,1);
+    for (const pt of particles){
+      const a = p.noise(pt.x*0.0017, pt.y*0.0017, t*0.12) * p.TWO_PI * 2.2;
+      const speed = 0.32 + audio.level*2.2 + audio.mid*0.45;
+      pt.vx = p.lerp(pt.vx, Math.cos(a)*speed, 0.08);
+      pt.vy = p.lerp(pt.vy, Math.sin(a)*speed - 0.16, 0.08);
+      pt.x += pt.vx; pt.y += pt.vy;
+      pt.life -= 1.4 + (1-audio.level)*0.55;
+      if (pt.life<=0 || pt.x<-25 || pt.x>p.width+25 || pt.y<-25 || pt.y>p.height+25){
+        const e = emitters.length ? emitters[(Math.random()*emitters.length)|0] : null;
+        if (e) { resetParticle(pt, e.x+(Math.random()-0.5)*32, e.y+(Math.random()-0.5)*32); pt.hue = e.hue; }
+        else resetParticle(pt, Math.random()*p.width, Math.random()*p.height);
+      }
+      const lf = pt.life / pt.maxlife;
+      const h = (pt.hue + audio.hueShift + 360) % 360;
+      smoke.noStroke();
+      smoke.fill(h, 55, 100, 0.045*lf*(0.5+audio.level*1.8));
+      smoke.circle(pt.x*sx, pt.y*sy, (pt.sz*3.0 + (1-lf)*pt.sz*3 + audio.treble*3) * sx);
+    }
+  }
+
+  function updateAudio(t){
+    if (micOn && fft && mic){
+      const raw = mic.getLevel();
+      fft.analyze();
+      audio.level  = p.lerp(audio.level, raw, 0.22);
+      audio.bass   = p.lerp(audio.bass, fft.getEnergy('bass')/255, 0.16);
+      audio.mid    = p.lerp(audio.mid, fft.getEnergy('mid')/255, 0.16);
+      audio.treble = p.lerp(audio.treble, fft.getEnergy('treble')/255, 0.20);
+      const bright = audio.treble / (audio.treble + audio.bass + 0.001);
+      audio.bright = p.lerp(audio.bright, bright, 0.12);
+      const now = p.millis();
+      if (raw > 0.014 && now - lastPitchMs > CONFIG.pitchEveryMs){
+        lastPitchMs = now;
+        const f = autoCorrelateSparse(fft.waveform(), audioCtx ? audioCtx.sampleRate : 44100);
+        if (f > 0){
+          audio.pitchHz = p.lerp(audio.pitchHz || f, f, 0.25);
+          audio.pitchNorm = p.lerp(audio.pitchNorm, p.constrain(p.map(audio.pitchHz, 120, 560, 0, 1),0,1), 0.20);
+          audio.hueTarget = p.constrain(p.map(audio.pitchHz, 90, 700, -45, 110), -45, 130);
+        }
+      }
+    } else {
+      audio.level  = 0.045 + 0.035*(Math.sin(t*1.2)*0.5+0.5);
+      audio.bass   = 0.32 + 0.20*(Math.sin(t*0.6)*0.5+0.5);
+      audio.mid    = 0.28 + 0.16*(Math.sin(t*0.9+1)*0.5+0.5);
+      audio.treble = 0.18 + 0.11*(Math.sin(t*1.7+2)*0.5+0.5);
+      audio.bright = 0.5 + 0.14*Math.sin(t*0.27);
+      audio.pitchNorm = 0.5 + 0.16*Math.sin(t*0.21);
+      audio.hueTarget = 22*Math.sin(t*0.05);
+    }
+    audio.hueShift = p.lerp(audio.hueShift, audio.hueTarget, 0.045);
+  }
+
+  function autoCorrelateSparse(buf, sampleRate){
+    const step = 2;
+    const n = Math.floor(buf.length / step);
+    let rms = 0;
+    const b = new Float32Array(n);
+    for (let i=0;i<n;i++){ const v = buf[i*step]; b[i]=v; rms += v*v; }
+    rms = Math.sqrt(rms/n);
+    if (rms < 0.01) return -1;
+    const c = new Float32Array(n);
+    for (let lag=0; lag<n; lag++){
+      let sum = 0;
+      for (let i=0; i<n-lag; i++) sum += b[i]*b[i+lag];
+      c[lag] = sum;
+    }
+    let d=0; while(d<n-1 && c[d]>c[d+1]) d++;
+    let max=-1, pos=-1;
+    for(let i=d;i<n;i++){ if(c[i]>max){ max=c[i]; pos=i; } }
+    if (pos <= 0) return -1;
+    let T0 = pos;
+    const x1=c[T0-1]||0, x2=c[T0]||0, x3=c[T0+1]||0;
+    const a=(x1+x3-2*x2)/2, bb=(x3-x1)/2;
+    if (a) T0 = T0 - bb/(2*a);
+    return T0>0 ? (sampleRate/step)/T0 : -1;
+  }
+
+  async function startMic(){
+    try {
+      if (p.userStartAudio) await p.userStartAudio();
+      else if (window.userStartAudio) await window.userStartAudio();
+      audioCtx = p.getAudioContext ? p.getAudioContext() : (window.getAudioContext ? window.getAudioContext() : null);
+      mic = new p5.AudioIn();
+      mic.start(()=>{
+        fft = new p5.FFT(0.82, 512);
+        fft.setInput(mic);
+        micOn = true;
+        micBtn.textContent = 'listening'; micBtn.classList.add('on');
+      }, ()=>{ micBtn.textContent = 'mic blocked'; });
+    } catch(e){ micBtn.textContent = 'mic blocked'; }
+  }
+
+  function updatePerf(){
+    frames++;
+    const now = p.millis();
+    if (now - lastPerfAt > 700){
+      fps = Math.round(frames*1000/(now-lastPerfAt || 1));
+      frames = 0; lastPerfAt = now;
+      const branches = nodes.filter(n=>n.branch).length;
+      if (perf) perf.textContent = `${fps} fps · ${nodes.length} nodes · ${branches} cached branches · ${CONFIG.particles} particles`;
+    }
+  }
+});
+
+// const GLYPHS = {
+//   polygon(p, node, size) {
+//     regularPolygon(p, 0, 0, size, node.sides);
+//   },
+
+//   lens(p, node, size) {
+//     p.beginShape();
+//     p.vertex(-size, 0);
+//     p.bezierVertex(-size * 0.4, -size * 0.8, size * 0.4, -size * 0.8, size, 0);
+//     p.bezierVertex(size * 0.4, size * 0.8, -size * 0.4, size * 0.8, -size, 0);
+//     p.endShape(p.CLOSE);
+//   },
+
+//   star(p, node, size) {
+//     starPolygon(p, 0, 0, size * 0.45, size, 5);
+//   },
+
+//   crescent(p, node, size) {
+//     p.circle(0, 0, size * 2);
+//     // Then either mask/subtract with a buffer, or fake it with background-colored overlap.
+//   }
+// };
+// const CASE_GLYPH = {
+//   nom: "polygon",
+//   gen: "branch",
+//   dat: "lens",
+//   acc: "star",
+//   abl: "ring",
+//   voc: "crescent"
+// };
+
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+<title>verba lucentia — a Latin audio-reactive visualizer</title>
+
+<!-- The ONLY two dependencies, vendored from a CDN. No build step, no npm. -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/addons/p5.sound.min.js"></script>
+
+<style>
+  :root { --ink: rgba(255,255,255,0.86); --dim: rgba(255,255,255,0.4); }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; background: #05060a; overflow: hidden;
+    font-family: 'Iowan Old Style', 'Palatino Linotype', Palatino, Georgia, serif; }
+  canvas { display: block; position: fixed; inset: 0; }
+
+  .bar {
+    position: fixed; left: 50%; bottom: 28px; transform: translateX(-50%);
+    display: flex; gap: 10px; align-items: center; z-index: 10;
+    width: min(640px, 92vw);
+  }
+  .bar input[type=text] {
+    flex: 1; padding: 12px 16px; font-size: 18px; letter-spacing: .3px;
+    color: var(--ink); background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.14); border-radius: 12px;
+    backdrop-filter: blur(8px); font-family: inherit; outline: none;
+  }
+  .bar input::placeholder { color: var(--dim); font-style: italic; }
+  .btn {
+    padding: 12px 16px; font-size: 14px; white-space: nowrap; cursor: pointer;
+    color: var(--ink); background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.16); border-radius: 12px;
+    backdrop-filter: blur(8px); font-family: inherit; transition: .2s;
+  }
+  .btn:hover { background: rgba(255,255,255,0.12); }
+  .btn.on { color: #9ff5d9; border-color: rgba(159,245,217,0.5); }
+
+  .hint {
+    position: fixed; left: 50%; bottom: 80px; transform: translateX(-50%);
+    color: var(--dim); font-size: 13px; font-style: italic; z-index: 10;
+    text-align: center; width: min(640px, 92vw); pointer-events: none;
+  }
+  .hint b { color: rgba(255,255,255,0.6); font-style: normal; cursor: default; }
+
+  .reveal {
+    position: fixed; top: 18px; right: 20px; z-index: 10;
+    color: var(--dim); font-size: 13px; display: flex; gap: 7px; align-items: center;
+    user-select: none; cursor: pointer;
+  }
+  .reveal input { accent-color: #9ff5d9; }
+</style>
+</head>
+<body>
+
+<div class="hint" id="hint">
+  type Latin — change a <b>casus</b> and the form shifts · genitives nest into fractals · then sing
+</div>
+
+<div class="bar">
+  <input id="text" type="text" spellcheck="false"
+         value="lux et umbra noctis"
+         placeholder="lux umbrae… carmen stellarum… anima ignis" />
+  <button id="mic" class="btn">Start mic</button>
+</div>
+
+<label class="reveal"><input id="reveal" type="checkbox"> reveal grammar</label>
+
+<script>
+/* ============================================================================
+   verba lucentia  —  a plain-JS prototype
+   ----------------------------------------------------------------------------
+   Two halves, kept deliberately separate:
+     (1) TEXT  -> a deterministic grammatical parse -> a node graph (JSON-able)
+     (2) MIC   -> live audio features modulate that graph every frame
+   The parse is the visual's "DNA"; the voice modulates it.
+
+   Everything below is hand-written. Swap the tiny LEXICON / paradigm tables for
+   the full Whitaker's-Words or Collatinus data later WITHOUT touching the
+   renderer — analyzeWord() is the only contract.
+   ============================================================================ */
+
+/* ---------- 1. LATIN MORPHOLOGY (v0: paradigm tables, no ML, ~deterministic) */
+
+// A small, evocative lexicon. {pos, decl|conj, gender, stem, nom}
+// stem = the part that survives inflection; nom = nominative singular surface.
+const LEXICON = {
+  // --- 1st declension (a-stem, mostly feminine)
+  umbra:  {pos:'noun', decl:1, gender:'f', stem:'umbr',  nom:'umbra'},
+  vita:   {pos:'noun', decl:1, gender:'f', stem:'vit',   nom:'vita'},
+  rosa:   {pos:'noun', decl:1, gender:'f', stem:'ros',   nom:'rosa'},
+  stella: {pos:'noun', decl:1, gender:'f', stem:'stell', nom:'stella'},
+  aqua:   {pos:'noun', decl:1, gender:'f', stem:'aqu',   nom:'aqua'},
+  anima:  {pos:'noun', decl:1, gender:'f', stem:'anim',  nom:'anima'},
+  luna:   {pos:'noun', decl:1, gender:'f', stem:'lun',   nom:'luna'},
+  // --- 2nd declension (-us masc / -um neuter)
+  ventus: {pos:'noun', decl:2, gender:'m', stem:'vent',  nom:'ventus'},
+  somnus: {pos:'noun', decl:2, gender:'m', stem:'somn',  nom:'somnus'},
+  caelum: {pos:'noun', decl:2, gender:'n', stem:'cael',  nom:'caelum'},
+  verbum: {pos:'noun', decl:2, gender:'n', stem:'verb',  nom:'verbum'},
+  // --- 3rd declension (irregular nominative -> store explicitly)
+  lux:    {pos:'noun', decl:3, gender:'f', stem:'luc',   nom:'lux'},
+  nox:    {pos:'noun', decl:3, gender:'f', stem:'noct',  nom:'nox'},
+  ignis:  {pos:'noun', decl:3, gender:'m', stem:'ign',   nom:'ignis'},
+  amor:   {pos:'noun', decl:3, gender:'m', stem:'amor',  nom:'amor'},
+  mare:   {pos:'noun', decl:3, gender:'n', stem:'mar',   nom:'mare'},
+  flos:   {pos:'noun', decl:3, gender:'m', stem:'flor',  nom:'flos'},
+  mors:   {pos:'noun', decl:3, gender:'f', stem:'mort',  nom:'mors'},
+  sol:    {pos:'noun', decl:3, gender:'m', stem:'sol',   nom:'sol'},
+  carmen: {pos:'noun', decl:3, gender:'n', stem:'carmin',nom:'carmen'},
+  tempus: {pos:'noun', decl:3, gender:'n', stem:'tempor',nom:'tempus'},
+};
+
+// Declension endings: ending -> candidate {case, number}. Order longest-first.
+const DECL = {
+  1: {
+    arum:[['gen','pl']], am:[['acc','sg']], as:[['acc','pl']],
+    ae:[['gen','sg'],['dat','sg'],['nom','pl'],['voc','pl']],
+    is:[['dat','pl'],['abl','pl']],
+    a:[['nom','sg'],['abl','sg'],['voc','sg']],
+  },
+  2: {
+    orum:[['gen','pl']], us:[['nom','sg']], um:[['acc','sg'],['nom','sg']],
+    os:[['acc','pl']], is:[['dat','pl'],['abl','pl']],
+    i:[['gen','sg'],['nom','pl'],['voc','pl']],
+    o:[['dat','sg'],['abl','sg']],
+    a:[['nom','pl'],['acc','pl']],   // neuter plural
+    e:[['voc','sg']],
+  },
+  3: {
+    ibus:[['dat','pl'],['abl','pl']], ium:[['gen','pl']], um:[['gen','pl']],
+    em:[['acc','sg']], es:[['nom','pl'],['acc','pl'],['voc','pl']],
+    is:[['gen','sg']], i:[['dat','sg']], e:[['abl','sg']],
+  },
+};
+const CASE_ORDER = ['nom','gen','dat','acc','abl','voc'];
+
+// Closed-class words: particles / conjunctions / prepositions / adverbs.
+const PARTICLES = new Set(['et','in','cum','sub','super','per','ad','sine','sed',
+  'non','ut','ex','de','a','ab','aut','nec','que','sic','iam','semper','ubi']);
+
+// A few adjectives + verbs so POS lands right on common words.
+const ADJECTIVES = new Set(['magnus','parvus','pulcher','clarus','obscurus',
+  'aeternus','profundus','altus','niger','albus','sacer','novus']);
+const VERB_STEMS = { // stem -> conjugation (present system only, v0)
+  am:1, cant:1, vol:1, luce:2, arde:2, flu:3, viv:3, cad:3, can:3,
+};
+const VERB_PRES = { o:['1','sg'], as:['2','sg'], at:['3','sg'],
+  amus:['1','pl'], atis:['2','pl'], ant:['3','pl'],
+  es:['2','sg'], et:['3','sg'], emus:['1','pl'], etis:['2','pl'], ent:['3','pl'],
+  is:['2','sg'], it:['3','sg'], imus:['1','pl'], itis:['2','pl'], unt:['3','pl'] };
+
+function normalize(s){
+  return s.toLowerCase()
+    .normalize('NFD').replace(/[\u0300-\u036f]/g,'')   // strip macrons/accents
+    .replace(/[^a-z\s]/g,' ').replace(/\s+/g,' ').trim();
+}
+
+// Try to read a word as an inflected form of a known lexicon noun.
+function parseKnownNoun(w){
+  for (const key in LEXICON){
+    const e = LEXICON[key];
+    if (e.pos !== 'noun') continue;
+    if (w === e.nom) return mkParse(w, e, [['nom','sg']]);
+    if (w.startsWith(e.stem)){
+      const suf = w.slice(e.stem.length);
+      const cand = DECL[e.decl][suf];
+      if (cand) return mkParse(w, e, cand);
+    }
+  }
+  return null;
+}
+function mkParse(surface, e, cand){
+  const [c,n] = cand[0]; // primary reading; rest kept as alternates
+  return {
+    surface, pos:'noun', gender:e.gender, decl:e.decl, stem:e.stem, nom:e.nom,
+    features:{case:c, number:n}, alternates:cand.slice(1).map(([c2,n2])=>({case:c2,number:n2})),
+    known:true, recurse:0,
+  };
+}
+
+// Generic ending-based guess for unknown but Latin-looking words.
+function parseByEndings(w){
+  // verb?
+  for (const suf in VERB_PRES){
+    if (w.length > suf.length+1 && w.endsWith(suf)){
+      const [p,n] = VERB_PRES[suf];
+      return {surface:w, pos:'verb', features:{person:p, number:n, tense:'pres'},
+              gender:null, alternates:[], known:false, recurse:0};
+    }
+  }
+  // noun by ending, across all declensions; collect candidates
+  for (const d of [1,2,3]){
+    for (const suf of Object.keys(DECL[d])){
+      if (w.endsWith(suf) && w.length > suf.length){
+        const [c,n] = DECL[d][suf][0];
+        return {surface:w, pos:'noun', gender:guessGender(d,suf), decl:d,
+                features:{case:c, number:n}, alternates:[], known:false, recurse:0};
+      }
+    }
+  }
+  return null;
+}
+function guessGender(d,suf){ if (d===1) return 'f'; if (d===2) return suf[0]==='u'?'m':'n'; return 'n'; }
+
+// The single contract the renderer depends on.
+function analyzeWord(raw){
+  const w = raw;
+  if (PARTICLES.has(w)) return base(w,'particle');
+  if (ADJECTIVES.has(w)) return base(w,'adj');
+  const known = parseKnownNoun(w); if (known) return known;
+  // known verb by stem?
+  for (const st in VERB_STEMS){
+    if (w.startsWith(st)){
+      const guess = parseByEndings(w);
+      if (guess && guess.pos==='verb') return guess;
+    }
+  }
+  const byEnd = parseByEndings(w); if (byEnd) return byEnd;
+  return base(w,'unknown');
+}
+function base(w,pos){ return {surface:w, pos, gender:null, features:{}, alternates:[], known:false, recurse:0}; }
+
+// Generate the full declension of a known noun (powers "watch a casus morph").
+function declineKnown(key){
+  const e = LEXICON[key]; if (!e || e.pos!=='noun') return null;
+  const out = {};
+  const find = (d,c,n) => {
+    for (const suf in DECL[d]) for (const [cc,nn] of DECL[d][suf])
+      if (cc===c && nn===n) return suf;
+    return null;
+  };
+  for (const c of CASE_ORDER) for (const n of ['sg','pl']){
+    if (c==='nom' && n==='sg'){ out[c+'.'+n] = e.nom; continue; }
+    const suf = find(e.decl,c,n);
+    out[c+'.'+n] = suf!=null ? e.stem+suf : '—';
+  }
+  return out;
+}
+
+// Cheap, stable string hash for the non-Latin / unknown fallback colouring.
+function hashStr(s){ let h=2166136261; for(let i=0;i<s.length;i++){ h^=s.charCodeAt(i); h=Math.imul(h,16777619);} return (h>>>0)/4294967295; }
+
+/* ---------- 2. GRAMMAR -> VISUAL GRAPH ------------------------------------ */
+// POS picks the visual system; CASE picks the spatial/relational role;
+// number -> count, gender -> palette, GENITIVE RUNS -> fractal recursion depth.
+
+const GENDER_HUE = { f:[330,30], m:[205,55], n:[120,90] }; // [centre, spread]
+const CASE_LABEL = {nom:'nominative',gen:'genitive',dat:'dative',acc:'accusative',abl:'ablative',voc:'vocative'};
+
+let nodes = [], emitters = [], ambientHue = 215;
+
+function buildSentence(text){
+  const words = normalize(text).split(' ').filter(Boolean);
+  const parsed = words.map(analyzeWord);
+
+  // GENITIVE -> FRACTAL SEAM: a trailing run of genitives sets nesting depth.
+  let run = 0;
+  for (const p of parsed){
+    if (p.features.case === 'gen'){ run++; p.recurse = Math.min(run,4); }
+    else run = 0;
+  }
+
+  nodes = parsed.map((p,i) => makeNode(p,i));
+  ambientHue = nodes.length ? nodes.reduce((s,n)=>s+n.hue,0)/nodes.length : 215;
+  layoutNodes();
+  emitters = nodes.filter(n => n.pos==='verb' || n.features.case==='abl' || n.pos==='noun');
+  if (!emitters.length) emitters = nodes.slice();
+
+  window.__graph = parsed; // the JSON-able IR — what a Clojure/Overtone backend would read
+}
+
+/* ---------- L-SYSTEM: genitive chains grow into fractal forms ------------- */
+// A genitive node grows a turtle-interpreted Lindenmayer system. The "species"
+// is chosen by gender; the rewrite depth follows how deep the genitive chain
+// runs (recurse). The string is expanded ONCE per sentence; each frame it is
+// re-walked with a live, voice-driven sway so the structure breathes & blooms.
+
+const LRULES = {
+  fern:    {axiom:'X', rules:{X:'F-[[X]+X]+F[+FX]-X', F:'FF'}, angle:23, up:true,  iters:d=>constrain(d+1,2,3)},
+  tree:    {axiom:'F', rules:{F:'F[+F]F[-F]F'},                angle:27, up:true,  iters:d=>constrain(d+1,2,3)},
+  crystal: {axiom:'F++F++F', rules:{F:'F-F++F-F'},             angle:60, up:false, iters:d=>constrain(d,1,3)},
+};
+const LMAXLEN = 1500;   // hard cap on the rewritten string -> bounded cost per frame
+
+function lExpand(axiom, rules, iters, maxLen){
+  let s = axiom;
+  for (let k=0;k<iters;k++){
+    if (s.length > maxLen) break;
+    let out = '';
+    for (let i=0;i<s.length;i++){ out += (rules[s[i]] !== undefined ? rules[s[i]] : s[i]); if (out.length > maxLen) break; }
+    s = out;
+  }
+  return s.length > maxLen ? s.slice(0, maxLen) : s;
+}
+
+// Walk the rewritten string with a turtle; returns segments [x1,y1,x2,y2,branchDepth].
+function lsysSegments(str, angleDeg, startUp){
+  const segs = [], stack = [];
+  let x=0, y=0, h = startUp ? -Math.PI/2 : 0, depth = 0;
+  const a = angleDeg * Math.PI/180;
+  for (let i=0;i<str.length;i++){
+    const ch = str[i];
+    if (ch==='F'){ const nx=x+Math.cos(h), ny=y+Math.sin(h); segs.push([x,y,nx,ny,depth]); x=nx; y=ny; }
+    else if (ch==='+'){ h += a; }
+    else if (ch==='-'){ h -= a; }
+    else if (ch==='['){ stack.push([x,y,h,depth]); depth++; }
+    else if (ch===']'){ if (stack.length){ const s=stack.pop(); x=s[0]; y=s[1]; h=s[2]; depth=s[3]; } }
+  }
+  return segs;
+}
+
+function pickKind(p, seed){
+  if (p.gender==='f') return 'fern';
+  if (p.gender==='m') return 'tree';
+  if (p.gender==='n') return 'crystal';
+  return ['fern','tree','crystal'][Math.floor((seed||0)*3) % 3];
+}
+
+// Built once per genitive node: the rewritten string + a fit transform.
+function buildBranch(node, p){
+  const kind = pickKind(p, node.seed);
+  const R = LRULES[kind];
+  const str = lExpand(R.axiom, R.rules, R.iters(p.recurse), LMAXLEN);
+  const ref = lsysSegments(str, R.angle, R.up);
+  let minx=1e9,maxx=-1e9,miny=1e9,maxy=-1e9;
+  for (const s of ref){
+    minx=Math.min(minx,s[0],s[2]); maxx=Math.max(maxx,s[0],s[2]);
+    miny=Math.min(miny,s[1],s[3]); maxy=Math.max(maxy,s[1],s[3]);
+  }
+  if (!isFinite(minx)){ minx=maxx=miny=maxy=0; }
+  const ext = Math.max(maxx-minx, maxy-miny) || 1;
+  return { kind, str, angle:R.angle, up:R.up, cx:(minx+maxx)/2, cy:(miny+maxy)/2, ext };
+}
+
+// Drawn every frame, in node-local space (caller has already translated to n).
+function drawBranch(n, sz, hue, t){
+  const b = n.branch;
+  const sway = (noise(n.seed*5, t*0.4) - 0.5)*9 + midS*7;     // wind, partly from the voice
+  const segs = lsysSegments(b.str, b.angle + sway, b.up);
+  const lim = Math.min(segs.length, 820);
+  const target = sz*(2.4 + n.recurse*0.7);
+  const sc = target / b.ext;
+  push();
+  blendMode(ADD);
+  rotate(Math.sin(t*0.25 + n.seed*6)*0.16);
+  scale(sc);
+  translate(-b.cx, -b.cy);
+  for (let i=0;i<lim;i++){
+    const s = segs[i], d = s[4];
+    stroke((hue + d*7)%360, 62, 100, 0.09 + trebleS*0.12);
+    strokeWeight((2.0/sc) / (1 + d*0.45) * (1 + bassS*0.5));
+    line(s[0], s[1], s[2], s[3]);
+  }
+  noStroke();                                                 // blossoms at the tips open the louder you sing
+  const bloom = 0.15 + levelS*2.4;
+  for (let i=0;i<lim;i+=7){
+    const s = segs[i], d = s[4];
+    if (d < 2) continue;
+    fill((hue + d*10 + 20)%360, 45, 100, (0.05 + trebleS*0.22)*bloom);
+    circle(s[2], s[3], (3.0/sc) * bloom * (1 + d*0.2));
+  }
+  pop();
+}
+
+function makeNode(p,i){
+  const seed = hashStr(p.surface);
+  let hue, sides;
+  if (p.gender && GENDER_HUE[p.gender]){
+    const [c,sp] = GENDER_HUE[p.gender];
+    hue = (c + (seed-0.5)*sp + 360) % 360;
+    sides = p.gender==='m' ? 3 : p.gender==='n' ? 8 : 6;
+  } else {
+    hue = (seed*360) % 360;          // unknown -> hashed hue
+    sides = 4 + Math.floor(seed*4);
+  }
+  const node = {
+    ...p, seed, hue, sides,
+    size: 34 + seed*22,
+    spin: (seed-0.5)*0.5,
+    angle: seed*Math.PI*2,
+    count: p.features.number === 'pl' ? 4 : 1,   // plural -> satellites
+    x:0, y:0, baseX:0, baseY:0, branch:null,
+  };
+  if (p.recurse > 0) node.branch = buildBranch(node, p);   // GENITIVE -> L-SYSTEM
+  return node;
+}
+
+function layoutNodes(){
+  const cx = width/2, cy = height/2, R = Math.min(width,height)*0.30, N = nodes.length;
+  nodes.forEach((n,i)=>{
+    const ang = (i/Math.max(N,1))*TWO_PI - HALF_PI;
+    const rad = n.features.case==='nom' ? R*0.34 : R*(0.78 + 0.22*(i%3));
+    n.baseX = cx + Math.cos(ang)*rad;
+    n.baseY = cy + Math.sin(ang)*rad;
+    n.x = n.baseX; n.y = n.baseY;
+  });
+}
+
+/* ---------- 3. AUDIO (mic -> level / bands / pitch), all smoothed --------- */
+
+let mic, fft, audioCtx, micOn = false;
+let levelS = 0, bassS = 0, midS = 0, trebleS = 0, pitchHz = 0, hueShift = 0, hueTarget = 0;
+
+function readAudio(t){
+  if (micOn && fft && mic){
+    const level = mic.getLevel();
+    fft.analyze();
+    levelS  = lerp(levelS,  level,                    0.25);
+    bassS   = lerp(bassS,   fft.getEnergy('bass')/255, 0.20);
+    midS    = lerp(midS,    fft.getEnergy('mid')/255,  0.20);
+    trebleS = lerp(trebleS, fft.getEnergy('treble')/255,0.25);
+    if (level > 0.012){                                // pitch only when voiced
+      const f = autoCorrelate(fft.waveform(), audioCtx.sampleRate);
+      if (f > 0){
+        pitchHz = lerp(pitchHz || f, f, 0.2);
+        hueTarget = constrain(map(pitchHz, 90, 700, -45, 110), -45, 130);
+      }
+    }
+  } else { // idle "breath" so it's alive before the mic is on
+    levelS  = 0.05 + 0.04*(Math.sin(t*1.2)*0.5+0.5);
+    bassS   = 0.34 + 0.24*(Math.sin(t*0.6)*0.5+0.5);
+    midS    = 0.30 + 0.20*(Math.sin(t*0.9+1)*0.5+0.5);
+    trebleS = 0.20 + 0.14*(Math.sin(t*1.7+2)*0.5+0.5);
+    hueTarget = 26*Math.sin(t*0.05);
+  }
+  hueShift = lerp(hueShift, hueTarget, 0.05);
+}
+
+// Autocorrelation pitch detector (time-domain), good enough for a sung note.
+function autoCorrelate(buf, sampleRate){
+  const SIZE = buf.length; let rms = 0;
+  for (let i=0;i<SIZE;i++) rms += buf[i]*buf[i];
+  rms = Math.sqrt(rms/SIZE);
+  if (rms < 0.01) return -1;
+  let r1=0, r2=SIZE-1; const thres=0.2;
+  for (let i=0;i<SIZE/2;i++) if (Math.abs(buf[i])<thres){ r1=i; break; }
+  for (let i=1;i<SIZE/2;i++) if (Math.abs(buf[SIZE-i])<thres){ r2=SIZE-i; break; }
+  const b = buf.slice(r1,r2), n = b.length, c = new Array(n).fill(0);
+  for (let i=0;i<n;i++) for (let j=0;j<n-i;j++) c[i]+=b[j]*b[j+i];
+  let d=0; while (d<n-1 && c[d]>c[d+1]) d++;
+  let max=-1, pos=-1;
+  for (let i=d;i<n;i++) if (c[i]>max){ max=c[i]; pos=i; }
+  let T0=pos;
+  const x1=c[T0-1]||0, x2=c[T0]||0, x3=c[T0+1]||0;
+  const a=(x1+x3-2*x2)/2, bb=(x3-x1)/2;
+  if (a) T0 = T0 - bb/(2*a);
+  return T0>0 ? sampleRate/T0 : -1;
+}
+
+async function startMic(btn){
+  try {
+    await userStartAudio();
+    audioCtx = getAudioContext();
+    mic = new p5.AudioIn();
+    mic.start(()=>{
+      fft = new p5.FFT(0.8, 1024);
+      fft.setInput(mic);
+      micOn = true;
+      btn.textContent = 'listening'; btn.classList.add('on');
+    }, ()=>{ btn.textContent = 'mic blocked'; });
+  } catch(e){ btn.textContent = 'mic blocked'; }
+}
+
+/* ---------- 4. RENDER ----------------------------------------------------- */
+
+let particles = [];
+const N_PARTICLES = 460;
+
+function setup(){
+  createCanvas(windowWidth, windowHeight);
+  colorMode(HSB, 360, 100, 100, 1);
+  for (let i=0;i<N_PARTICLES;i++) particles.push(new Particle());
+
+  const input = document.getElementById('text');
+  const apply = ()=> buildSentence(input.value);
+  input.addEventListener('change', apply);
+  input.addEventListener('keydown', e=>{ if (e.key==='Enter'){ input.blur(); apply(); }});
+  const micBtn = document.getElementById('mic');
+  micBtn.addEventListener('click', ()=> startMic(micBtn));
+
+  buildSentence(input.value);
+  setTimeout(()=>{ const h=document.getElementById('hint'); if(h) h.style.transition='opacity 2s', h.style.opacity='0'; }, 9000);
+}
+
+function windowResized(){ resizeCanvas(windowWidth, windowHeight); layoutNodes(); }
+
+function draw(){
+  const t = millis()/1000;
+  readAudio(t);
+
+  // motion-trail backdrop (BLEND): a translucent dark wash, never a hard clear
+  blendMode(BLEND);
+  noStroke();
+  fill(232, 55, 6, 0.15);
+  rect(0,0,width,height);
+
+  // node drift (gentle noise + audio outward push)
+  const cx=width/2, cy=height/2;
+  for (const n of nodes){
+    const dx = (noise(n.seed*10, t*0.18)-0.5)*70;
+    const dy = (noise(n.seed*10+99, t*0.18)-0.5)*70;
+    const push = 1 + bassS*0.28;
+    n.x = lerp(n.x, cx + (n.baseX-cx)*push + dx, 0.05);
+    n.y = lerp(n.y, cy + (n.baseY-cy)*push + dy, 0.05);
+  }
+
+  // smoke / particle field (ADD)
+  blendMode(ADD);
+  for (const p of particles){ p.update(t); p.show(); }
+
+  // connective lines (conjunctions/prepositions tie their neighbours)
+  for (let i=0;i<nodes.length;i++){
+    const n = nodes[i];
+    if (n.pos==='particle'){
+      const a = nodes[i-1], b = nodes[i+1];
+      if (a && b){
+        stroke((ambientHue+hueShift)%360, 40, 100, 0.10+levelS*0.3);
+        strokeWeight(1+midS*2);
+        line(a.x,a.y,b.x,b.y);
+      }
+    }
+  }
+
+  // forms
+  for (const n of nodes) drawNode(n, t);
+
+  // grammar overlay (BLEND so text reads cleanly)
+  blendMode(BLEND);
+  if (document.getElementById('reveal').checked) drawGrammar();
+}
+
+function drawNode(n, t){
+  push();
+  translate(n.x, n.y);
+
+  if (n.pos==='adj'){ // adjective -> a breathing aura ring
+    blendMode(ADD); noFill();
+    const r = 60 + 30*Math.sin(t*1.5 + n.seed*6) + levelS*120;
+    stroke((n.hue+hueShift)%360, 55, 100, 0.10+trebleS*0.2);
+    strokeWeight(2); circle(0,0,r);
+    pop(); return;
+  }
+  if (n.pos==='verb'){ // verb -> a turning streak (and it seeds particles via emitters)
+    blendMode(ADD); noFill();
+    stroke((n.hue+hueShift)%360, 50, 100, 0.18+levelS*0.4);
+    strokeWeight(2+midS*3);
+    const r = n.size*(1+levelS);
+    arc(0,0,r,r, t*2+n.angle, t*2+n.angle+PI*1.1);
+    pop(); return;
+  }
+
+  // nouns (and unknown): voc pulses; genitive -> L-system growth; plural -> satellites
+  const pulse = n.features.case==='voc' ? Math.sin(t*4+n.seed*7)*0.32 : 0;
+  const sz = n.size*(1 + bassS*0.85 + levelS*0.55 + pulse);
+  const hue = (n.hue+hueShift)%360;
+
+  if (n.branch){                            // GENITIVE: an L-system grows from the seed
+    drawBranch(n, sz, hue, t);
+    push(); rotate(t*n.spin + n.angle); drawShape(n, sz*0.55, hue, 0); pop();  // bright seed core
+  } else {
+    push(); rotate(t*n.spin + n.angle); drawShape(n, sz, hue, 0); pop();
+    for (let s=1; s<n.count; s++){          // number: plural satellites
+      push();
+      rotate(t*0.6 + s*TWO_PI/Math.max(n.count-1,1));
+      translate(sz*1.5, 0);
+      drawShape(n, sz*0.34, (hue+18)%360, 0);
+      pop();
+    }
+  }
+  pop();
+}
+
+function drawShape(n, sz, hue, depth){
+  blendMode(ADD);
+  noFill();
+  for (let g=3; g>=1; g--){            // layered glow strokes
+    stroke(hue, 72, 100, 0.11);
+    strokeWeight(g*1.4*(1+trebleS*1.4));
+    polygon(0,0, sz*(1+(3-g)*0.05), n.sides);
+  }
+  fill(hue, 52, 100, 0.16); noStroke();
+  polygon(0,0, sz*0.5, n.sides);
+
+  if (depth>0 && sz>7){                 // GENITIVE nesting -> fractal recursion
+    push();
+    rotate(0.5 + millis()*0.0003);
+    drawShape(n, sz*0.56, (hue+26)%360, depth-1);
+    pop();
+  }
+}
+
+function polygon(x,y,r,sides){
+  beginShape();
+  for (let i=0;i<sides;i++){ const a=TWO_PI*i/sides - HALF_PI; vertex(x+Math.cos(a)*r, y+Math.sin(a)*r); }
+  endShape(CLOSE);
+}
+
+function drawGrammar(){
+  textFont('Menlo, monospace'); textSize(11); textAlign(CENTER, TOP);
+  for (const n of nodes){
+    const f = n.features;
+    let line2 = n.pos;
+    if (f.case) line2 = `${n.pos} · ${CASE_LABEL[f.case]||f.case} ${f.number||''}`;
+    else if (f.person) line2 = `verb · ${f.person}${f.number} ${f.tense||''}`;
+    fill(0,0,100,0.85); text(n.surface, n.x, n.y + n.size*0.8);
+    fill(0,0,100,0.45); text(line2,   n.x, n.y + n.size*0.8 + 14);
+  }
+  // legend
+  textAlign(LEFT, BOTTOM); textSize(11); fill(0,0,100,0.4);
+  const L = ['nom → centred · gen → L-system growth · abl → emits smoke',
+             'voc → pulse · plural → satellites · gender → palette',
+             'pitch → hue · loudness → motion · bass → pulse · treble → sparkle'];
+  L.forEach((s,i)=> text(s, 18, height-18-(L.length-1-i)*15));
+}
+
+/* ---------- Particle: smoke advected by a Perlin flow field --------------- */
+class Particle{
+  constructor(){ this.reset(Math.random()*innerWidth, Math.random()*innerHeight); }
+  reset(x,y){
+    this.x=x; this.y=y; this.vx=0; this.vy=0;
+    this.maxlife = 60 + Math.random()*160; this.life=this.maxlife;
+    this.sz = 1.4 + Math.random()*3.2;
+    this.hue = ambientHue;
+  }
+  update(t){
+    const a = noise(this.x*0.0016, this.y*0.0016, t*0.15) * TWO_PI * 2.2;
+    const speed = 0.35 + levelS*3.2 + midS*0.6;
+    this.vx = lerp(this.vx, Math.cos(a)*speed, 0.08);
+    this.vy = lerp(this.vy, Math.sin(a)*speed - 0.18, 0.08); // drifts upward, like smoke
+    this.x += this.vx; this.y += this.vy;
+    this.life -= 1 + (1-levelS);
+    if (this.life<=0 || this.x<-25||this.x>width+25||this.y<-25||this.y>height+25){
+      const e = emitters.length ? emitters[(Math.random()*emitters.length)|0] : null;
+      if (e){ this.reset(e.x+(Math.random()-0.5)*36, e.y+(Math.random()-0.5)*36); this.hue=e.hue; }
+      else this.reset(Math.random()*width, Math.random()*height);
+    }
+  }
+  show(){
+    const lf = this.life/this.maxlife, h=(this.hue+hueShift)%360;
+    noStroke();
+    fill(h, 60, 100, 0.05*lf*(0.4+levelS*2.2));        // soft halo
+    circle(this.x, this.y, this.sz*(2.4) + (1-lf)*this.sz*3 + trebleS*4);
+    fill(h, 28, 100, 0.10*lf);                          // bright core
+    circle(this.x, this.y, this.sz);
+  }
+}
+</script>
+</body>
+</html>

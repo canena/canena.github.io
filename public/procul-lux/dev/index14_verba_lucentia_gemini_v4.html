@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="la">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vox Latina - Visualizer Matrix</title>
+    <style>
+        * { box-sizing: border-box; }
+        body, html {
+            margin: 0; padding: 0; width: 100%; height: 100%;
+            overflow: hidden; background-color: #020204;
+            font-family: monospace; color: #a0a0c0;
+        }
+        #canvas {
+            position: absolute; top: 0; left: 0;
+            width: 100vw; height: 100vh; z-index: 1;
+        }
+        #ui-layer {
+            position: absolute; bottom: 20px; left: 50%;
+            transform: translateX(-50%); z-index: 10;
+            width: 90%; max-width: 700px;
+            background: rgba(6, 6, 12, 0.9);
+            padding: 15px; border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 0 30px rgba(0,0,0,0.8);
+            backdrop-filter: blur(8px);
+            transition: opacity 0.4s;
+        }
+        #ui-layer.hidden { opacity: 0.02; }
+        #ui-layer.hidden:hover { opacity: 1; }
+        textarea {
+            width: 100%; height: 80px; background: rgba(0, 0, 0, 0.6);
+            border: 1px solid #223; color: #fff; padding: 8px;
+            border-radius: 4px; resize: none; font-family: inherit;
+        }
+        .controls {
+            display: flex; justify-content: space-between; align-items: center; margin-top: 8px;
+        }
+        button {
+            background: #121e36; color: #fff; border: 1px solid #2a3a5a;
+            padding: 6px 12px; border-radius: 4px; cursor: pointer; font-family: inherit;
+        }
+        button:hover { background: #1a2a4a; }
+        .stats { font-size: 11px; color: #557; }
+    </style>
+    <script type="importmap">
+      {
+        "imports": {
+          "gl-matrix": "https://unpkg.com/gl-matrix@3.4.3/esm/index.js"
+        }
+      }
+    </script>
+</head>
+<body>
+
+    <canvas id="canvas"></canvas>
+
+    <div id="ui-layer">
+        <textarea id="latin-input">Initio mundi
+Victuri te salutant
+Illumina tenebras
+Idolum redux, serpens caudam suam mordens
+Insidens oculatus, obtutu figens
+Procul lux, ultra caligo
+In monte ardentem laeti saltamus</textarea>
+        <div class="controls">
+            <button id="mic-btn">🎙️ Start Audio Engine</button>
+            <div class="stats" id="stats-out">Grammar Status...</div>
+        </div>
+    </div>
+
+<script type="module">
+import { mat4 } from 'gl-matrix';
+
+// ==========================================
+// 1. LATIN LEXICON & GENDER PROFILE ENGINE
+// ==========================================
+const LEXICON_STATIC = {
+    umbra:   {pos:'noun', decl:1, gender:'f', stem:'umbr', nom:'umbra'},
+    ventus:  {pos:'noun', decl:2, gender:'m', stem:'vent', nom:'ventus'},
+    lux:     {pos:'noun', decl:3, gender:'f', stem:'luc',  nom:'lux'},
+    mundus:  {pos:'noun', decl:2, gender:'m', stem:'mund', nom:'mundus'},
+    initium: {pos:'noun', decl:2, gender:'n', stem:'initi',nom:'initium'},
+    tenebrae:{pos:'noun', decl:1, gender:'f', stem:'tenebr',nom:'tenebrae'},
+    cauda:   {pos:'noun', decl:1, gender:'f', stem:'caud', nom:'cauda'},
+    idolum:  {pos:'noun', decl:2, gender:'n', stem:'idol', nom:'idolum'},
+    caligo:  {pos:'noun', decl:3, gender:'f', stem:'caligin', nom:'caligo'},
+    mons:    {pos:'noun', decl:3, gender:'m', stem:'mont', nom:'mons'}
+};
+
+const DECL = {
+    1: { arum:[['gen','pl']], am:[['acc','sg']], as:[['acc','pl']], ae:[['gen','sg'],['dat','sg']], a:[['nom','sg'],['abl','sg']] },
+    2: { orum:[['gen','pl']], us:[['nom','sg']], um:[['acc','sg']], i:[['gen','sg']], o:[['dat','sg'],['abl','sg']], a:[['nom','pl']] },
+    3: { ibus:[['dat','pl']], ium:[['gen','pl']], um:[['gen','pl']], em:[['acc','sg']], es:[['nom','pl']], is:[['gen','sg']], e:[['abl','sg']] }
+};
+
+const grammarState = {
+    nominatives: 3, genitives: 1, accusatives: 1, ablatives: 1,
+    masculine: 1, feminine: 1, neuter: 1, wordCount: 7
+};
+
+function parseGrammar(text) {
+    let cleanText = text.toLowerCase().replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g,"").trim();
+    if (!cleanText) return;
+    let words = cleanText.split(/\s+/).filter(Boolean);
+
+    // i) Store authentic global length metrics
+    grammarState.wordCount = words.length;
+
+    let nom = 0, gen = 0, acc = 0, abl = 0;
+    let masc = 0, fem = 0, neut = 0;
+
+    words.forEach(word => {
+        let found = false;
+        for (let key in LEXICON_STATIC) {
+            let item = LEXICON_STATIC[key];
+            if (word.startsWith(item.stem) || word === item.nom) {
+                if (item.gender === 'm') masc++;
+                if (item.gender === 'f') fem++;
+                if (item.gender === 'n') neut++;
+
+                const ending = word.substring(item.stem.length);
+                const rules = DECL[item.decl]?.[ending] || [];
+                rules.forEach(r => {
+                    if (r[0] === 'nom') nom++; if (r[0] === 'gen') gen++;
+                    if (r[0] === 'acc') acc++; if (r[0] === 'abl') abl++;
+                });
+                found = true; break;
+            }
+        }
+        if (!found) {
+            // Heuristic fallbacks for genders based on common trailing indicators
+            if (word.endsWith('us') || word.endsWith('os')) masc++;
+            else if (word.endsWith('am') || word.endsWith('ae') || word.endsWith('a')) fem++;
+            else if (word.endsWith('um') || word.endsWith('u')) neut++;
+
+            if (word.endsWith('orum') || word.endsWith('arum') || word.endsWith('ium')) gen++;
+            else if (word.endsWith('um') || word.endsWith('am') || word.endsWith('os') || word.endsWith('as')) acc++;
+            else if (word.endsWith('o') || word.endsWith('is') || word.endsWith('e')) abl++;
+            else if (word.endsWith('us') || word.endsWith('a') || word.endsWith('es')) nom++;
+        }
+    });
+
+    // i) Clamp the processing influence to 10 max structurally to prevent wash-outs
+    grammarState.nominatives = Math.min(10, Math.max(3, nom));
+    grammarState.genitives = Math.min(10, Math.max(1, gen));
+    grammarState.accusatives = Math.min(10, Math.max(1, acc));
+    grammarState.ablatives = Math.min(10, Math.max(1, abl));
+
+    // Normalize gender distribution factors
+    let sumG = Math.max(1, masc + fem + neut);
+    grammarState.masculine = masc / sumG;
+    grammarState.feminine = fem / sumG;
+    grammarState.neuter = neut / sumG;
+
+    document.getElementById('stats-out').innerText =
+        `NOM: ${grammarState.nominatives} | GEN: ${grammarState.genitives} | GENDERS(M/F/N): ${masc}/${fem}/${neut}`;
+}
+
+// ==========================================
+// 2. AUDIO CAPTURE SYSTEM
+// ==========================================
+let audioCtx = null, analyser = null, dataArrayFreq = null, dataArrayTime = null;
+const audioState = { volume: 0, bass: 0, mid: 0, high: 0 };
+
+async function initAudio() {
+    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    const stream = await navigator.mediaDevices.getUserMedia({ audio: true, video: false });
+    const source = audioCtx.createMediaStreamSource(stream);
+    analyser = audioCtx.createAnalyser();
+    analyser.fftSize = 512;
+    source.connect(analyser);
+    dataArrayFreq = new Uint8Array(analyser.frequencyBinCount);
+    dataArrayTime = new Uint8Array(analyser.frequencyBinCount);
+    document.getElementById('mic-btn').innerText = "🎙️ Engine Live";
+    document.getElementById('mic-btn').disabled = true;
+}
+
+function updateAudioMetrics() {
+    if (!analyser) return;
+    analyser.getByteFrequencyData(dataArrayFreq);
+    analyser.getByteTimeDomainData(dataArrayTime);
+
+    let total = 0, bass = 0, mid = 0, high = 0;
+    const len = dataArrayFreq.length;
+
+    for (let i = 0; i < len; i++) {
+        const val = dataArrayFreq[i] / 255.0;
+        total += val;
+        if (i < len * 0.15) bass += val;
+        else if (i < len * 0.55) mid += val;
+        else high += val;
+    }
+
+    audioState.volume = total / len;
+    audioState.bass = bass / (len * 0.15);
+    audioState.mid = mid / (len * 0.40);
+    audioState.high = high / (len * 0.45);
+}
+
+// ==========================================
+// 3. COMPLETE WEBGL SHADER PIPELINES
+// ==========================================
+const baseVertexSrc = `#version 300 es
+in vec2 position;
+out vec2 v_texCoord;
+void main() {
+    v_texCoord = position * 0.5 + 0.5;
+    gl_Position = vec4(position, 0.0, 1.0);
+}`;
+
+const feedbackFragmentSrc = `#version 300 es
+precision highp float;
+in vec2 v_texCoord;
+uniform sampler2D u_prevFrame;
+uniform float u_time;
+uniform float u_decay;
+uniform float u_zoom;
+uniform float u_rotate;
+uniform vec2 u_shift;
+
+// k) Gender Ratio Uniform Controls
+uniform vec3 u_genderHue;
+
+uniform vec2 u_mousePos;
+uniform float u_mouseIntensity;
+
+out vec4 fragColor;
+
+float hash(vec2 p) {
+    return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453123);
+}
+
+void main() {
+    vec2 uv = v_texCoord - 0.5;
+
+    float c = cos(u_rotate); float s = sin(u_rotate);
+    uv = mat2(c, -s, s, c) * uv;
+    uv *= u_zoom;
+    uv += u_shift;
+
+    vec2 sampleCoord = uv + 0.5;
+    vec4 prev = texture(u_prevFrame, sampleCoord);
+
+    // Fixed decay factor to prevent fast drop-offs into total darkness
+    prev.rgb *= vec3(u_decay, u_decay * 0.98, u_decay * 0.99);
+
+    // j) k) Vibrant Colored Plasma Nebula Background Driven by Grammatical Gender
+    float plasma = sin(v_texCoord.x * 4.0 + u_time) * cos(v_texCoord.y * 4.0 - u_time) * 0.04;
+    vec3 backgroundGlow = u_genderHue * (plasma + 0.025);
+    prev.rgb += backgroundGlow;
+
+    // Click / Touch interaction system
+    float dist = distance(v_texCoord, u_mousePos);
+    if (u_mouseIntensity > 0.01) {
+        float wave = sin(dist * 40.0 - u_time * 20.0) * 0.5 + 0.5;
+        float flash = wave * smoothstep(0.4, 0.0, dist) * u_mouseIntensity;
+        prev.rgb += vec3(flash * 0.4, flash * 0.7, flash * 1.0);
+        sampleCoord += (v_texCoord - u_mousePos) * flash * 0.03;
+    }
+
+    if(sampleCoord.x < 0.0 || sampleCoord.x > 1.0 || sampleCoord.y < 0.0 || sampleCoord.y > 1.0) {
+        prev.rgb = backgroundGlow;
+    }
+
+    fragColor = vec4(prev.rgb, 1.0);
+}`;
+
+// Presentation pipeline wrapper to map dynamic pixel scaling without resets
+const presentationFragmentSrc = `#version 300 es
+precision highp float;
+in vec2 v_texCoord;
+uniform sampler2D u_bufferFrame;
+uniform float u_pixelScale;
+out vec4 fragColor;
+
+void main() {
+    vec2 res = vec2(textureSize(u_bufferFrame, 0));
+
+    // h) Pixelation calculations handled elegantly in screen-space processing
+    vec2 dCoord = floor(v_texCoord * res / u_pixelScale) / (res / u_pixelScale);
+    fragColor = texture(u_bufferFrame, dCoord);
+}`;
+
+const sceneVertexSrc = `#version 300 es
+in vec3 position;
+in vec3 color;
+uniform mat4 u_matrix;
+out vec3 v_color;
+void main() {
+    v_color = color;
+    gl_Position = u_matrix * vec4(position, 1.0);
+}`;
+
+const sceneFragmentSrc = `#version 300 es
+precision highp float;
+in vec3 v_color;
+out vec4 fragColor;
+void main() {
+    fragColor = vec4(v_color, 1.0);
+}`;
+
+// ==========================================
+// 4. GRAPHICS MATRIX BOILERPLATE INITIALIZATION
+// ==========================================
+const presentationProg = gl.createProgram();
+const vsP = gl.createShader(gl.VERTEX_SHADER); gl.shaderSource(vsP, baseVertexSrc); gl.compileShader(vsP);
+const fsP = gl.createShader(gl.FRAGMENT_SHADER); gl.shaderSource(fsP, presentationFragmentSrc); gl.compileShader(fsP);
+gl.attachShader(presentationProg, vsP); gl.attachShader(presentationProg, fsP); gl.linkProgram(presentationProg);
+
+const feedbackProg = gl.createProgram();
+const vsG = gl.createShader(gl.VERTEX_SHADER); gl.shaderSource(vsG, baseVertexSrc); gl.compileShader(vsG);
+const fsG = gl.createShader(gl.FRAGMENT_SHADER); gl.shaderSource(fsG, feedbackFragmentSrc); gl.compileShader(fsG);
+gl.attachShader(feedbackProg, vsG); gl.attachShader(feedbackProg, fsG); gl.linkProgram(feedbackProg);
+
+const sceneProg = gl.createProgram();
+const vsS = gl.createShader(gl.VERTEX_SHADER); gl.shaderSource(vsS, sceneVertexSrc); gl.compileShader(vsS);
+const fsS = gl.createShader(gl.FRAGMENT_SHADER); gl.shaderSource(fsS, sceneFragmentSrc); gl.compileShader(fsS);
+gl.attachShader(sceneProg, vsS); gl.attachShader(sceneProg, fsS); gl.linkProgram(sceneProg);
+
+const quadVAO = gl.createVertexArray(); gl.bindVertexArray(quadVAO);
+const quadVBO = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, quadVBO);
+gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1, 1,-1, -1,1, -1,1, 1,-1, 1,1]), gl.STATIC_DRAW);
+gl.enableVertexAttribArray(0); gl.vertexAttribPointer(0, 2, gl.FLOAT, false, 0, 0);
+
+const sceneVAO = gl.createVertexArray(); gl.bindVertexArray(sceneVAO);
+const sceneVBO = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, sceneVBO);
+gl.enableVertexAttribArray(gl.getAttribLocation(sceneProg, "position"));
+gl.vertexAttribPointer(gl.getAttribLocation(sceneProg, "position"), 3, gl.FLOAT, false, 24, 0);
+gl.enableVertexAttribArray(gl.getAttribLocation(sceneProg, "color"));
+gl.vertexAttribPointer(gl.getAttribLocation(sceneProg, "color"), 3, gl.FLOAT, false, 24, 12);
+
+let width = canvas.width = window.innerWidth;
+let height = canvas.height = window.innerHeight;
+let fbA = gl.createFramebuffer(), fbB = gl.createFramebuffer();
+let texA, texB;
+
+function buildFixedBuffers() {
+    width = canvas.width = window.innerWidth; height = canvas.height = window.innerHeight;
+    if(texA) { gl.deleteTexture(texA); gl.deleteTexture(texB); }
+    const createTex = () => {
+        const t = gl.createTexture(); gl.bindTexture(gl.TEXTURE_2D, t);
+        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, width, height, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+        return t;
+    };
+    texA = createTex(); texB = createTex();
+    gl.bindFramebuffer(gl.FRAMEBUFFER, fbA); gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, texA, 0);
+    gl.bindFramebuffer(gl.FRAMEBUFFER, fbB); gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, texB, 0);
+}
+buildFixedBuffers();
+window.addEventListener('resize', buildFixedBuffers);
+
+// ==========================================
+// 5. k) COMPOSITING DYNAMIC PRIMITIVES
+// ==========================================
+function drawCentralGeometry(time) {
+    const vertexData = [];
+    const pulse = 1.0 + audioState.bass * 0.7;
+    const jitter = audioState.mid * 0.04;
+    const size = 0.55 * pulse;
+
+    // k) Base Node setting acts directly as structural side/vertice count boundaries
+    let nodes = grammarState.nominatives;
+    let pointsCount = nodes * 12; // Smooth out side edges cleanly
+
+    for (let i = 0; i <= pointsCount; i++) {
+        let angle = (i / pointsCount) * Math.PI * 2;
+
+        // Morph shapes fluidly between pristine math triangles/squares/stars
+        let shapeRadius = 1.0;
+        if (nodes < 7) {
+            // Polygon projection math
+            shapeRadius = cos(Math.PI / nodes) / cos((angle % (Math.PI * 2.0 / nodes)) - (Math.PI / nodes));
+        } else {
+            // Star matrix complex conversion logic
+            shapeRadius = 0.7 + sin(angle * nodes) * 0.3;
+        }
+
+        let radius = shapeRadius * size + (Math.random() - 0.5) * jitter;
+        let x = Math.cos(angle) * radius;
+        let y = Math.sin(angle) * radius;
+
+        let r = sin(angle + time) * 0.5 + 0.5;
+        let g = cos(angle - time) * 0.5 + 0.5;
+        let b = sin(angle * 2.0 + time) * 0.5 + 0.5;
+        vertexData.push(x, y, 0, r, g, b);
+    }
+
+    // Dynamic line stroke mapping using vocal energy ranges
+    gl.lineWidth(1.5 + Math.floor(audioState.mid * 8.0));
+
+    gl.bindBuffer(gl.ARRAY_BUFFER, sceneVBO);
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertexData), gl.DYNAMIC_DRAW);
+    gl.bindVertexArray(sceneVAO);
+    gl.drawArrays(gl.LINE_STRIP, 0, vertexData.length / 6);
+}
+
+// ==========================================
+// 6. PIPELINE LOOP CONTROLLER
+// ==========================================
+let startTime = performance.now();
+const touchState = { x: 0, y: 0, intensity: 0 };
+
+function render() {
+    requestAnimationFrame(render);
+    updateAudioMetrics();
+
+    let time = (performance.now() - startTime) * 0.001;
+
+    // k) Overall word count maps directly to baseline global rotation speeds
+    let rotationBaseMultiplier = 1.0 + (grammarState.wordCount * 0.04);
+    let driftSpeed = time * rotationBaseMultiplier * (1.0 + grammarState.accusatives * 0.05);
+
+    let decayVal = 0.94 + Math.min(0.045, (grammarState.ablatives * 0.004));
+    touchState.intensity *= 0.95;
+
+    // Phase 1: Render expanding feedback buffer matrix onto Framebuffer-B
+    gl.bindFramebuffer(gl.FRAMEBUFFER, fbB);
+    gl.viewport(0, 0, width, height);
+    gl.useProgram(feedbackProg);
+
+    gl.uniform1i(gl.getUniformLocation(feedbackProg, "u_prevFrame"), 0);
+    gl.uniform1f(gl.getUniformLocation(feedbackProg, "u_time"), time);
+    gl.uniform1f(gl.getUniformLocation(feedbackProg, "u_decay"), decayVal);
+
+    let tunnelZoom = 0.975 - (grammarState.genitives * 0.002) - (audioState.bass * 0.012);
+    gl.uniform1f(gl.getUniformLocation(feedbackProg, "u_zoom"), tunnelZoom);
+    gl.uniform1f(gl.getUniformLocation(feedbackProg, "u_rotate"), 0.02 * rotationBaseMultiplier);
+    gl.uniform2f(gl.getUniformLocation(feedbackProg, "u_shift"), Math.cos(driftSpeed)*0.002, Math.sin(driftSpeed)*0.002);
+
+    // Feed Gender profile metrics vectors right inside background generators
+    gl.uniform3f(gl.getUniformLocation(feedbackProg, "u_genderHue"), grammarState.masculine, grammarState.feminine, grammarState.neuter);
+    gl.uniform2f(gl.getUniformLocation(feedbackProg, "u_mousePos"), touchState.x, touchState.y);
+    gl.uniform1f(gl.getUniformLocation(feedbackProg, "u_mouseIntensity"), touchState.intensity);
+
+    gl.activeTexture(gl.TEXTURE0); gl.bindTexture(gl.TEXTURE_2D, texA);
+    gl.bindVertexArray(quadVAO); gl.drawArrays(gl.TRIANGLES, 0, 6);
+
+    // Phase 2: Layer morphing geometric vectors on top
+    gl.useProgram(sceneProg);
+    const matrix = mat4.create();
+    mat4.ortho(matrix, -(width/height), width/height, -1, 1, -1, 1);
+    mat4.rotateZ(matrix, matrix, time * 0.1 * rotationBaseMultiplier);
+    gl.uniformMatrix4fv(gl.getUniformLocation(sceneProg, "u_matrix"), false, matrix);
+    drawCentralGeometry(time);
+
+    // Phase 3: Screen-space pixel shader rendering pass down to monitor view
+    gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+    gl.viewport(0, 0, width, height);
+    gl.useProgram(presentationProg);
+
+    gl.uniform1i(gl.getUniformLocation(presentationProg, "u_bufferFrame"), 0);
+
+    // h) Dynamic pixel scaling computed on the fly natively over full textures
+    let dynamicPixelResolution = 2.0 + (audioState.bass * 8.0) - (audioState.high * 1.5);
+    gl.uniform1f(gl.getUniformLocation(presentationProg, "u_pixelScale"), Math.max(1.0, dynamicPixelResolution));
+
+    gl.bindTexture(gl.TEXTURE_2D, texB);
+    gl.bindVertexArray(quadVAO); gl.drawArrays(gl.TRIANGLES, 0, 6);
+
+    // Frame swaps
+    let tempTex = texA; texA = texB; texB = tempTex;
+    let tempFb = fbA; fbA = fbB; fbB = tempFb;
+}
+
+function cos(v) { return Math.cos(v); }
+
+// ==========================================
+// 7. LISTENERS & SETUP SEEDS
+// ==========================================
+window.addEventListener('pointerdown', (e) => {
+    if(e.target.closest('#ui-layer')) return;
+    touchState.x = e.clientX / window.innerWidth;
+    touchState.y = 1.0 - (e.clientY / window.innerHeight);
+    touchState.intensity = 1.6;
+});
+
+const inputArea = document.getElementById('latin-input');
+inputArea.addEventListener('input', (e) => parseGrammar(e.target.value));
+document.getElementById('mic-btn').addEventListener('click', () => {
+    initAudio().catch(err => console.error(err));
+});
+
+let uiTimer;
+document.addEventListener('pointermove', () => {
+    const ui = document.getElementById('ui-layer'); ui.classList.remove('hidden');
+    clearTimeout(uiTimer); uiTimer = setTimeout(() => ui.classList.add('hidden'), 4000);
+});
+
+parseGrammar(inputArea.value);
+gl.clearColor(0.0, 0.0, 0.0, 1.0);
+requestAnimationFrame(render);
+</script>
+</body>
+</html>

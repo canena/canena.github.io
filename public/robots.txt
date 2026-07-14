@@ -5,6 +5,7 @@ Disallow: /dev/
 Disallow: /drafts/
 Disallow: /private/
 Disallow: /src/
+Disallow: /procul-lux/
 
 # OpenAI: allow ChatGPT search, decline model-training collection
 User-agent: OAI-SearchBot
@@ -13,6 +14,7 @@ Disallow: /dev/
 Disallow: /drafts/
 Disallow: /private/
 Disallow: /src/
+Disallow: /procul-lux/
 
 User-agent: GPTBot
 Disallow: /
@@ -24,6 +26,7 @@ Disallow: /dev/
 Disallow: /drafts/
 Disallow: /private/
 Disallow: /src/
+Disallow: /procul-lux/
 
 User-agent: ClaudeBot
 Disallow: /
@@ -35,6 +38,7 @@ Disallow: /dev/
 Disallow: /drafts/
 Disallow: /private/
 Disallow: /src/
+Disallow: /procul-lux/
 
 # Amazon: allow search experiences, decline AI-training collection
 User-agent: Amzn-SearchBot
@@ -43,6 +47,7 @@ Disallow: /dev/
 Disallow: /drafts/
 Disallow: /private/
 Disallow: /src/
+Disallow: /procul-lux/
 
 User-agent: Amazonbot
 Disallow: /
