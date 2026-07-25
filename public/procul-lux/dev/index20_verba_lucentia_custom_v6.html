@@ -82,7 +82,7 @@
     }
 
     #ui-layer {
-      backdrop-filter: blur(0.3rem);
+      backdrop-filter: blur(0.6rem);
       /* background: rgba(6, 6, 12, 0.9); */
       border: 1px solid rgba(255, 255, 255, 0.08);
       /* border-top-left-radius: 8px; */
@@ -177,10 +177,6 @@
       position: relative;
     }
 
-    button:hover {
-      background-color: rgba(255, 255, 255, 0.10);
-    }
-
     button.icon {
       border-radius: 50%;
       box-shadow: 0 0 2rem rgba(0, 0, 0, 0.8);
@@ -195,8 +191,7 @@
     }
 
     button.icon.active::after {
-      --r: -0.3rem;
-      border: 1px solid rgba(255, 255, 255, 0.4);
+      --r: -0.2rem;
       border-radius: 50%;
       bottom: var(--r);
       box-shadow: 0 0 2rem rgba(255, 255, 255, 1);
@@ -208,9 +203,8 @@
       top: var(--r);
     }
 
-    button[disabled] {
-      cursor: default;
-      opacity: 0.4;
+    button::disabled {
+      opacity: 0.1;
     }
 
     #pixel-btn {}
@@ -232,7 +226,7 @@
       /* color: #557; */
       color: var(--ink);
       display: flex;
-      font-size: 0.5rem;
+      font-size: 0.6rem;
       justify-content: center;
     }
   </style>
@@ -242,57 +236,8 @@
 <script type="module">
   globalThis.LUX = {
     ui: {
-      typingEffectTimeoutMs: 35,
       prose: {
-        alia: `Alia iacta est`,
-        catullus: `
-Odet amo. Quarid faciam, fortasse requiris?
-Nescio, sed fieri sentiet excrucior.
-`.trim(),
-        commodian: `
-Incolae caelorum / futuri cum Deo Christo
-Tenente principium, / vidente cuncta de caelo
-Simplicitas, bonitas / habitet in corpore vestro
-Irasci nolite / sine causa fratri devoto
-Recipietis enim / quidquid feceritis ab illo
-Hoc placuit Christo / resurgere mortuos imo
-Cum suis corporibus, / et quos ignis ussit in aevo
-Sex milibus annis / completis mundo finito.
-`.trim(),
-        eligiacCouplet: `
-Arma gravi numero violentaque bella parabam
-edere materia conveniente modis
-`.trim(),
-        evora: `
-Dum simul dulcem / cum viro carpere(m) vitam,
-ilico me Fortuna tulit / semper noxsea cuntis.
-Vita(m) dum vix(i), Venantia nomen. In seculo gesi
-ter deciens quater / in pace quietos per annos.
-`.trim(),
-        horatio: `
-beatus ille quī procul negōtiīs,
-ut prīsca gēns mortālium,
-paterna rūra būbus exercet suīs
-solūtus omnī faenore
-`.trim(),
-        horatio2: `
-perfundī nārdō iuvat et fide Cyllēnaeā
-levāre dīrīs pectora sollicitūdinibus
-`.trim(),
-        oppilanus: `
-Vrbanilla mihi coniunx / verecundia plena hic sita est
-Romae comes / negotiorum socia / parsimonio fulta
-Bene gestis omnibus, / cum in patria mecum rediret
-Au! miseram Carthago / mihi eripuit sociam
-Nulla spes vivendi / mihi sine coniuge tali.
-`.trim(),
-        oppilanus2: `
-Illa domum servare / meam, illa et consilio iuvare.
-Luce privata, misera / quescit in marmore clusa
-Lucius ego coniunx / hic te marmore texi
-Anc nobis sorte dedit / fatu cum luci daremur.
-`.trim(),
-        proculLux: `
+        default: `
 Initio mundi
 Victuri te salutant
 Illumina tenebras
@@ -301,22 +246,6 @@ Insidens oculatus, obtutu figens
 Procul lux, ultra caligo
 In monte ardentem laeti saltamus
         `.trim(),
-        scipio: `
-Et michi conspicuum meritis belloque tremendum,
-Musa, virum referes, Italis cui fracta sub armis
-Nobilis eternum prius attulit Africa nomen.
-`.trim(),
-        seneca: `
-nunc, nunc adeste sceleris ultrīcēs deae,
-crīnem solūtīs squālidae serpentibus,
-ātram cruentīs manibus amplexae facem
-`.trim(),
-        terentianus: `
-iambus ipse sex enim locīs manet
-et inde nōmen inditum est sēnāriō:
-sed ter ferītur, hīnc trimetrus dīcitur
-scandendo quod bīnōs pedēs coniungimus
-`.trim(),
       },
       pixel: {
         // label: "▦",
@@ -328,10 +257,10 @@ scandendo quod bīnōs pedēs coniungimus
           enabled: "⌨",
         },
       },
-      cycle: {
+      play: {
         label: {
-          enabled: "↻",
-          disabled: "↻", // "▶",
+          enabled: "⏸",
+          disabled: "‣", // "▶",
         },
       },
       mic: {
@@ -352,16 +281,15 @@ scandendo quod bīnōs pedēs coniungimus
 </script>
 
 <body>
-  <noscript>Diese Seite benötigt aktiviertes JavaScript. Alle Eingaben bleiben lokal auf Ihrem Rechner.</noscript>
 
   <canvas id="canvas"></canvas>
 
   <div id="ui-layer">
     <textarea id="latin-input"></textarea>
-    <div class="stats" id="stats-out">...</div>
+    <div class="stats" id="stats-out">Grammar Status...</div>
   </div>
   <div class="controls">
-    <button id="cycle-btn" class="icon" alt="Nächster Prosablock">↻</button>
+    <button id="pause-btn" class="icon" alt="Abspielen/Pausieren">▪</button>
     <button id="pixel-btn" class="icon" alt="Pixelrendering an-/abschalten"></button>
     <button id="settings-btn" alt="Texteingabe an-/abschalten"></button>
     <button id="tunnel-btn" class="icon" alt="Tunnelrendering an-/abschalten">꩜</button>
@@ -375,10 +303,9 @@ scandendo quod bīnōs pedēs coniungimus
       playing: true,
       mic: false,
       pixel: false,
-      tunnel: false,
+      tunnel: true,
       settings: true,
       audioInitialized: false,
-      stats: '',
     };
 
     // ==========================================
@@ -405,6 +332,11 @@ scandendo quod bīnōs pedēs coniungimus
       return m;
     })(LEXICON_STATIC_BASE);
 
+    // const DECL = {
+    //     1: { arum:[['gen','pl']], am:[['acc','sg']], as:[['acc','pl']], ae:[['gen','sg'],['dat','sg']], a:[['nom','sg'],['abl','sg']] },
+    //     2: { orum:[['gen','pl']], us:[['nom','sg']], um:[['acc','sg']], i:[['gen','sg']], o:[['dat','sg'],['abl','sg']], a:[['nom','pl']] },
+    //     3: { ibus:[['dat','pl']], ium:[['gen','pl']], um:[['gen','pl']], em:[['acc','sg']], es:[['nom','pl']], is:[['gen','sg']], e:[['abl','sg']] }
+    // };
     const DECL = {
       // 1st Declension (Mostly Feminine)
       1: {
@@ -474,536 +406,6 @@ scandendo quod bīnōs pedēs coniungimus
     };
     runtime._grammarState = grammarState;
 
-    const meterState = {
-      coherence: 0.0,
-      hexameter: 0.0,
-      pentameter: 0.0,
-      dactylicEnergy: 0.0,
-    };
-    runtime._meterState = meterState;
-
-    /** @param {string} */
-    function analyzeMeter(source) {
-      const VOWELS = "aeiouyāēīōūȳ";
-      const DIPHTHONGS = new Set([
-        "ae", "au", "ei", "eu", "oe", "ui"
-      ]);
-      const MACRONS = new Set("āēīōūȳ");
-
-      const DACTYL = ["L", "S", "S"];
-      const SPONDEE = ["L", "L"];
-
-      const isVowel = c =>
-        Boolean(c) && VOWELS.includes(c);
-
-      const baseVowel = c => ({
-        ā: "a",
-        ē: "e",
-        ī: "i",
-        ō: "o",
-        ū: "u",
-        ȳ: "y"
-      }[c] || c);
-
-      const clamp01 = value => Math.max(0, Math.min(1, value));
-
-      function estimateLatinQuantities(source) {
-        let text = source
-          .toLowerCase()
-          .normalize("NFC")
-          .replace(/[^a-zāēīōūȳ\s]/g, " ")
-          .replace(/\s+/g, " ")
-          .trim();
-
-        /*
-        * Approximate elision:
-        *
-        * multum ille -> mult ille
-        * atque eadem -> atqu eadem
-        */
-        const elidable =
-          `(?:ae|au|ei|eu|oe|ui|[${VOWELS}])m?`;
-
-        text = text.replace(
-          new RegExp(
-            `(${elidable})\\s+h?(?=[${VOWELS}])`,
-            "g"
-          ),
-          " "
-        );
-
-        const nuclei = [];
-
-        for (let i = 0; i < text.length; i++) {
-          const char = text[i];
-
-          if (!isVowel(char)) {
-            continue;
-          }
-
-          const atWordStart =
-            i === 0 || text[i - 1] === " ";
-
-          /*
-          * Rough handling of consonantal i and u.
-          *
-          * iam: initial i behaves as a consonant
-          * maior: intervocalic i behaves as a consonant
-          * qui: u after q behaves as a consonant
-          */
-          if (
-            char === "i" &&
-            isVowel(text[i + 1]) &&
-            (
-              atWordStart ||
-              isVowel(text[i - 1])
-            )
-          ) {
-            continue;
-          }
-
-          if (
-            char === "u" &&
-            /[qg]/.test(text[i - 1] || "") &&
-            isVowel(text[i + 1])
-          ) {
-            continue;
-          }
-
-          let end = i + 1;
-
-          const pair =
-            baseVowel(char) +
-            baseVowel(text[i + 1]);
-
-          const diphthong =
-            isVowel(text[i + 1]) &&
-            DIPHTHONGS.has(pair);
-
-          if (diphthong) {
-            end++;
-          }
-
-          const nucleusText =
-            text.slice(i, end);
-
-          nuclei.push({
-            start: i,
-            end,
-
-            longByNature:
-              diphthong ||
-              [...nucleusText].some(
-                c => MACRONS.has(c)
-              )
-          });
-
-          i = end - 1;
-        }
-
-        return nuclei.map((nucleus, index) => {
-          const next = nuclei[index + 1];
-
-          if (nucleus.longByNature) {
-            return {
-              quantity: "L",
-              wordEnd: false
-            };
-          }
-
-          if (!next) {
-            return {
-              quantity: "?",
-              wordEnd: true
-            };
-          }
-
-          const rawCluster =
-            text.slice(nucleus.end, next.start);
-
-          const acrossWord =
-            rawCluster.includes(" ");
-
-          /*
-          * h is ignored for quantity.
-          * qu/gu and aspirated stops count approximately
-          * as one consonantal unit.
-          */
-          const cluster = rawCluster
-            .replace(/\s|h/g, "")
-            .replace(/qu|gu|su/g, "q")
-            .replace(/ch/g, "c")
-            .replace(/ph/g, "p")
-            .replace(/th/g, "t");
-
-          let consonantCount = 0;
-
-          for (const char of cluster) {
-            if (isVowel(char)) {
-              continue;
-            }
-
-            consonantCount +=
-              char === "x" || char === "z"
-                ? 2
-                : 1;
-          }
-
-          const muteLiquid =
-            !acrossWord &&
-            /^[pbtdcgf][lr]$/.test(cluster);
-
-          let quantity = "?";
-
-          if (
-            consonantCount >= 2 &&
-            !muteLiquid
-          ) {
-            quantity = "L";
-          } else if (
-            consonantCount === 0 &&
-            !acrossWord
-          ) {
-            // Non-diphthong vowel before another vowel.
-            quantity = "S";
-          }
-
-          return {
-            quantity,
-            wordEnd: acrossWord
-          };
-        });
-      }
-
-      function generateFootChoices(count) {
-        const choices = [];
-
-        for (
-          let mask = 0;
-          mask < (1 << count);
-          mask++
-        ) {
-          const pattern = [];
-          let dactyls = 0;
-
-          for (
-            let foot = 0;
-            foot < count;
-            foot++
-          ) {
-            const isDactyl =
-              (mask & (1 << foot)) !== 0;
-
-            pattern.push(
-              ...(isDactyl
-                ? DACTYL
-                : SPONDEE)
-            );
-
-            if (isDactyl) {
-              dactyls++;
-            }
-          }
-
-          choices.push({
-            pattern,
-            dactyls
-          });
-        }
-
-        return choices;
-      }
-
-      const HEXAMETER_TEMPLATES =
-        generateFootChoices(4).map(choice => ({
-          meter: "hexameter",
-
-          pattern: [
-            ...choice.pattern,
-
-            // Characteristic fifth-foot dactyl.
-            ...DACTYL,
-
-            // Sixth foot: long plus anceps.
-            "L",
-            "X"
-          ],
-
-          dactylRatio:
-            (choice.dactyls + 1) / 5
-        }));
-
-      const PENTAMETER_TEMPLATES =
-        generateFootChoices(2).map(choice => {
-          const firstHalf = [
-            ...choice.pattern,
-            "L"
-          ];
-
-          return {
-            meter: "pentameter",
-
-            pattern: [
-              ...firstHalf,
-              ...DACTYL,
-              ...DACTYL,
-              "X"
-            ],
-
-            // Number of syllables before the
-            // central pentameter division.
-            caesuraIndex:
-              firstHalf.length,
-
-            dactylRatio:
-              (choice.dactyls + 2) / 4
-          };
-        });
-
-      function quantityEditCost(observed, expected) {
-        const gapCost = 1.15;
-
-        let previous = Array.from(
-          {
-            length:
-              expected.length + 1
-          },
-          (_, index) =>
-            index * gapCost
-        );
-
-        for (
-          let i = 1;
-          i <= observed.length;
-          i++
-        ) {
-          const current = [
-            i * gapCost
-          ];
-
-          for (
-            let j = 1;
-            j <= expected.length;
-            j++
-          ) {
-            let substitutionCost;
-
-            if (expected[j - 1] === "X") {
-              substitutionCost = 0;
-            } else if (
-              observed[i - 1] === "?"
-            ) {
-              // Unknown natural quantity.
-              substitutionCost = 0.22;
-            } else {
-              substitutionCost =
-                observed[i - 1] ===
-                  expected[j - 1]
-                  ? 0
-                  : 1;
-            }
-
-            current[j] = Math.min(
-              // Delete observed syllable.
-              previous[j] + gapCost,
-
-              // Insert missing syllable.
-              current[j - 1] + gapCost,
-
-              // Match or substitute.
-              previous[j - 1] +
-              substitutionCost
-            );
-          }
-
-          previous = current;
-        }
-
-        return previous[
-          expected.length
-        ];
-      }
-
-      function findBestMeterTemplate(syllables, templates) {
-        const observed =
-          syllables.map(
-            syllable =>
-              syllable.quantity
-          );
-
-        const knownRatio =
-          observed.length === 0
-            ? 0
-            : observed.filter(
-              quantity =>
-                quantity !== "?"
-            ).length /
-            observed.length;
-
-        let best = null;
-
-        for (const template of templates) {
-          let cost = quantityEditCost(
-            observed,
-            template.pattern
-          );
-
-          /*
-          * Reward a word boundary at the
-          * pentameter's central division.
-          */
-          if (
-            template.caesuraIndex &&
-            observed.length ===
-            template.pattern.length
-          ) {
-            const boundary =
-              syllables[
-                template.caesuraIndex - 1
-              ]?.wordEnd;
-
-            cost += boundary
-              ? -0.12
-              : 0.12;
-          }
-
-          const scale =
-            Math.max(
-              observed.length,
-              template.pattern.length,
-              1
-            ) * 1.15;
-
-          const shapeScore =
-            clamp01(
-              1 - cost / scale
-            );
-
-          /*
-          * Reduce confidence when nearly
-          * everything is an unknown quantity.
-          */
-          const confidence =
-            shapeScore *
-            (
-              0.55 +
-              0.45 * knownRatio
-            );
-
-          if (
-            !best ||
-            confidence > best.confidence
-          ) {
-            best = {
-              meter:
-                template.meter,
-
-              confidence,
-
-              dactylRatio:
-                template.dactylRatio,
-
-              pattern:
-                template.pattern.join(""),
-
-              knownRatio
-            };
-          }
-        }
-
-        return best;
-      }
-
-      function detectLatinMeter(line) {
-        const syllables =
-          estimateLatinQuantities(line);
-
-        const hexameter =
-          findBestMeterTemplate(
-            syllables,
-            HEXAMETER_TEMPLATES
-          );
-
-        const pentameter =
-          findBestMeterTemplate(
-            syllables,
-            PENTAMETER_TEMPLATES
-          );
-
-        const best =
-          hexameter.confidence >=
-            pentameter.confidence
-            ? hexameter
-            : pentameter;
-
-        return {
-          meter:
-            best.meter,
-
-          confidence:
-            best.confidence,
-
-          dactylRatio:
-            best.dactylRatio,
-
-          quantities:
-            syllables
-              .map(
-                syllable =>
-                  syllable.quantity
-              )
-              .join(""),
-
-          hexameterConfidence:
-            hexameter.confidence,
-
-          pentameterConfidence:
-            pentameter.confidence
-        };
-      }
-
-      function detectElegiacCouplet(firstLine, secondLine) {
-        const first =
-          detectLatinMeter(firstLine);
-
-        const second =
-          detectLatinMeter(secondLine);
-
-        return {
-          confidence:
-            (
-              first.hexameterConfidence +
-              second.pentameterConfidence
-            ) / 2,
-
-          first,
-          second
-        };
-      }
-
-      let k = 0;
-      const groups = [];
-      for (const line of source.trim().split("\n")) {
-        if (k % 2 === 0) {
-          groups.push([]);
-        }
-        groups[groups.length - 1].push(line);
-        k += 1;
-      }
-      if (k % 2 === 1) {
-        groups[groups.length - 1].push("");
-      }
-      // console.log({ groups });
-
-      for (const [a, b] of groups) {
-        const result = detectElegiacCouplet(a, b);
-        meterState.coherence = (meterState.coherence + result.confidence) * 0.5;
-        meterState.hexameter = (meterState.hexameter + result.first.hexameterConfidence) * 0.5;
-        meterState.pentameter = (meterState.pentameter + result.second.pentameterConfidence) * 0.5;
-        meterState.dactylicEnergy = (meterState.dactylicEnergy + (result.first.dactylRatio + result.second.dactylRatio) * 0.5) * 0.5;
-      }
-    }
-
     function parseGrammar(text) {
       let cleanText = text.toLowerCase().replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, "").trim();
       if (!cleanText) return;
@@ -1058,14 +460,8 @@ scandendo quod bīnōs pedēs coniungimus
       grammarState.feminine = fem / sumG;
       grammarState.neuter = neut / sumG;
 
-      analyzeMeter(text);
-
-      runtime.stats = [
-        `NOM:${grammarState.nominatives} GEN:${grammarState.genitives}`,
-        `M:${masc} F:${fem} N:${neut}`,
-        // `MTR:${meterState.coherence.toFixed(1)}`,
-        `PT:${meterState.pentameter.toFixed(1)} HX:${meterState.hexameter.toFixed(1)} DCTY:${meterState.dactylicEnergy.toFixed(1)}`,
-      ].join(" 〰 ")
+      document.getElementById('stats-out').innerText =
+        `NOM: ${grammarState.nominatives} | GEN: ${grammarState.genitives} | GENDERS(M/F/N): ${masc}/${fem}/${neut}`;
     }
 
     // ==========================================
@@ -1167,7 +563,7 @@ void main() {
     float dist = distance(v_texCoord, u_mousePos);
     if (u_mouseIntensity > 0.01) {
         float wave = sin(dist * 40.0 - u_time * 20.0) * 0.5 + 0.5;
-        float flash = wave * smoothstep(0.3, 0.0, dist) * u_mouseIntensity;
+        float flash = wave * smoothstep(0.4, 0.0, dist) * u_mouseIntensity;
         prev.rgb += vec3(flash * 0.4, flash * 0.7, flash * 1.0);
         sampleCoord += (v_texCoord - u_mousePos) * flash * 0.03;
     }
@@ -1213,218 +609,6 @@ void main() {
     fragColor = vec4(v_color, 1.0);
 }`;
 
-    const kaleidoVS = `#version 300 es
-precision highp float;
-
-layout(location = 0) in vec2 aPosition;
-layout(location = 1) in vec2 aUV;
-
-out vec2 vUV;
-
-void main() {
-  vUV = aUV;
-  gl_Position = vec4(aPosition, 0.0, 1.0);
-}
-`;
-
-    const kaleidoFS = `#version 300 es
-precision highp float;
-
-uniform sampler2D uScene;
-uniform vec2 uResolution;
-uniform float uTime;
-
-uniform float uSectorCount;      // Usually between 5.0 and 6.0
-uniform float uMirrorStrength;   // 0..1
-uniform float uTwist;            // signed twist
-uniform float uTripletStrength;  // 0..1, from dactylic energy
-uniform float uPulse;            // audio pulse
-uniform float uZoom;             // slight breathing / framing shift
-uniform float uColorCycle;       // optional extra chroma movement
-uniform vec2 uCenter;            // usually 0.5, 0.5
-
-in vec2 vUV;
-out vec4 outColor;
-
-const float PI  = 3.141592653589793;
-const float TAU = 6.283185307179586;
-
-float longShortShort(float x) {
-  // x is periodic; create one stronger pulse and two weaker ones.
-  x = fract(x);
-
-  float longBeat   = exp(-34.0 * pow(x - 0.16, 2.0));
-  float shortBeat1 = exp(-72.0 * pow(x - 0.50, 2.0));
-  float shortBeat2 = exp(-72.0 * pow(x - 0.83, 2.0));
-
-  return longBeat + 0.55 * shortBeat1 + 0.55 * shortBeat2;
-}
-
-void main() {
-  vec2 p = (vUV - uCenter) * 2.0;
-
-  float aspect = uResolution.x / uResolution.y;
-  p.x *= aspect;
-
-  p *= uZoom;
-
-  float r = length(p);
-  float a = atan(p.y, p.x);
-
-  // A little breathing in radius and some mild spiral twist.
-  a += uTwist * r;
-  r *= 1.0 + sin(uTime * 1.35 + r * 10.0) * (0.05 * uPulse);
-
-  float sectors = max(uSectorCount, 1.0);
-  float wedge = TAU / sectors;
-
-  // Sector-local angle.
-  float local = mod(a + 0.5 * wedge, wedge);
-
-  // Mirrored fold.
-  float mirrored = abs(local - 0.5 * wedge);
-
-  // Blend from "raw wedge" to full mirrored kaleidoscope.
-  float folded = mix(local, mirrored, clamp(uMirrorStrength, 0.0, 1.0));
-
-  // Normalized 0..1 from centerline to edge of wedge.
-  float wedgeNorm = folded / max(0.5 * wedge, 1e-5);
-
-  // Dactylic internal structure.
-  float cadence = longShortShort(wedgeNorm * 3.0);
-  float tripletWobble =
-    sin(wedgeNorm * TAU * 3.0 + uTime * 0.8) *
-    (0.10 * uTripletStrength);
-
-  float tripletScale =
-    1.0 + (cadence - 0.65) * (0.08 * uTripletStrength);
-
-  float sampleAngle = folded + tripletWobble;
-  float sampleRadius = r * tripletScale;
-
-  vec2 sampleP = vec2(cos(sampleAngle), sin(sampleAngle)) * sampleRadius;
-  sampleP.x /= aspect;
-
-  vec2 sampleUV = sampleP * 0.5 + uCenter;
-  sampleUV = clamp(sampleUV, vec2(0.001), vec2(0.999));
-
-  vec4 color = texture(uScene, sampleUV);
-
-  // Dactylic brightness accent.
-  color.rgb *= 1.0 + 0.20 * uTripletStrength * cadence;
-
-  // Mild color cycling so the post-process feels alive.
-  float chroma = sin(sampleAngle * 3.0 + uTime * 0.9 + sampleRadius * 5.0) * 0.5 + 0.5;
-  color.r *= 1.0 + uColorCycle * 0.12 * chroma;
-  color.g *= 1.0 + uColorCycle * 0.08 * (1.0 - chroma);
-  color.b *= 1.0 + uColorCycle * 0.16 * (0.5 + 0.5 * sin(uTime + sampleRadius * 4.0));
-
-  // Soft vignette to keep the frame focused.
-  float vignette = 1.0 - smoothstep(0.85, 1.35, sampleRadius);
-  color.rgb *= vignette;
-
-  outColor = color;
-}
-`;
-
-    let kaleidoProgram;
-    let kaleidoVAO;
-    let kaleidoVBO;
-
-    let uKScene;
-    let uKResolution;
-    let uKTime;
-    let uKSectorCount;
-    let uKMirrorStrength;
-    let uKTwist;
-    let uKTripletStrength;
-    let uKPulse;
-    let uKZoom;
-    let uKColorCycle;
-    let uKCenter;
-
-    function registerKaleidoscopeProgram() {
-      function createShader(type, source) {
-        const shader = gl.createShader(type);
-        gl.shaderSource(shader, source);
-        gl.compileShader(shader);
-
-        if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
-          const log = gl.getShaderInfoLog(shader);
-          gl.deleteShader(shader);
-          throw new Error("Shader compile failed:\\n" + log);
-        }
-
-        return shader;
-      }
-
-      function createProgram(vsSource, fsSource) {
-        const vs = createShader(gl.VERTEX_SHADER, vsSource);
-        const fs = createShader(gl.FRAGMENT_SHADER, fsSource);
-
-        const program = gl.createProgram();
-        gl.attachShader(program, vs);
-        gl.attachShader(program, fs);
-        gl.linkProgram(program);
-
-        gl.deleteShader(vs);
-        gl.deleteShader(fs);
-
-        if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
-          const log = gl.getProgramInfoLog(program);
-          gl.deleteProgram(program);
-          throw new Error("Program link failed:\\n" + log);
-        }
-
-        return program;
-      }
-
-      function buildKaleidoPass() {
-        kaleidoProgram = createProgram(kaleidoVS, kaleidoFS);
-
-        uKScene = gl.getUniformLocation(kaleidoProgram, "uScene");
-        uKResolution = gl.getUniformLocation(kaleidoProgram, "uResolution");
-        uKTime = gl.getUniformLocation(kaleidoProgram, "uTime");
-        uKSectorCount = gl.getUniformLocation(kaleidoProgram, "uSectorCount");
-        uKMirrorStrength = gl.getUniformLocation(kaleidoProgram, "uMirrorStrength");
-        uKTwist = gl.getUniformLocation(kaleidoProgram, "uTwist");
-        uKTripletStrength = gl.getUniformLocation(kaleidoProgram, "uTripletStrength");
-        uKPulse = gl.getUniformLocation(kaleidoProgram, "uPulse");
-        uKZoom = gl.getUniformLocation(kaleidoProgram, "uZoom");
-        uKColorCycle = gl.getUniformLocation(kaleidoProgram, "uColorCycle");
-        uKCenter = gl.getUniformLocation(kaleidoProgram, "uCenter");
-
-        const quad = new Float32Array([
-          // x, y, u, v
-          -1, -1, 0, 0,
-          1, -1, 1, 0,
-          -1, 1, 0, 1,
-
-          -1, 1, 0, 1,
-          1, -1, 1, 0,
-          1, 1, 1, 1
-        ]);
-
-        kaleidoVAO = gl.createVertexArray();
-        kaleidoVBO = gl.createBuffer();
-
-        gl.bindVertexArray(kaleidoVAO);
-        gl.bindBuffer(gl.ARRAY_BUFFER, kaleidoVBO);
-        gl.bufferData(gl.ARRAY_BUFFER, quad, gl.STATIC_DRAW);
-
-        gl.enableVertexAttribArray(0);
-        gl.vertexAttribPointer(0, 2, gl.FLOAT, false, 16, 0);
-
-        gl.enableVertexAttribArray(1);
-        gl.vertexAttribPointer(1, 2, gl.FLOAT, false, 16, 8);
-
-        gl.bindVertexArray(null);
-        gl.bindBuffer(gl.ARRAY_BUFFER, null);
-      }
-
-      buildKaleidoPass();
-    }
-
     // ==========================================
     // 4. GRAPHICS MATRIX BOILERPLATE INITIALIZATION
     // ==========================================
@@ -1458,64 +642,6 @@ void main() {
     gl.enableVertexAttribArray(gl.getAttribLocation(sceneProg, "color"));
     gl.vertexAttribPointer(gl.getAttribLocation(sceneProg, "color"), 3, gl.FLOAT, false, 24, 12);
 
-    registerKaleidoscopeProgram();
-
-    function computeKaleidoState(meterState) {
-      function clamp(value, min, max) {
-        return Math.max(min, Math.min(max, value));
-      }
-
-      const hex = clamp(meterState?.hexameter ?? 0.0, 0.0, 1.0);
-      const pent = clamp(meterState?.pentameter ?? 0.0, 0.0, 1.0);
-      const coherence = clamp(
-        meterState?.coherence ?? Math.max(hex, pent),
-        0.0,
-        1.0
-      );
-      const dactyl = clamp(meterState?.dactylicEnergy ?? 0.0, 0.0, 1.0);
-
-      // Relative preference: 0 => pure pentameter, 1 => pure hexameter
-      const total = Math.max(hex + pent, 1e-5);
-      const bias = hex / total;
-
-      // Softly morph between 5 and 6 in ambiguous cases...
-      // const smoothSectorCount = 2.0 * (5.0 + bias);
-      const smoothSectorCount = 5.0 + bias;
-
-      // ...but snap toward integer structure when confidence is high.
-      const hardSectorCount = pent >= hex ? 5.0 : 6.0;
-      const snap = coherence * 0.65;
-
-      const sectorCount =
-        smoothSectorCount * (1.0 - snap) +
-        hardSectorCount * snap;
-
-      return {
-        sectorCount,
-
-        // Stronger confidence => cleaner mirror/fold behavior.
-        mirrorStrength: 0.25 + coherence * 0.75,
-
-        // Give hexameter and pentameter slightly different rotational personalities.
-        twist: (hex - pent) * 0.35 + (audioState.mid - 0.5) * 0.05,
-
-        // Dactylic texture.
-        tripletStrength: dactyl,
-
-        // Bass breathing.
-        pulse: 0.12 + audioState.bass * 0.28,
-
-        // Slight framing difference between the two meters.
-        zoom: 0.05 + 1.00 + pent * 0.05 - hex * 0.03,
-
-        // Dactyls make the palette more excitable.
-        colorCycle: 0.08 + dactyl * 0.55,
-
-        centerX: 0.5,
-        centerY: 0.5
-      };
-    }
-
     let width = canvas.width = window.innerWidth;
     let height = canvas.height = window.innerHeight;
     let fbA = gl.createFramebuffer(), fbB = gl.createFramebuffer();
@@ -1524,85 +650,19 @@ void main() {
     const cos = Math.cos;
     const sin = Math.sin;
 
-    const TAU = Math.PI * 2;
-    const FLOATS_PER_VERTEX = 6;
-    const IDLE_VERTICES_PER_POINT = 3;
-
-    let geometryVertexData = new Float32Array(0);
-    let geometryVertexCapacityFloats = 0;
-
-    function getIdleFloatCount(nodes) {
-      const pointsCount = nodes * 12;
-
-      // The loop is inclusive: 0 through pointsCount.
-      return (
-        (pointsCount + 1) * IDLE_VERTICES_PER_POINT * FLOATS_PER_VERTEX
-      );
-    }
-
-    function ensureGeometryCapacity(nodes) {
-      const requiredFloats = getIdleFloatCount(nodes);
-
-      if (requiredFloats <= geometryVertexCapacityFloats) {
-        return;
-      }
-
-      // Grow geometrically so changing the node count does not cause frequent
-      // CPU and GPU reallocations.
-      let nextCapacity = Math.max(256, geometryVertexCapacityFloats);
-
-      while (nextCapacity < requiredFloats) {
-        nextCapacity *= 2;
-      }
-
-      geometryVertexData = new Float32Array(nextCapacity);
-      geometryVertexCapacityFloats = nextCapacity;
-
-      gl.bindBuffer(gl.ARRAY_BUFFER, sceneVBO);
-
-      // Allocate GPU storage without uploading initial data.
-      gl.bufferData(gl.ARRAY_BUFFER, nextCapacity * Float32Array.BYTES_PER_ELEMENT, gl.STREAM_DRAW);
-    }
-
     function buildFixedBuffers() {
-      width = canvas.width = window.innerWidth;
-      height = canvas.height = window.innerHeight;
-
-      if (texA) {
-        gl.deleteTexture(texA);
-        gl.deleteTexture(texB);
-      }
-
+      width = canvas.width = window.innerWidth; height = canvas.height = window.innerHeight;
+      if (texA) { gl.deleteTexture(texA); gl.deleteTexture(texB); }
       const createTex = () => {
-        const t = gl.createTexture();
-
-        gl.bindTexture(gl.TEXTURE_2D, t);
+        const t = gl.createTexture(); gl.bindTexture(gl.TEXTURE_2D, t);
         gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, width, height, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
-
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
-
-        // Good hygiene for screen-space post processing.
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-
         return t;
       };
-
-      texA = createTex();
-      texB = createTex();
-
-      gl.bindFramebuffer(gl.FRAMEBUFFER, fbA);
-      gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, texA, 0);
-
-      gl.bindFramebuffer(gl.FRAMEBUFFER, fbB);
-      gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, texB, 0);
-
-      // Polygon projection is not valid below three sides.
-      const nodes = Math.max(3, grammarState.nominatives | 0);
-      ensureGeometryCapacity(nodes);
-
-      gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+      texA = createTex(); texB = createTex();
+      gl.bindFramebuffer(gl.FRAMEBUFFER, fbA); gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, texA, 0);
+      gl.bindFramebuffer(gl.FRAMEBUFFER, fbB); gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, texB, 0);
     }
     buildFixedBuffers();
     window.addEventListener('resize', buildFixedBuffers);
@@ -1611,256 +671,328 @@ void main() {
     // 5. k) COMPOSITING DYNAMIC PRIMITIVES
     // ==========================================
     function drawInteractiveGeometry(time) {
-      const nodes = Math.max(3, grammarState.nominatives | 0);
-      const pointsCount = nodes * 12;
-      const recursions = Math.min(5, grammarState.genitives);
+      const vertexData = [];
 
-      // The idle geometry buffer is larger than this path requires:
-      // idle = 3 vertices per point
-      // interactive = 2 vertices per point
-      ensureGeometryCapacity(nodes);
-
-      const vertexData = geometryVertexData;
-      let offset = 0;
-
-      // Dynamic mapping from audio metrics.
+      // Dynamic mapping from audio metrics
       const pulse = 1.0 + audioState.bass * 0.7;
       const jitter = audioState.mid * 0.04;
       const size = 0.55 * pulse;
 
-      const angleStep = TAU / pointsCount;
-      const curveStep = TAU / 300;
+      // k) Base Node setting acts directly as structural side/vertice count boundaries
+      const nodes = 7; //grammarState.nominatives;
+      const pointsCount = nodes * 12; // Smooth out side edges cleanly
+      const recursions = Math.min(5, grammarState.genitives); // Sub-loops
 
-      // Values that remain constant throughout the loop.
-      const nodeHalfSector = Math.PI / nodes;
-      const nodeSector = TAU / nodes;
-      const nodePolygonNumerator = cos(nodeHalfSector);
+      for (let i = 0; i <= pointsCount; i++) {
+        let s = (i / 300) * Math.PI * 2;
+        let t = (i / 300) * Math.PI * 2;
+        let u = (i / 300) * Math.PI * 2;
+        // let t = (i / 10) * Math.PI * 2;
+        let angle = (i / pointsCount) * Math.PI * 2;
 
-      for (let i = 0; i <= pointsCount; i += 1) {
-        const angle = i * angleStep;
+        {
+          // Morph shapes fluidly between pristine math triangles/squares/stars
+          let shapeRadius = 1.0;
+          if (nodes <= 7) {
+            // Polygon projection math
+            shapeRadius = cos(Math.PI / nodes) / cos((angle % (Math.PI * 2.0 / nodes)) - (Math.PI / nodes));
+          } else {
+            // Star matrix complex conversion logic
+            shapeRadius = 0.7 + sin(angle * nodes) * 0.3;
+          }
 
-        // In the original code, s, t, and u had identical values.
-        const curveAngle = i * curveStep;
+          let radius = shapeRadius * size + (Math.random() - 0.5) * jitter;
+          let x = cos(angle) * radius;
+          let y = sin(angle) * radius;
 
-        /*
-        * Grammar-driven polygon/star.
-        */
-        let shapeRadius;
+          let r = sin(angle + time) * 0.5 + 0.5;
+          let g = cos(angle - time) * 0.5 + 0.5;
+          let b = sin(angle * 2.0 + time) * 0.5 + 0.5;
+          vertexData.push(x, y, 0, r, g, b);
+        }
+        {
+          // Mathematical Rose Curve variant altered by grammar profile
+          let r = sin(nodes * s + time) * 0.4;
+          r += cos((nodes + recursions) * s - time) * 0.15 * pulse;
+          r += (Math.random() - 0.5) * jitter;
 
-        if (nodes <= 7) {
-          shapeRadius = nodePolygonNumerator / cos((angle % nodeSector) - nodeHalfSector);
-        } else {
-          shapeRadius = 0.7 + sin(angle * nodes) * 0.3;
+          let x = cos(t) * r * pulse;
+          let y = sin(t) * r * pulse;
+
+          // Dynamic Neon Spectrum assignment
+          let rCol = sin(s + time) * 0.5 + 0.5;
+          let gCol = cos(s - time * 1.5) * 0.5 + 0.5;
+          let bCol = sin(s * recursions) * 0.5 + 0.5;
+
+          vertexData.push(x, y, 0, rCol, gCol, bCol);
         }
 
-        let radius = shapeRadius * size + (Math.random() - 0.5) * jitter;
+        // BACKUP
+        // {
+        //   // Mathematical Rose Curve variant altered by grammar profile
+        //   let r = sin(nodes * t + time) * 0.6;
+        //   r += cos((nodes + recursions) * t - time) * 0.15 * pulse;
+        //   r += (Math.random() - 0.5) * jitter;
 
-        let x = cos(angle) * radius;
-        let y = sin(angle) * radius;
+        //   let x = cos(t) * r * pulse;
+        //   let y = sin(t) * r * pulse;
 
-        let red = sin(angle + time) * 0.5 + 0.5;
-        let green = cos(angle - time) * 0.5 + 0.5;
-        let blue = sin(angle * 2.0 + time) * 0.5 + 0.5;
+        //   // Dynamic Neon Spectrum assignment
+        //   let rCol = sin(t + time) * 0.5 + 0.5;
+        //   let gCol = cos(t - time * 1.5) * 0.5 + 0.5;
+        //   let bCol = sin(t * recursions) * 0.5 + 0.5;
 
-        vertexData[offset++] = x;
-        vertexData[offset++] = y;
-        vertexData[offset++] = 0;
-        vertexData[offset++] = red;
-        vertexData[offset++] = green;
-        vertexData[offset++] = blue;
+        //   vertexData.push(x, y, 0, rCol, gCol, bCol);
+        // }
 
-        /*
-        * Mathematical rose curve.
-        */
-        radius = sin(nodes * curveAngle + time) * 0.4;
-        radius += cos((nodes + recursions) * curveAngle - time) * 0.15 * pulse;
-        radius += (Math.random() - 0.5) * jitter;
+        // {
+        //   // Mathematical Rose Curve variant altered by grammar profile
+        //   let r = sin(nodes * u + time) * 0.6;
+        //   r += cos((nodes + recursions) * u - time) * 0.15 * pulse;
+        //   r += (Math.random() - 0.5) * jitter;
 
-        x = cos(curveAngle) * radius * pulse;
-        y = sin(curveAngle) * radius * pulse;
+        //   let x = cos(u) * r * pulse;
+        //   let y = sin(u) * r * pulse;
 
-        red = sin(curveAngle + time) * 0.5 + 0.5;
-        green = cos(curveAngle - time * 1.5) * 0.5 + 0.5;
-        blue = sin(curveAngle * recursions) * 0.5 + 0.5;
+        //   // Dynamic Neon Spectrum assignment
+        //   let rCol = sin(u + time) * 0.5 + 0.5;
+        //   let gCol = cos(u - time * 1.5) * 0.5 + 0.5;
+        //   let bCol = sin(u * recursions) * 0.5 + 0.5;
 
-        vertexData[offset++] = x;
-        vertexData[offset++] = y;
-        vertexData[offset++] = 0;
-        vertexData[offset++] = red;
-        vertexData[offset++] = green;
-        vertexData[offset++] = blue;
+        //   vertexData.push(x, y, 0, rCol, gCol, bCol);
+        // }
       }
 
-      const vertexCount = offset / FLOATS_PER_VERTEX;
-
+      // Dynamic line stroke mapping using vocal energy ranges
       gl.lineWidth(1.5 + Math.floor(audioState.mid * 8.0));
+      // gl.lineWidth(2 + Math.floor(audioState.mid * 8.0));
+      // gl.lineWidth(6 + Math.floor(audioState.mid * 8.0));
+      // gl.lineWidth(6 - Math.floor(audioState.mid * 8.0));
+
       gl.bindBuffer(gl.ARRAY_BUFFER, sceneVBO);
-
-      // WebGL2 overload: upload only the populated portion of
-      // the reusable typed array without creating a subarray.
-      gl.bufferSubData(gl.ARRAY_BUFFER, 0, vertexData, 0, offset);
-
+      gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertexData), gl.DYNAMIC_DRAW);
       gl.bindVertexArray(sceneVAO);
-      gl.enable(gl.BLEND);
 
-      gl.blendFuncSeparate(gl.ONE, gl.ONE_MINUS_SRC_COLOR, gl.ZERO, gl.ONE);
-      gl.drawArrays(gl.LINE_STRIP, 0, vertexCount);
+      gl.enable(gl.BLEND);
+      // // soft-add
+      // gl.blendFuncSeparate(
+      //   gl.SRC_ALPHA,
+      //   gl.ONE,
+      //   gl.ZERO,
+      //   gl.ONE
+      // );
+      // screen
+      gl.blendFuncSeparate(
+        gl.ONE,
+        gl.ONE_MINUS_SRC_COLOR,
+        gl.ZERO,
+        gl.ONE
+      );
+      // // pre-multiplied
+      // gl.blendFuncSeparate(
+      //             gl.ONE,
+      //             gl.ONE_MINUS_SRC_ALPHA,
+      //             gl.ONE,
+      //             gl.ONE_MINUS_SRC_ALPHA
+      //         );
+
+      gl.drawArrays(gl.LINE_STRIP, 0, vertexData.length / 6);
+
       gl.disable(gl.BLEND);
     }
 
     function drawIdleGeometry(time) {
-      const nodes = Math.max(3, grammarState.nominatives | 0);
-      const pointsCount = nodes * 12;
-      const recursions = Math.min(5, grammarState.genitives);
+      const vertexData = [];
 
-      // Handles grammar changes that occur without a resize/build pass.
-      ensureGeometryCapacity(nodes);
-
-      const vertexData = geometryVertexData;
-      let offset = 0;
-
-      // Dynamic mapping from audio metrics.
+      // Dynamic mapping from audio metrics
       const pulse = 1.0 + audioState.bass * 0.7;
       const jitter = audioState.mid * 0.04;
       const size = 0.55 * pulse;
 
-      // Precompute values that are constant for the whole loop.
-      const angleStep = TAU / pointsCount;
-      const roseStep = TAU / 300;
+      // k) Base Node setting acts directly as structural side/vertice count boundaries
+      const nodes = 7; //grammarState.nominatives;
+      const pointsCount = nodes * 12; // Smooth out side edges cleanly
+      const recursions = Math.min(5, grammarState.genitives); // Sub-loops
 
-      const nodeHalfSector = Math.PI / nodes;
-      const nodeSector = TAU / nodes;
-      const nodePolygonNumerator = cos(nodeHalfSector);
+      for (let i = 0; i <= pointsCount; i++) {
+        let s = (i / 300) * Math.PI * 2;
+        let t = (i / 300) * Math.PI * 2;
+        let u = (i / 300) * Math.PI * 2;
+        // let t = (i / 10) * Math.PI * 2;
+        let angle = (i / pointsCount) * Math.PI * 2;
 
-      const triangleSides = 3;
-      const triangleHalfSector = Math.PI / triangleSides;
-      const triangleSector = TAU / triangleSides;
-      const trianglePolygonNumerator = cos(triangleHalfSector);
+        // TODO: mic-off
+        {
+          // Morph shapes fluidly between pristine math triangles/squares/stars
+          let shapeRadius = 1.0;
+          if (nodes <= 7) {
+            // Polygon projection math
+            shapeRadius = cos(Math.PI / nodes) / cos((angle % (Math.PI * 2.0 / nodes)) - (Math.PI / nodes));
+          } else {
+            // Star matrix complex conversion logic
+            shapeRadius = 0.7 + sin(angle * nodes) * 0.3;
+          }
 
-      for (let i = 0; i <= pointsCount; i += 1) {
-        const angle = i * angleStep;
-        const u = i * roseStep;
+          let radius = shapeRadius * size + (Math.random() - 0.5) * jitter;
+          let x = cos(angle) * radius;
+          let y = sin(angle) * radius;
 
-        /*
-        * Grammar-driven polygon/star.
-        */
-        let shapeRadius;
-
-        if (nodes <= 7) {
-          shapeRadius = nodePolygonNumerator / cos((angle % nodeSector) - nodeHalfSector);
-        } else {
-          shapeRadius = 0.7 + Math.sin(angle * nodes) * 0.3;
+          let r = sin(angle + time) * 0.5 + 0.5;
+          let g = cos(angle - time) * 0.5 + 0.5;
+          let b = sin(angle * 2.0 + time) * 0.5 + 0.5;
+          vertexData.push(x, y, 0, r, g, b);
         }
 
-        let radius = shapeRadius * size + (Math.random() - 0.5) * jitter;
+        {
+          // Mathematical Rose Curve variant altered by grammar profile
+          let r = sin(nodes * u + time) * 0.6;
+          r += cos((nodes + recursions) * u - time) * 0.15 * pulse;
+          r += (Math.random() - 0.5) * jitter;
 
-        let x = cos(angle) * radius;
-        let y = sin(angle) * radius;
+          let x = cos(u) * r * pulse;
+          let y = sin(u) * r * pulse;
 
-        let red = sin(angle + time) * 0.5 + 0.5;
-        let green = cos(angle - time) * 0.5 + 0.5;
-        let blue = sin(angle * 2.0 + time) * 0.5 + 0.5;
+          // Dynamic Neon Spectrum assignment
+          let rCol = sin(u + time) * 0.5 + 0.5;
+          let gCol = cos(u - time * 1.5) * 0.5 + 0.5;
+          let bCol = sin(u * recursions) * 0.5 + 0.5;
 
-        vertexData[offset++] = x;
-        vertexData[offset++] = y;
-        vertexData[offset++] = 0;
-        vertexData[offset++] = red;
-        vertexData[offset++] = green;
-        vertexData[offset++] = blue;
+          vertexData.push(x, y, 0, rCol, gCol, bCol);
+        }
 
-        /*
-        * Mathematical rose curve.
-        */
-        radius = sin(nodes * u + time) * 0.6;
-        radius += cos((nodes + recursions) * u - time) * 0.15 * pulse;
-        radius += (Math.random() - 0.5) * jitter;
+        {
+          // Morph shapes fluidly between pristine math triangles/squares/stars
+          let shapeRadius = 1.0;
+          let n = 3;
+          let a = angle;
+          if (n < 7) {
+            // Polygon projection math
+            shapeRadius = cos(Math.PI / n) / cos((a % (Math.PI * 2.0 / n)) - (Math.PI / n));
+          } else {
+            // Star matrix complex conversion logic
+            shapeRadius = 0.7 + sin(a * n) * 0.3;
+          }
 
-        x = cos(u) * radius * pulse;
-        y = sin(u) * radius * pulse;
+          let radius = shapeRadius * 0.8 * size + (Math.random() - 0.5) * jitter;
+          let x = cos(a) * radius;
+          let y = sin(a) * radius;
 
-        red = sin(u + time) * 0.5 + 0.5;
-        green = cos(u - time * 1.5) * 0.5 + 0.5;
-        blue = sin(u * recursions) * 0.5 + 0.5;
+          let r = sin(a + time) * 0.5 + 0.5;
+          let g = cos(a - time) * 0.5 + 0.5;
+          let b = sin(a * 2.0 + time) * 0.5 + 0.5;
+          vertexData.push(x, y, 0, r, g, b);
+        }
 
-        vertexData[offset++] = x;
-        vertexData[offset++] = y;
-        vertexData[offset++] = 0;
-        vertexData[offset++] = red;
-        vertexData[offset++] = green;
-        vertexData[offset++] = blue;
+        // TODO: Mic-on
+        // {
+        //   // Morph shapes fluidly between pristine math triangles/squares/stars
+        //   let shapeRadius = 1.0;
+        //   if (nodes <= 7) {
+        //       // Polygon projection math
+        //       shapeRadius = cos(Math.PI / nodes) / cos((angle % (Math.PI * 2.0 / nodes)) - (Math.PI / nodes));
+        //   } else {
+        //       // Star matrix complex conversion logic
+        //       shapeRadius = 0.7 + sin(angle * nodes) * 0.3;
+        //   }
 
-        /*
-        * Triangle projection.
-        */
-        shapeRadius = trianglePolygonNumerator / cos((angle % triangleSector) - triangleHalfSector);
+        //   let radius = shapeRadius * size + (Math.random() - 0.5) * jitter;
+        //   let x = cos(angle) * radius;
+        //   let y = sin(angle) * radius;
 
-        radius = shapeRadius * 0.8 * size + (Math.random() - 0.5) * jitter;
+        //   let r = sin(angle + time) * 0.5 + 0.5;
+        //   let g = cos(angle - time) * 0.5 + 0.5;
+        //   let b = sin(angle * 2.0 + time) * 0.5 + 0.5;
+        //   vertexData.push(x, y, 0, r, g, b);
+        // }
+        // {
+        //   // Mathematical Rose Curve variant altered by grammar profile
+        //   let r = sin(nodes * s + time) * 0.4;
+        //   r += cos((nodes + recursions) * s - time) * 0.15 * pulse;
+        //   r += (Math.random() - 0.5) * jitter;
 
-        x = Math.cos(angle) * radius;
-        y = Math.sin(angle) * radius;
+        //   let x = cos(t) * r * pulse;
+        //   let y = sin(t) * r * pulse;
 
-        red = Math.sin(angle + time) * 0.5 + 0.5;
-        green = Math.cos(angle - time) * 0.5 + 0.5;
-        blue = sin(angle * 2.0 + time) * 0.5 + 0.5;
+        //   // Dynamic Neon Spectrum assignment
+        //   let rCol = sin(s + time) * 0.5 + 0.5;
+        //   let gCol = cos(s - time * 1.5) * 0.5 + 0.5;
+        //   let bCol = sin(s * recursions) * 0.5 + 0.5;
 
-        vertexData[offset++] = x;
-        vertexData[offset++] = y;
-        vertexData[offset++] = 0;
-        vertexData[offset++] = red;
-        vertexData[offset++] = green;
-        vertexData[offset++] = blue;
+        //   vertexData.push(x, y, 0, rCol, gCol, bCol);
+        // }
+
+        // BACKUP
+        // {
+        //   // Mathematical Rose Curve variant altered by grammar profile
+        //   let r = sin(nodes * t + time) * 0.6;
+        //   r += cos((nodes + recursions) * t - time) * 0.15 * pulse;
+        //   r += (Math.random() - 0.5) * jitter;
+
+        //   let x = cos(t) * r * pulse;
+        //   let y = sin(t) * r * pulse;
+
+        //   // Dynamic Neon Spectrum assignment
+        //   let rCol = sin(t + time) * 0.5 + 0.5;
+        //   let gCol = cos(t - time * 1.5) * 0.5 + 0.5;
+        //   let bCol = sin(t * recursions) * 0.5 + 0.5;
+
+        //   vertexData.push(x, y, 0, rCol, gCol, bCol);
+        // }
+
+        // {
+        //   // Mathematical Rose Curve variant altered by grammar profile
+        //   let r = sin(nodes * u + time) * 0.6;
+        //   r += cos((nodes + recursions) * u - time) * 0.15 * pulse;
+        //   r += (Math.random() - 0.5) * jitter;
+
+        //   let x = cos(u) * r * pulse;
+        //   let y = sin(u) * r * pulse;
+
+        //   // Dynamic Neon Spectrum assignment
+        //   let rCol = sin(u + time) * 0.5 + 0.5;
+        //   let gCol = cos(u - time * 1.5) * 0.5 + 0.5;
+        //   let bCol = sin(u * recursions) * 0.5 + 0.5;
+
+        //   vertexData.push(x, y, 0, rCol, gCol, bCol);
+        // }
       }
 
-      const vertexCount = offset / FLOATS_PER_VERTEX;
-
+      // Dynamic line stroke mapping using vocal energy ranges
       gl.lineWidth(1.5 + Math.floor(audioState.mid * 8.0));
+      // gl.lineWidth(2 + Math.floor(audioState.mid * 8.0));
+      // gl.lineWidth(6 + Math.floor(audioState.mid * 8.0));
+      // gl.lineWidth(6 - Math.floor(audioState.mid * 8.0));
 
       gl.bindBuffer(gl.ARRAY_BUFFER, sceneVBO);
-
-      /*
-      * WebGL2's five-argument overload uploads only the populated section
-      * without creating vertexData.subarray(...).
-      */
-      gl.bufferSubData(gl.ARRAY_BUFFER, 0, vertexData, 0, offset);
-
+      gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertexData), gl.DYNAMIC_DRAW);
       gl.bindVertexArray(sceneVAO);
 
       gl.enable(gl.BLEND);
-      gl.blendFuncSeparate(gl.ONE, gl.ONE_MINUS_SRC_COLOR, gl.ZERO, gl.ONE);
-      gl.drawArrays(gl.LINE_STRIP, 0, vertexCount);
+      // // soft-add
+      // gl.blendFuncSeparate(
+      //   gl.SRC_ALPHA,
+      //   gl.ONE,
+      //   gl.ZERO,
+      //   gl.ONE
+      // );
+      // screen
+      gl.blendFuncSeparate(
+        gl.ONE,
+        gl.ONE_MINUS_SRC_COLOR,
+        gl.ZERO,
+        gl.ONE
+      );
+      // // pre-multiplied
+      // gl.blendFuncSeparate(
+      //             gl.ONE,
+      //             gl.ONE_MINUS_SRC_ALPHA,
+      //             gl.ONE,
+      //             gl.ONE_MINUS_SRC_ALPHA
+      //         );
+
+      gl.drawArrays(gl.LINE_STRIP, 0, vertexData.length / 6);
+
       gl.disable(gl.BLEND);
-    }
-
-    function drawKaleidoPass(time, meterState, sourceTex, targetFB = null) {
-      const state = computeKaleidoState(meterState);
-
-      gl.bindFramebuffer(gl.FRAMEBUFFER, targetFB);
-      gl.viewport(0, 0, width, height);
-
-      gl.useProgram(kaleidoProgram);
-      gl.bindVertexArray(kaleidoVAO);
-
-      gl.disable(gl.BLEND);
-
-      gl.activeTexture(gl.TEXTURE0);
-      gl.bindTexture(gl.TEXTURE_2D, sourceTex);
-      gl.uniform1i(uKScene, 0);
-
-      gl.uniform2f(uKResolution, width, height);
-      gl.uniform1f(uKTime, time);
-
-      gl.uniform1f(uKSectorCount, state.sectorCount);
-      gl.uniform1f(uKMirrorStrength, state.mirrorStrength);
-      gl.uniform1f(uKTwist, state.twist);
-      gl.uniform1f(uKTripletStrength, state.tripletStrength);
-      gl.uniform1f(uKPulse, state.pulse);
-      gl.uniform1f(uKZoom, state.zoom);
-      gl.uniform1f(uKColorCycle, state.colorCycle);
-      gl.uniform2f(uKCenter, state.centerX, state.centerY);
-
-      gl.drawArrays(gl.TRIANGLES, 0, 6);
-
-      gl.bindVertexArray(null);
     }
 
     // ==========================================
@@ -1901,8 +1033,7 @@ void main() {
       gl.uniform1f(gl.getUniformLocation(feedbackProg, "u_decay"), decayVal);
 
       let tunnelZoom = 1.002 - (grammarState.genitives * 0.002) - (audioState.bass * 0.012);
-      // if (runtime.tunnel && runtime.mic) {
-      if (runtime.tunnel) {
+      if (runtime.tunnel && runtime.mic) {
         tunnelZoom = 0.975 - (grammarState.genitives * 0.002) - (audioState.bass * 0.012);
       }
 
@@ -1939,21 +1070,17 @@ void main() {
       gl.uniform1i(gl.getUniformLocation(presentationProg, "u_bufferFrame"), 0);
 
       // h) Dynamic pixel scaling computed on the fly natively over full textures
+      // let dynamicPixelResolution = 1.5 + (audioState.bass * 8.0) - (audioState.high * 1.5);
+      // let dynamicPixelResolution = 2 - (1.1 + (audioState.bass * 8.0) - (audioState.high * 1.5));
+      // let dynamicPixelResolution = 2.0 + (audioState.mid * 0.04) + (audioState.bass * 8.0) - (audioState.high * 1.5);
       let dynamicPixelResolution = 1.0;
       if (runtime.mic && runtime.pixel) {
         dynamicPixelResolution = 2.0 + (audioState.mid * 0.04) + (audioState.bass * 8.0) - (audioState.high * 1.5);
-        // dynamicPixelResolution = 1.5 + (audioState.bass * 8.0) - (audioState.high * 1.5);
-        // dynamicPixelResolution = 2 - (1.1 + (audioState.bass * 8.0) - (audioState.high * 1.5));
-        // dynamicPixelResolution = 2.0 + (audioState.mid * 0.04) + (audioState.bass * 8.0) - (audioState.high * 1.5);
       }
       gl.uniform1f(gl.getUniformLocation(presentationProg, "u_pixelScale"), Math.max(1.0, dynamicPixelResolution));
 
       gl.bindTexture(gl.TEXTURE_2D, texB);
       gl.bindVertexArray(quadVAO); gl.drawArrays(gl.TRIANGLES, 0, 6);
-
-      if (meterState.coherence >= 0.38) {
-        drawKaleidoPass(time, meterState, texB, null);
-      }
 
       // Frame swaps
       let tempTex = texA; texA = texB; texB = tempTex;
@@ -1996,53 +1123,48 @@ void main() {
       runtime.playing = !runtime.playing;
       LUX.update();
     };
-    globalThis.LUX.cycleProse = function () {
-      const candidates = Object.values(LUX.ui.prose);
-      return candidates[Math.floor(candidates.length * Math.random())]
-    },
-      globalThis.LUX.update = function () {
-        pixelButton.innerText = LUX.ui.pixel.label;
-        document.getElementById('stats-out').innerText = runtime.stats;
-        if (runtime.mic) {
-          document.getElementById('ui-layer').classList.remove("idle");
-          document.getElementById('mic-btn').innerText = LUX.ui.mic.label.enabled;
-          document.getElementById('mic-btn').classList.add("active");
-          document.getElementById('pixel-btn').disabled = false;
-          // document.getElementById('tunnel-btn').disabled = false;
-
-          if (runtime.pixel) {
-            document.getElementById('pixel-btn').classList.add("active");
-          } else {
-            document.getElementById('pixel-btn').classList.remove("active");
-          }
-        } else {
-          document.getElementById('ui-layer').classList.add("idle");
-          document.getElementById('mic-btn').innerText = LUX.ui.mic.label.disabled;
-          document.getElementById('mic-btn').classList.remove("active");
-          document.getElementById('pixel-btn').disabled = true;
-          // document.getElementById('tunnel-btn').disabled = true;
-          // document.getElementById('tunnel-btn').classList.remove("active");
-          document.getElementById('pixel-btn').classList.remove("active");
-        }
-        if (runtime.settings) {
-          document.getElementById('ui-layer').classList.remove("closed");
-          document.getElementById('settings-btn').innerText = LUX.ui.settings.label.enabled;
-        } else {
-          document.getElementById('ui-layer').classList.add("closed");
-          document.getElementById('settings-btn').innerText = LUX.ui.settings.label.disabled;
-        }
-        // if (runtime.playing) {
-        //   document.getElementById('pause-btn').innerText = LUX.ui.play.label.enabled;
-        // } else {
-        //   document.getElementById('pause-btn').innerText = LUX.ui.play.label.disabled;
-        // }
+    globalThis.LUX.update = function () {
+      pixelButton.innerText = LUX.ui.pixel.label;
+      if (runtime.mic) {
+        document.getElementById('ui-layer').classList.remove("idle");
+        document.getElementById('mic-btn').innerText = LUX.ui.mic.label.enabled;
+        document.getElementById('mic-btn').classList.add("active");
+        document.getElementById('pixel-btn').disabled = false;
+        document.getElementById('tunnel-btn').disabled = false;
 
         if (runtime.tunnel) {
           document.getElementById('tunnel-btn').classList.add("active");
         } else {
           document.getElementById('tunnel-btn').classList.remove("active");
         }
-      };
+
+        if (runtime.pixel) {
+          document.getElementById('pixel-btn').classList.add("active");
+        } else {
+          document.getElementById('pixel-btn').classList.remove("active");
+        }
+      } else {
+        document.getElementById('ui-layer').classList.add("idle");
+        document.getElementById('mic-btn').innerText = LUX.ui.mic.label.disabled;
+        document.getElementById('mic-btn').classList.remove("active");
+        document.getElementById('pixel-btn').disabled = true;
+        document.getElementById('tunnel-btn').disabled = true;
+        document.getElementById('tunnel-btn').classList.remove("active");
+        document.getElementById('pixel-btn').classList.remove("active");
+      }
+      if (runtime.settings) {
+        document.getElementById('ui-layer').classList.remove("closed");
+        document.getElementById('settings-btn').innerText = LUX.ui.settings.label.enabled;
+      } else {
+        document.getElementById('ui-layer').classList.add("closed");
+        document.getElementById('settings-btn').innerText = LUX.ui.settings.label.disabled;
+      }
+      if (runtime.playing) {
+        document.getElementById('pause-btn').innerText = LUX.ui.play.label.enabled;
+      } else {
+        document.getElementById('pause-btn').innerText = LUX.ui.play.label.disabled;
+      }
+    };
 
     window.addEventListener('pointerdown', (e) => {
       if (e.target.closest('#ui-layer')) return;
@@ -2061,10 +1183,8 @@ void main() {
     });
 
     const inputArea = document.getElementById('latin-input');
-    inputArea.addEventListener('input', (e) => {
-      parseGrammar(e.target.value);
-      LUX.update();
-    });
+    inputArea.addEventListener('input', (e) => parseGrammar(e.target.value));
+    inputArea.value = LUX.ui.prose.default;
 
     const pixelButton = document.getElementById('pixel-btn');
     pixelButton.addEventListener('click', () => {
@@ -2076,45 +1196,9 @@ void main() {
       LUX.toggleTunnel();
     });
 
-    const cycleButton = document.getElementById('cycle-btn');
-    const typeProseIntoField = (text, now) => {
-      const full = text ?? LUX.cycleProse();
-      if (now) {
-        inputArea.value = full;
-        parseGrammar(full);
-        LUX.update();
-        return;
-      }
-
-      const letterCount = Math.min(full.length, Math.max(0, 75));
-      const init = full.substring(0, full.length - letterCount)
-      const rest = full.substring(init.length);
-
-      cycleButton.disabled = true;
-      let i = 1;
-      (function step() {
-        if (i > rest.length) {
-          cycleButton.disabled = false;
-          return;
-        }
-
-        const value = `${init}${rest.substring(0, i)}`;
-        inputArea.value = value;
-        parseGrammar(value);
-        LUX.update();
-
-        i += 1;
-
-        setTimeout(step, LUX.ui.typingEffectTimeoutMs)
-      }());
-
-    }
-    cycleButton.addEventListener('click', () => {
-      if (runtime.settings) {
-        typeProseIntoField();
-      } else {
-        typeProseIntoField(null, true);
-      }
+    const pauseButton = document.getElementById('pause-btn');
+    pauseButton.addEventListener('click', () => {
+      LUX.togglePlay();
     });
 
     const settingsButton = document.getElementById('settings-btn');
@@ -2127,12 +1211,11 @@ void main() {
       await LUX.toggleMic();
     });
 
-    // parseGrammar(inputArea.value);
+    parseGrammar(inputArea.value);
     gl.clearColor(0.0, 0.0, 0.0, 1.0);
     requestAnimationFrame(render);
 
     LUX.update();
-    typeProseIntoField(LUX.ui.prose.proculLux);
   </script>
 </body>
 
