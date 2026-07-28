@@ -171,8 +171,7 @@
       border: 1px solid rgba(255, 255, 255, 0.14);
       border-radius: var(--radius);
       /* box-shadow: 0 0 0.6rem rgba(0, 0, 0, 0.2) inset; */
-      /* text-shadow: 0 0 0.6rem rgba(0, 0, 0, 1); */
-      text-shadow: 0 0 0.2rem rgba(0, 0, 0, 1);
+      text-shadow: 0 0 0.6rem rgba(0, 0, 0, 1);
       text-transform: uppercase;
       /* color: #fff; */
       color: var(--ink);
@@ -186,16 +185,6 @@
       resize: none;
       /* z-index: 1; */
       width: 100%;
-    }
-
-    textarea:focus {
-      backdrop-filter: blur(1rem);
-      /* background-color: rgba(255, 255, 255, 0.6); */
-      background-color: rgba(128, 128, 128, 0.15);
-      box-shadow: 0 0 0.2rem rgba(0, 0, 0, 0.3) inset;
-      /* background-color: rgba(0, 0, 0, 0.1); */
-      /* background-image: linear-gradient(0deg, rgba(50, 50, 50, 0.2), rgba(50, 50, 50, 0.01)); */
-      /*, transparent);*/
     }
 
     /* .textarea-wrapper::after {
@@ -323,14 +312,11 @@
     } */
 
     .stats {
-      /* background-image: linear-gradient(0deg, #222, transparent); */
       /* color: #557; */
       color: var(--ink);
       display: flex;
       font-size: 0.5rem;
       justify-content: center;
-      text-shadow: 0 0 0.2rem rgba(0, 0, 0, 1);
-      white-space: nowrap;
     }
   </style>
   <x-script src="./gl-matrix-3.4.3.development.js"></x-script>
@@ -432,7 +418,7 @@ scandendo quod bīnōs pedēs coniungimus
       },
       pixel: {
         // label: "▦",
-        label: "ε", // "👾",
+        label: "👾",
       },
       settings: {
         label: {
@@ -442,14 +428,8 @@ scandendo quod bīnōs pedēs coniungimus
       },
       cycle: {
         label: {
-          enabled: "↻", // "δ"
+          enabled: "↻",
           disabled: "↻", // "▶",
-        },
-      },
-      tunnel: {
-        label: {
-          enabled: "∞",
-          disabled: "∞",
         },
       },
       mic: {
@@ -513,7 +493,7 @@ In monte ardentem laeti saltamus</textarea>
     <button id="cycle-btn" class="icon" alt="Nächster Prosablock" disabled>↻</button>
     <button id="pixel-btn" class="icon" alt="Pixelrendering an-/abschalten" disabled></button>
     <button id="settings-btn" alt="Texteingabe an-/abschalten" disabled></button>
-    <button id="tunnel-btn" class="icon" alt="Tunnelrendering an-/abschalten" disabled></button>
+    <button id="tunnel-btn" class="icon" alt="Tunnelrendering an-/abschalten" disabled>꩜</button>
     <button id="mic-btn" class="icon" alt="Microfoneingabe an-/abschalten" disabled></button>
   </div>
   <div id="init-controls" class="controls">
@@ -654,15 +634,6 @@ In monte ardentem laeti saltamus</textarea>
       };
       runtime._meterState = meterState;
 
-      const baseVowel = c => ({
-        ā: "a",
-        ē: "e",
-        ī: "i",
-        ō: "o",
-        ū: "u",
-        ȳ: "y"
-      }[c] || c);
-
       /** @param {string} */
       function analyzeMeter(source) {
         const VOWELS = "aeiouyāēīōūȳ";
@@ -676,6 +647,15 @@ In monte ardentem laeti saltamus</textarea>
 
         const isVowel = c =>
           Boolean(c) && VOWELS.includes(c);
+
+        const baseVowel = c => ({
+          ā: "a",
+          ē: "e",
+          ī: "i",
+          ō: "o",
+          ū: "u",
+          ȳ: "y"
+        }[c] || c);
 
         const clamp01 = value => Math.max(0, Math.min(1, value));
 
@@ -1192,16 +1172,8 @@ In monte ardentem laeti saltamus</textarea>
         }
       }
 
-      const toPercent = (n) => `${Math.floor((n ?? 0) * 100)}%`;
-
       function parseGrammar(text) {
-        let cleanText = text.toLowerCase()
-          .normalize("NFC")
-          .replace(/[\/\|~\(\)]/g, "")
-          .replace(/[.,#!$%\^&\*;:{}=\-_`]/g, " ")
-          .replace(/[āēīōūȳ]/gi, (m) => baseVowel(m))
-          .trim();
-        let isEmpty = cleanText.length === 0;
+        let cleanText = text.toLowerCase().replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, "").trim();
         // if (!cleanText) return;
         let words = cleanText.split(/\s+/).filter(Boolean);
 
@@ -1256,24 +1228,12 @@ In monte ardentem laeti saltamus</textarea>
 
         analyzeMeter(text);
 
-        // Hairspace
-        const space = "\u200a";
-        if (isEmpty) {
-          runtime.stats = [
-            [`NOM:0`, `GEN:0`, `ACC:0`, `ABL:0`].join(space),
-            [`M:0`, `F:0`, `N:0`].join(space),
-            // `MTR~0%`,
-            [`PT:0%`, `HX:0%`, `DCTY:0%`].join(space),
-          ].join(`${space}〰${space}`);
-        } else {
-          runtime.stats = [
-            [`NOM:${grammarState.nominatives}`, `GEN:${grammarState.genitives}`, `ACC:${grammarState.accusatives}`, `ABL:${grammarState.ablatives}`].join(space),
-            [`M:${masc}`, `F:${fem}`, `N:${neut}`].join(space),
-            // `MTR~${meterState.coherence.toFixed(1)}`,
-            // `PT~${(meterState.pentameter ?? 0).toFixed(1)} HX~${(meterState.hexameter ?? 0).toFixed(1)} DCTY~${(meterState.dactylicEnergy ?? 0).toFixed(1)})`,
-            [`PT:${toPercent(meterState.pentameter)}`, `HX:${toPercent(meterState.hexameter)}`, `DCTY:${toPercent(meterState.dactylicEnergy)}`].join(space),
-          ].join(`${space}〰${space}`);
-        }
+        runtime.stats = [
+          `NOM:${grammarState.nominatives} GEN:${grammarState.genitives}`,
+          `M:${masc} F:${fem} N:${neut}`,
+          // `MTR:${meterState.coherence.toFixed(1)}`,
+          `PT:${(meterState.pentameter ?? 0).toFixed(1)} HX:${(meterState.hexameter ?? 0).toFixed(1)} DCTY:${(meterState.dactylicEnergy ?? 0).toFixed(1)}`,
+        ].join(" 〰 ")
       }
 
       // ==========================================
@@ -1847,6 +1807,7 @@ In monte ardentem laeti saltamus</textarea>
         for (let i = 0; i <= pointsCount; i += 1) {
           const angle = i * angleStep;
 
+          // In the original code, s, t, and u had identical values.
           const curveAngle = i * curveStep;
 
           /*
@@ -2088,13 +2049,11 @@ In monte ardentem laeti saltamus</textarea>
         let time = (performance.now() - startTime) * 0.001;
 
         // k) Overall word count maps directly to baseline global rotation speeds
-        // let rotationBaseMultiplier = 1.0 + (grammarState.wordCount * 0.04);
-        let rotationBaseMultiplier = 1.0 + (grammarState.wordCount * 0.05);
-        // let driftSpeed = time * rotationBaseMultiplier * (1.0 + grammarState.accusatives * 0.05);
-        let driftSpeed = time * rotationBaseMultiplier * (1.0 + grammarState.accusatives * 0.06);
+        let rotationBaseMultiplier = 1.0 + (grammarState.wordCount * 0.04);
+        let driftSpeed = time * rotationBaseMultiplier * (1.0 + grammarState.accusatives * 0.05);
 
         // let decayVal = 0.94 + Math.min(0.045, (grammarState.ablatives * 0.004));
-        let decayVal = 0.96 + Math.min(0.045, (grammarState.ablatives * 0.007));
+        let decayVal = 0.96 + Math.min(0.045, (grammarState.ablatives * 0.004));
         touchState.intensity *= 0.95;
 
         // Phase 1: Render expanding feedback buffer matrix onto Framebuffer-B
@@ -2109,12 +2068,10 @@ In monte ardentem laeti saltamus</textarea>
         gl.uniform1f(gl.getUniformLocation(feedbackProg, "u_time"), time);
         gl.uniform1f(gl.getUniformLocation(feedbackProg, "u_decay"), decayVal);
 
-        // let tunnelZoom = 1.002 - (grammarState.genitives * 0.002) - (audioState.bass * 0.012);
-        let tunnelZoom = 1.002 - (grammarState.genitives * 0.004) - (audioState.bass * 0.012);
+        let tunnelZoom = 1.002 - (grammarState.genitives * 0.002) - (audioState.bass * 0.012);
         // if (runtime.tunnel && runtime.mic) {
         if (runtime.tunnel) {
-          // tunnelZoom = 0.975 - (grammarState.genitives * 0.002) - (audioState.bass * 0.012);
-          tunnelZoom = 0.975 - (grammarState.genitives * 0.004) - (audioState.bass * 0.012);
+          tunnelZoom = 0.975 - (grammarState.genitives * 0.002) - (audioState.bass * 0.012);
         }
 
         gl.uniform1f(gl.getUniformLocation(feedbackProg, "u_zoom"), tunnelZoom);
@@ -2272,10 +2229,8 @@ In monte ardentem laeti saltamus</textarea>
 
         if (runtime.tunnel) {
           document.getElementById('tunnel-btn').classList.add("active");
-          document.getElementById('tunnel-btn').innerText = LUX.ui.tunnel.label.enabled;
         } else {
           document.getElementById('tunnel-btn').classList.remove("active");
-          document.getElementById('tunnel-btn').innerText = LUX.ui.tunnel.label.disabled;
         }
 
         if (pushState) {
